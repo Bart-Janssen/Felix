@@ -1,0 +1,12 @@
+server:
+  port: 29805
+
+spring:
+  rabbitmq:
+    host: ${PRODUCTION_RABBIT_SERVER:192.168.52.131}
+    port: 5672
+    username: guest
+    password: guest
+
+  main:
+    allow-bean-definition-overriding: true
