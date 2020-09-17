@@ -14,15 +14,15 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService extends MicroService implements IUserService
 {
-    private Map<String, User> users = new HashMap<String, User>() //TODO
+    private Map<String, User> users = new HashMap<String, User>() //TODO db connectie
     {{
-        super.put("Henk", User.builder().id(UUID.randomUUID()).displayName("Henk123").name("Henk").twoFAEnabled(false).password("123").build()); //todo
+        super.put("Henk", User.builder().id(UUID.randomUUID()).displayName("Henk123").name("Henk").twoFAEnabled(false).password("123").build()); //todo db connectie
     }};
 
     @Override
     public User login(User user) throws IOException, URISyntaxException
     {
-        User authenticatedUser = this.users.get(user.getName()); //todo
+        User authenticatedUser = this.users.get(user.getName()); //todo db connectie
         if (authenticatedUser == null) return null;
         if (!authenticatedUser.getPassword().equals(user.getPassword())) return null;
         return User.builder().id(authenticatedUser.getId()).twoFAEnabled(authenticatedUser.isTwoFAEnabled()).name(authenticatedUser.getName()).displayName(authenticatedUser.getDisplayName()).build(); //throw new NotImplementedException();

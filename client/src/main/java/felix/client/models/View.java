@@ -6,6 +6,7 @@ public enum View
     CRITICAL_ERROR("criticalError"),
 
     HOME("home"),
+    LOGIN("login"),
     CHAT("chat");
 
     private final String page;

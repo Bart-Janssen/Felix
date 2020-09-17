@@ -1,44 +1,39 @@
 package felix.api.configuration;
 
-import com.google.gson.Gson;
-import javafx.collections.FXCollections;
-
+import felix.api.controller.WebSocket;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
-@ServerEndpoint(value = "/server/")
-public class Connection
+@ServerEndpoint(value = "/server/{" + WebSocket.TOKEN + "}")
+public class WebSocketConnection extends WebSocket
 {
-//    private static final HashMap<Session, WebSocketMessage> sessionsAndUser = new HashMap<>();
-//    private static final HashMap<User, User> pendingInvitesUserTo_Sender = new HashMap<>();
-//    private static final ArrayList<Group> groups = new ArrayList<>();
-
-    @OnOpen
-    public void onConnect(Session session)
+    @Override
+    public void onWebSocketConnect(Session session) throws IOException
     {
+        String token = super.parseToken(session.getPathParameters());
+        if (token == null) session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, " Token is not valid"));
         System.out.println("[Connected] SessionID: " + session.getId());
     }
 
-    @OnMessage
+    @Override
     public void onText(String message, Session session)
     {
         System.out.println("[on msg odin!] " + message);
         session.getAsyncRemote().sendText("Yay response from server");
     }
 
-    @OnClose
+    @Override
     public void onClose(CloseReason reason, Session session)
     {
+        super.removeSession(super.parseToken(session.getPathParameters()));
         System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
     }
 
-    @OnError
+    @Override
     public void onError(Throwable cause, Session session)
     {
         System.out.println("[Session ID] : " + session.getId() + "[ERROR]: ");
-        //cause.printStackTrace(System.err);
+        cause.printStackTrace(System.err);
     }
 }

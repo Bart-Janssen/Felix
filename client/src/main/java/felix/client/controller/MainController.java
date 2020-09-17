@@ -1,5 +1,7 @@
 package felix.client.controller;
 
+import felix.client.exceptions.NotAuthorizedException;
+import felix.client.models.JwtToken;
 import felix.client.models.View;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -19,7 +21,8 @@ abstract class MainController implements Initializable
 {
     @FXML
     private static Stage stage;
-    protected Session session;
+    Session session;
+    private static JwtToken token;
 
     void setStage(Node currentView)
     {
@@ -28,26 +31,35 @@ abstract class MainController implements Initializable
         {
             try
             {
-                this.session.close();
+                this.session.close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Client logged off"));
             }
             catch (Exception ignored) {}
-            System.exit(0);
             System.out.println("System closed.");
+            System.exit(0);
         });
     }
 
-    void connectToServer(String server)
+    private String getToken()
     {
-        WebSocketContainer container;
+        return MainController.token == null ? null : MainController.token.getToken();
+    }
+
+    void connectToServer() throws NotAuthorizedException
+    {
+        if (this.getToken() == null) throw new NotAuthorizedException();
         try
         {
-            container = ContainerProvider.getWebSocketContainer();
-            this.session = container.connectToServer(new EventClientSocket(), URI.create(server));
+            this.session = ContainerProvider.getWebSocketContainer().connectToServer(new EventClientSocket(), URI.create("ws://localhost:6666/server/" + this.getToken()));
         }
         catch (DeploymentException | IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    void setJwtToken(JwtToken token)
+    {
+        MainController.token = token;
     }
 
     void openNewView(final View view)

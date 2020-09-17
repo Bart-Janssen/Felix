@@ -1,11 +1,18 @@
 package felix.client.controller;
 
+import felix.client.models.View;
+
 import javax.websocket.*;
+import java.net.URL;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 @ClientEndpoint
-public class EventClientSocket
+public class EventClientSocket extends MainController
 {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {}
+
     @OnOpen
     public void onWebSocketConnect()
     {
@@ -21,7 +28,8 @@ public class EventClientSocket
     @OnClose
     public void onWebSocketClose(CloseReason reason)
     {
-        System.out.println("[Closed]: " + new Date() + reason);
+        System.out.println("[Closed]: " + new Date() + "; " + reason);
+        super.openNewView(View.LOGIN);
     }
 
     @OnError

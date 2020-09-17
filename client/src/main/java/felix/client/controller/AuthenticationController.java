@@ -1,6 +1,7 @@
 package felix.client.controller;
 
 import felix.client.exceptions.NotAuthorizedException;
+import felix.client.models.JwtToken;
 import felix.client.models.User;
 import felix.client.models.View;
 import felix.client.service.user.IUserService;
@@ -71,7 +72,7 @@ public class AuthenticationController extends MainController
         }
         try
         {
-            this.userService.login(new User(this.textFieldUsername.getText(), this.textFieldPassword.getText()));
+            super.setJwtToken(this.userService.login(new User(this.textFieldUsername.getText(), this.textFieldPassword.getText())));
         }
         catch (NotAuthorizedException e)
         {
@@ -84,6 +85,7 @@ public class AuthenticationController extends MainController
 
     private void loginFailed()
     {
+        super.setJwtToken(null);
         this.textFieldUsername.clear();
         this.textFieldPassword.clear();
         this.textFieldUsername.requestFocus();

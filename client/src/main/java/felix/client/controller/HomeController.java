@@ -23,12 +23,21 @@ public class HomeController extends MainController
 
     private void listenPrivateChat()
     {
-        connectToServer("ws://localhost:6666/server/");
+        try
+        {
+            super.connectToServer();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            super.setJwtToken(null);
+            super.openNewView(View.LOGIN);
+        }
     }
 
     public void click()
     {
-        session.getAsyncRemote().sendText("Hey");
+        super.session.getAsyncRemote().sendText("Hey");
         //super.openNewView(View.CHAT);
     }
 }

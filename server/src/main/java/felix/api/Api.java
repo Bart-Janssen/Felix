@@ -1,6 +1,6 @@
 package felix.api;
 
-import felix.api.configuration.Connection;
+import felix.api.configuration.WebSocketConnection;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.eclipse.jetty.server.Server;
@@ -13,11 +13,11 @@ public class Api
 {
 	public static void main(String[] args)
 	{
-		new Thread(Api::startServer).start();
+		new Thread(Api::startWebSocketServer).start();
 		SpringApplication.run(Api.class, args);
 	}
 
-	private static void startServer()
+	private static void startWebSocketServer()
 	{
 		System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
 		System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
@@ -30,7 +30,7 @@ public class Api
 		webSocketServer.setHandler(webSocketContext);
 		try
 		{
-			WebSocketServerContainerInitializer.configureContext(webSocketContext).addEndpoint(Connection.class);
+			WebSocketServerContainerInitializer.configureContext(webSocketContext).addEndpoint(WebSocketConnection.class);
 			webSocketServer.start();
 			webSocketServer.join();
 		}
