@@ -26,6 +26,9 @@ public class WebSocketConnection extends WebSocket
     }
 
     @Override
+    public void onPong(PongMessage pong) {}
+
+    @Override
     public void onText(String message, Session session)
     {
         System.out.println("[on msg odin!] " + message);

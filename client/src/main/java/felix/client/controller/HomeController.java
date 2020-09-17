@@ -37,7 +37,7 @@ public class HomeController extends MainController
 
     public void click()
     {
-        super.session.getAsyncRemote().sendText("Hey");
+        super.sendMessage("Hey!");
         //super.openNewView(View.CHAT);
     }
 }

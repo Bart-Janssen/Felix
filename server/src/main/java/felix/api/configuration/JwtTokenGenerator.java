@@ -17,7 +17,7 @@ import java.util.UUID;
 @Component
 public class JwtTokenGenerator
 {
-    private static final String SECRET_KEY = "asjkdhakjshfkjasdhgfkjashdbfiweutrm8wvt93vt3eV*AENVta8t4yugsetuuekiurtPsdTNA$*A&VPNaTN&AntPVTNa*N&VTAV&*TNAT";
+    private static final String SECRET_KEY = "asjkdhakjshfkjasdhyfkjashdbfiweutrm8wvt93vt3eV*AENVta8t4yugsetuuekiurtPsdTNA$*A&VPNaTN&AntPVTNa*N&VTAV&*TNAT";
     private static final int TTL = 1800000;
     private static final String NAME = "username";
     private static final String DISPLAY_NAME = "displayName";

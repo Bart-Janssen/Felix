@@ -16,13 +16,15 @@ import felix.client.main.Main;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.ByteBuffer;
 
 abstract class MainController implements Initializable
 {
     @FXML
     private static Stage stage;
-    Session session;
+    private Session session;
     private static JwtToken token;
+    private static HeartBeatThread heartBeatThread;
 
     void setStage(Node currentView)
     {
@@ -50,6 +52,8 @@ abstract class MainController implements Initializable
         try
         {
             this.session = ContainerProvider.getWebSocketContainer().connectToServer(new EventClientSocket(), URI.create("ws://localhost:6666/server/" + this.getToken()));
+            heartBeatThread = new HeartBeatThread(session);
+            heartBeatThread.start();
         }
         catch (DeploymentException | IOException e)
         {
@@ -81,5 +85,15 @@ abstract class MainController implements Initializable
                 openNewView(View.PAGE_NOT_FOUND);
             }
         });
+    }
+
+    void stopHeartbeat()
+    {
+        heartBeatThread.stop();
+    }
+
+    void sendMessage(String text)
+    {
+        session.getAsyncRemote().sendText(text);
     }
 }

@@ -24,6 +24,9 @@ public abstract class WebSocket
     @OnMessage
     public abstract void onText(String message, Session session);
 
+    @OnMessage
+    public abstract void onPong(PongMessage pong);
+
     @OnClose
     public abstract void onClose(CloseReason reason, Session session);
 

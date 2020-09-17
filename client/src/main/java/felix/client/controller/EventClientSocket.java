@@ -29,6 +29,7 @@ public class EventClientSocket extends MainController
     public void onWebSocketClose(CloseReason reason)
     {
         System.out.println("[Closed]: " + new Date() + "; " + reason);
+        super.stopHeartbeat();
         super.openNewView(View.LOGIN);
     }
 
