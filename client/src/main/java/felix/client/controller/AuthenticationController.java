@@ -1,5 +1,6 @@
 package felix.client.controller;
 
+import felix.client.exceptions.AlreadyLoggedInException;
 import felix.client.exceptions.NotAuthorizedException;
 import felix.client.models.JwtToken;
 import felix.client.models.User;
@@ -32,8 +33,11 @@ public class AuthenticationController extends MainController
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        Platform.runLater(() -> super.setStage(this.mainGrid));
-        this.textFieldUsername.requestFocus();
+        Platform.runLater(() ->
+        {
+            super.setStage(this.mainGrid);
+            this.textFieldUsername.requestFocus();
+        });
         this.initializeNodes();
     }
 
@@ -76,19 +80,24 @@ public class AuthenticationController extends MainController
         }
         catch (NotAuthorizedException e)
         {
-            e.printStackTrace();
-            this.loginFailed();
+            this.loginFailed("Login failed.");
+            return;
+        }
+        catch (AlreadyLoggedInException e)
+        {
+            this.loginFailed("This account is already logged in.");
             return;
         }
         super.openNewView(View.HOME);
     }
 
-    private void loginFailed()
+    private void loginFailed(String reason)
     {
         super.setJwtToken(null);
         this.textFieldUsername.clear();
         this.textFieldPassword.clear();
         this.textFieldUsername.requestFocus();
+        this.loginFailedLabel.setText(reason);
         this.loginFailedLabel.setVisible(true);
     }
 }

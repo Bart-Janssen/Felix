@@ -12,7 +12,16 @@ public class WebSocketConnection extends WebSocket
     public void onWebSocketConnect(Session session) throws IOException
     {
         String token = super.parseToken(session.getPathParameters());
-        if (token == null) session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, " Token is not valid"));
+        if (token == null)
+        {
+            session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, " Token is not valid"));
+            return;
+        }
+        if (!super.setSession(session, token))
+        {
+            session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER, " Session is already logged in"));
+            return;
+        }
         System.out.println("[Connected] SessionID: " + session.getId());
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import felix.client.exceptions.AlreadyLoggedInException;
 import felix.client.exceptions.BadRequestException;
 import felix.client.exceptions.NotAuthorizedException;
 import felix.client.exceptions.PageNotFoundException;
@@ -82,11 +83,13 @@ public abstract class MainService
     private void handleStatusCode(int statusCode)
     {
         //log.info(Integer.toString(statusCode));
+        System.out.println(statusCode);
         switch (statusCode)
         {
             case 404: throw new PageNotFoundException();
             case 400: throw new BadRequestException();
             case 401: throw new NotAuthorizedException();
+            case 208: throw new AlreadyLoggedInException();
             case 200: break;
             case 201: break;
             default: throw new UnsupportedOperationException();

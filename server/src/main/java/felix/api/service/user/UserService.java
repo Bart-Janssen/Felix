@@ -17,6 +17,7 @@ public class UserService extends MicroService implements IUserService
     private Map<String, User> users = new HashMap<String, User>() //TODO db connectie
     {{
         super.put("Henk", User.builder().id(UUID.randomUUID()).displayName("Henk123").name("Henk").twoFAEnabled(false).password("123").build()); //todo db connectie
+        super.put("Bart", User.builder().id(UUID.randomUUID()).displayName("Bart123").name("Bart").twoFAEnabled(false).password("123").build()); //todo db connectie
     }};
 
     @Override

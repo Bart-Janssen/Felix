@@ -64,10 +64,6 @@ abstract class MainController implements Initializable
 
     void openNewView(final View view)
     {
-        if (!view.equals(View.PAGE_NOT_FOUND))
-        {
-            //todo
-        }
         Platform.runLater(() ->
         {
             try
@@ -75,16 +71,13 @@ abstract class MainController implements Initializable
                 FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/" + view.getPage() + ".fxml"));
                 Scene scene = new Scene(loader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());
                 stage.setScene(scene);
-                scene.getStylesheets().add(getClass().getResource("/view/navBar.css").toExternalForm());
-                stage.setTitle("Sysma - " + view.getPage().substring(view.getPage().indexOf("/") + 1).substring(0, 1).toUpperCase() + view.getPage().substring(view.getPage().indexOf("/") + 2));
+                //scene.getStylesheets().add(getClass().getResource("/view/navBar.css").toExternalForm());
+                stage.setTitle("Felix - " + view.getPage().substring(view.getPage().indexOf("/") + 1).substring(0, 1).toUpperCase() + view.getPage().substring(view.getPage().indexOf("/") + 2));
                 stage.show();
             }
             catch (Exception e)
             {
-                if (view.equals(View.PAGE_NOT_FOUND))
-                {
-                    return;
-                }
+                if (view.equals(View.PAGE_NOT_FOUND)) return;
                 openNewView(View.PAGE_NOT_FOUND);
             }
         });
