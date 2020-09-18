@@ -1,5 +1,6 @@
 package felix.api.configuration;
 
+import felix.api.controller.WebSocket;
 import felix.api.models.JwtToken;
 import felix.api.models.User;
 import io.jsonwebtoken.Claims;
@@ -8,25 +9,37 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
 @Component
 public class JwtTokenGenerator
 {
-    private static final String SECRET_KEY = "asjkdhakjshfkjasdhyfkjashdbfiweutrm8wvt93vt3eV*AENVta8t4yugsetuuekiurtPsdTNA$*A&VPNaTN&AntPVTNa*N&VTAV&*TNAT";
-    private static final int TTL = 1800000;
+    private static final int TTL = 1_800_000;
     private static final String NAME = "username";
     private static final String DISPLAY_NAME = "displayName";
     private static final String USER_ID = "id";
     private static final String TWO_FA = "twofa";
 
-    public JwtToken createJWT(User account)
+    public JwtToken createJWT(User account) throws NoSuchAlgorithmException
     {
-        Key signingKey = new SecretKeySpec(DatatypeConverter.parseBase64Binary(SECRET_KEY), SignatureAlgorithm.HS256.getJcaName());
+        byte[] KEY;
+        SecretKey key = KeyGenerator.getInstance(SignatureAlgorithm.HS512.getJcaName()).generateKey();
+        KEY = Arrays.toString(key.getEncoded()).getBytes(StandardCharsets.UTF_8);
+        Key signingKey = new SecretKeySpec(KEY, SignatureAlgorithm.HS256.getJcaName());
         JwtBuilder builder = Jwts.builder()
                 .setSubject("Felix chat app")
                 .claim(USER_ID, account.getId())
@@ -36,7 +49,7 @@ public class JwtTokenGenerator
                 .setIssuer("Felix")
                 .signWith(signingKey)
                 .setExpiration(new Date(System.currentTimeMillis() + TTL));
-        return new JwtToken(builder.compact());
+        return new JwtToken(builder.compact(), KEY);
     }
 
     public User decodeJWT(String jwt)
@@ -44,7 +57,7 @@ public class JwtTokenGenerator
         try
         {
             User user = new User();
-            Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY)).parseClaimsJws(jwt.replace("Bearer", "").trim()).getBody();
+            Claims claims = Jwts.parser().setSigningKey(WebSocket.getKeyFromSession(jwt)).parseClaimsJws(jwt.replace("Bearer", "").trim()).getBody();
             user.setName(claims.get(NAME).toString());
             user.setDisplayName(claims.get(DISPLAY_NAME).toString());
             user.setId(UUID.fromString(claims.get(USER_ID).toString()));

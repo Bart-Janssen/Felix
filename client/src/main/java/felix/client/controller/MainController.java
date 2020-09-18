@@ -20,8 +20,7 @@ import java.nio.ByteBuffer;
 
 abstract class MainController implements Initializable
 {
-    @FXML
-    private static Stage stage;
+    @FXML private static Stage stage;
     private Session session;
     private static JwtToken token;
     private static HeartBeatThread heartBeatThread;

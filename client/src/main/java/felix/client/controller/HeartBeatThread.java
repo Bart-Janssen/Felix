@@ -25,15 +25,11 @@ public class HeartBeatThread implements Runnable
         {
             try
             {
-                Thread.sleep(280000);
+                Thread.sleep(0x4_45_C0);
                 this.session.getAsyncRemote().sendPing(ByteBuffer.wrap("Ping".getBytes()));
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            catch (Exception ignored) {}
         }
-
     }
 
     void stop()

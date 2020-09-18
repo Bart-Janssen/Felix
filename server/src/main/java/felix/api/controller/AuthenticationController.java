@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import felix.api.configuration.JwtTokenGenerator;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 
 @CrossOrigin
 @RestController
@@ -22,7 +23,7 @@ public class AuthenticationController
     @GetMapping("/hai")
     public ResponseEntity logins()
     {
-        for (UserSession s : WebSocket.getSessions().values())
+        for (UserSession s : WebSocket.getSessions().values(SessionMap.T.DISPLAY_NAME))
         {
             s.getSession().getAsyncRemote().sendText("Hello, msg from server: " + s.getUser().getDisplayName());
         }
@@ -30,14 +31,14 @@ public class AuthenticationController
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtToken> login(@RequestBody User user) throws IOException, URISyntaxException
+    public ResponseEntity<JwtToken> login(@RequestBody User user) throws IOException, URISyntaxException, NoSuchAlgorithmException
     {
         User authenticatedUser = userService.login(user);
         if (authenticatedUser != null)
         {
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(new JwtToken(token.getToken(), null));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -53,7 +54,7 @@ public class AuthenticationController
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtToken> register(@RequestBody User user) throws IOException, URISyntaxException
+    public ResponseEntity<JwtToken> register(@RequestBody User user) throws IOException, URISyntaxException, NoSuchAlgorithmException
     {
         if (user.getPassword().length() < 8) throw new BadRequestException();
         User registeredUser = userService.register(user);

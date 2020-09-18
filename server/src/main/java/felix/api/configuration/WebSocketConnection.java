@@ -12,7 +12,7 @@ public class WebSocketConnection extends WebSocket
     public void onWebSocketConnect(Session session) throws IOException
     {
         String token = super.parseToken(session.getPathParameters());
-        if (token == null)
+        if (token == null || !super.validateToken(token))
         {
             session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, " Token is not valid"));
             return;
@@ -31,6 +31,7 @@ public class WebSocketConnection extends WebSocket
     @Override
     public void onText(String message, Session session)
     {
+        System.out.println("Validate on text: " + super.validateToken(super.parseToken(session.getPathParameters())));
         System.out.println("[on msg odin!] " + message);
         session.getAsyncRemote().sendText("Yay response from server");
     }

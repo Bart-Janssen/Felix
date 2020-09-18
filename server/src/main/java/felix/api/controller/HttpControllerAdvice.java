@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import felix.api.models.Event;
 import felix.api.models.EventType;
 
+import java.security.NoSuchAlgorithmException;
+
 @Slf4j
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -22,6 +24,13 @@ import felix.api.models.EventType;
 public class HttpControllerAdvice
 {
     private final IEventService eventService;
+
+    @ExceptionHandler(NoSuchAlgorithmException.class)
+    public ResponseEntity handleNoSuchAlgorithmException(final NoSuchAlgorithmException e)
+    {
+        this.createEvent(e, EventType.INFO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 
     @ExceptionHandler(ItemNotFoundException.class)
     public ResponseEntity handleItemNotFoundException(final ItemNotFoundException e)

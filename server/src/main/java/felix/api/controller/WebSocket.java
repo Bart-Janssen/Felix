@@ -2,18 +2,18 @@ package felix.api.controller;
 
 import felix.api.configuration.JwtTokenGenerator;
 import felix.api.models.JwtToken;
+import felix.api.models.SessionMap;
 import felix.api.models.User;
 import felix.api.models.UserSession;
 import javax.websocket.*;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class WebSocket
 {
     public static final String TOKEN = "token";
 
-    public static Map<String, UserSession> getSessions()
+    public static SessionMap getSessions()
     {
         return sessions;
     }
@@ -33,37 +33,42 @@ public abstract class WebSocket
     @OnError
     public abstract void onError(Throwable cause, Session session);
 
-    private static Map<String, UserSession> sessions = new HashMap<>();
+    private static SessionMap sessions = new SessionMap();
 
     protected Boolean setSession(Session session, String token)
     {
         User user = new JwtTokenGenerator().decodeJWT(token);
-        UserSession userSession = sessions.get(user.getDisplayName());
-        System.out.println(userSession.getSession() == null);
+        UserSession userSession = sessions.get(SessionMap.T.DISPLAY_NAME, user.getDisplayName());
         if (userSession.getSession() != null) return false;
         userSession.setSession(session);
-        sessions.put(user.getDisplayName(), userSession);
+        sessions.put(SessionMap.T.DISPLAY_NAME, user.getDisplayName(), userSession);
         return true;
+    }
+
+    public static byte[] getKeyFromSession(String token)
+    {
+        UserSession userSession = sessions.get(SessionMap.T.TOKEN, token);
+        return userSession == null ? null : userSession.getToken().getKey();
     }
 
     static Boolean addSession(User user, JwtToken token)
     {
-        if (sessions.get(user.getDisplayName()) != null) return false;
-        WebSocket.sessions.put(user.getDisplayName(), new UserSession(user, token));
+        if (sessions.get(SessionMap.T.DISPLAY_NAME, user.getDisplayName()) != null) return false;
+        WebSocket.sessions.addSession(user.getDisplayName(), new UserSession(user, token));
         return true;
     }
 
     protected void removeSession(String token)
     {
         User user = new JwtTokenGenerator().decodeJWT(token);
-        sessions.remove(user.getDisplayName());
+        sessions.removeSession(user.getDisplayName(), token);
     }
 
     private Boolean userHasToken(String token)
     {
         User decodedUser = new JwtTokenGenerator().decodeJWT(token);
         if (decodedUser == null) return false;
-        UserSession sessionUser = sessions.get(decodedUser.getDisplayName());
+        UserSession sessionUser = sessions.get(SessionMap.T.DISPLAY_NAME, decodedUser.getDisplayName());
         if (sessionUser == null) return false;
         JwtToken sessionToken = sessionUser.getToken();
         if (sessionToken == null) return false;
@@ -74,7 +79,11 @@ public abstract class WebSocket
 
     protected String parseToken(Map<String, String> parameters)
     {
-        String token = parameters.get(TOKEN);
-        return ((token == null) | (!this.userHasToken(token))) ? null : token;
+        return parameters.get(TOKEN);
+    }
+
+    protected Boolean validateToken(String token)
+    {
+        return this.userHasToken(token);
     }
 }
