@@ -23,11 +23,13 @@ public class AuthenticationController
     @GetMapping("/hai")
     public ResponseEntity logins()
     {
+        int i = 0;
         for (UserSession s : WebSocket.getSessions().values(SessionMap.T.DISPLAY_NAME))
         {
+            i++;
             s.getSession().getAsyncRemote().sendText("Hello, msg from server: " + s.getUser().getDisplayName());
         }
-        return ResponseEntity.ok("yo");
+        return ResponseEntity.ok("yo " + i);
     }
 
     @PostMapping("/login")

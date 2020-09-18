@@ -36,7 +36,7 @@ public class EventClientSocket extends MainController
     @OnError
     public void onWebSocketError(Throwable cause)
     {
-        cause.printStackTrace();
+//        cause.printStackTrace();
         System.out.println("[ERROR]: " + cause);
         System.out.println("Error");
     }

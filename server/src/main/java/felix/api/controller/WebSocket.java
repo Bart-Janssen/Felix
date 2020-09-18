@@ -38,11 +38,8 @@ public abstract class WebSocket
     protected Boolean setSession(Session session, String token)
     {
         User user = new JwtTokenGenerator().decodeJWT(token);
-        UserSession userSession = sessions.get(SessionMap.T.DISPLAY_NAME, user.getDisplayName());
-        if (userSession.getSession() != null) return false;
-        userSession.setSession(session);
-        sessions.put(SessionMap.T.DISPLAY_NAME, user.getDisplayName(), userSession);
-        return true;
+        if (user == null) return false;
+        return sessions.updateSession(user, session, token);
     }
 
     public static byte[] getKeyFromSession(String token)
@@ -58,10 +55,10 @@ public abstract class WebSocket
         return true;
     }
 
-    protected void removeSession(String token)
+    protected void removeSession(String sessionId)
     {
-        User user = new JwtTokenGenerator().decodeJWT(token);
-        sessions.removeSession(user.getDisplayName(), token);
+        //User user = new JwtTokenGenerator().decodeJWT(token);
+        sessions.removeSession(sessionId);
     }
 
     private Boolean userHasToken(String token)

@@ -19,6 +19,7 @@ public class WebSocketConnection extends WebSocket
         }
         if (!super.setSession(session, token))
         {
+            super.removeSession(session.getId());
             session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER, " Session is already logged in"));
             return;
         }
@@ -39,7 +40,7 @@ public class WebSocketConnection extends WebSocket
     @Override
     public void onClose(CloseReason reason, Session session)
     {
-        super.removeSession(super.parseToken(session.getPathParameters()));
+        super.removeSession(session.getId());
         System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
     }
 
