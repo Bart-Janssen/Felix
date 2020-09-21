@@ -51,13 +51,12 @@ public abstract class WebSocket
     static Boolean addSession(User user, JwtToken token)
     {
         if (sessions.get(SessionMap.T.DISPLAY_NAME, user.getDisplayName()) != null) return false;
-        WebSocket.sessions.addSession(user.getDisplayName(), new UserSession(user, token));
+        sessions.addSession(user.getDisplayName(), new UserSession(user, token));
         return true;
     }
 
     protected void removeSession(String sessionId)
     {
-        //User user = new JwtTokenGenerator().decodeJWT(token);
         sessions.removeSession(sessionId);
     }
 

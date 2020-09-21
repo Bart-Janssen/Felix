@@ -24,7 +24,7 @@ public class AuthenticationController
     public ResponseEntity logins()
     {
         int i = 0;
-        for (UserSession s : WebSocket.getSessions().values(SessionMap.T.DISPLAY_NAME))
+        for (UserSession s : WebSocket.getSessions().values())
         {
             i++;
             s.getSession().getAsyncRemote().sendText("Hello, msg from server: " + s.getUser().getDisplayName());
