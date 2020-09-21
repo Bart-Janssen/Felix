@@ -7,11 +7,14 @@ public class UserSession
     private JwtToken token;
     private User user;
     private Session session;
+    private String publicKey;
 
-    public UserSession(User user, JwtToken token)
+    public UserSession(User user, Session session, JwtToken token, String publicKey)
     {
         this.user = user;
+        this.session = session;
         this.token = token;
+        this.publicKey = publicKey;
     }
 
     public User getUser()

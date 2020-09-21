@@ -1,5 +1,6 @@
 package felix.api.controller;
 
+import felix.api.configuration.RsaEncryptionManager;
 import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import felix.api.service.user.IUserService;
@@ -11,6 +12,7 @@ import felix.api.configuration.JwtTokenGenerator;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -32,12 +34,13 @@ public class AuthenticationController
         return ResponseEntity.ok("yo " + i);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<JwtToken> login(@RequestBody User user) throws IOException, URISyntaxException, NoSuchAlgorithmException
+    @PostMapping("/login/")
+    public ResponseEntity<JwtToken> login(@RequestBody User user) throws Exception
     {
         User authenticatedUser = userService.login(user);
         if (authenticatedUser != null)
         {
+            authenticatedUser.setEncryptedUUID(user.getEncryptedUUID()); //todo AES
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
             return ResponseEntity.ok(new JwtToken(token.getToken(), null));
@@ -56,7 +59,7 @@ public class AuthenticationController
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtToken> register(@RequestBody User user) throws IOException, URISyntaxException, NoSuchAlgorithmException
+    public ResponseEntity<JwtToken> register(@RequestBody User user) throws Exception
     {
         if (user.getPassword().length() < 8) throw new BadRequestException();
         User registeredUser = userService.register(user);

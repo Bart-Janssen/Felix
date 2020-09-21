@@ -1,16 +1,28 @@
 package felix.api.configuration;
 
+import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
+import felix.api.models.PendingSession;
+import felix.api.models.WebSocketMessage;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import java.util.UUID;
 
-@ServerEndpoint(value = "/server/{" + WebSocket.TOKEN + "}")
+@ServerEndpoint(value = "/server/{" + WebSocket.KEY + "}")
 public class WebSocketConnection extends WebSocket
 {
     @Override
     public void onWebSocketConnect(Session session) throws IOException
     {
+        /*
         String token = super.parseToken(session.getPathParameters());
         if (token == null || !super.validateToken(token))
         {
@@ -22,18 +34,49 @@ public class WebSocketConnection extends WebSocket
             super.removeSession(session.getId());
             session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER, " Session is already logged in"));
             return;
+        }*/
+
+        String clientPublicKey = session.getPathParameters().get(WebSocket.KEY).replace("--dash--", "/");
+        UUID pendingUUID = super.putPendingSession(session, clientPublicKey);
+        session.getAsyncRemote().sendText(RsaEncryptionManager.getPubKey());
+        try
+        {
+            String chipper = RsaEncryptionManager.encrypt(this.setServerPublicKey(clientPublicKey), "UUID:" + pendingUUID.toString());
+            session.getAsyncRemote().sendText(chipper);
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         System.out.println("[Connected] SessionID: " + session.getId());
     }
 
+    private PublicKey setServerPublicKey(String serverPublicKey)
+    {
+        byte[] data = Base64.getDecoder().decode(serverPublicKey);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(data);
+        KeyFactory fact;
+        try
+        {
+            fact = KeyFactory.getInstance("RSA");
+            return fact.generatePublic(spec);
+        }
+        catch (NoSuchAlgorithmException | InvalidKeySpecException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
-    public void onPong(PongMessage pong) {}
+    public void onPong(PongMessage pong) {System.out.println("Heartbeat!");}
 
     @Override
     public void onText(String message, Session session)
     {
-        System.out.println("Validate on text: " + super.validateToken(super.parseToken(session.getPathParameters())));
-        System.out.println("[on msg odin!] " + message);
+        System.out.println("Validate on text: " + super.validateToken(new Gson().fromJson(message, WebSocketMessage.class).getJwtToken().getToken()));
+        System.out.println("[on msg odin!] " + new Gson().fromJson(message, WebSocketMessage.class));
         session.getAsyncRemote().sendText("Yay response from server");
     }
 

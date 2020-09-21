@@ -2,9 +2,11 @@ package felix.client.controller;
 
 import felix.client.exceptions.AlreadyLoggedInException;
 import felix.client.exceptions.NotAuthorizedException;
+import felix.client.main.FelixSession;
 import felix.client.models.JwtToken;
 import felix.client.models.User;
 import felix.client.models.View;
+import felix.client.service.system.RsaEncryptionManager;
 import felix.client.service.user.IUserService;
 import felix.client.service.user.UserService;
 import javafx.application.Platform;
@@ -76,7 +78,8 @@ public class AuthenticationController extends MainController
         }
         try
         {
-            super.setJwtToken(this.userService.login(new User(this.textFieldUsername.getText(), this.textFieldPassword.getText())));
+            //todo AES encrypt
+            FelixSession.getInstance().setToken(this.userService.login(new User(this.textFieldUsername.getText(), this.textFieldPassword.getText()), RsaEncryptionManager.encrypt(FelixSession.getInstance().getPendingUUID().toString())));
         }
         catch (NotAuthorizedException e)
         {
@@ -88,12 +91,17 @@ public class AuthenticationController extends MainController
             this.loginFailed("This account is already logged in.");
             return;
         }
+        catch (Exception e)
+        {
+            this.loginFailed("Encryption failure.");
+            return;
+        }
         super.openNewView(View.HOME);
     }
 
     private void loginFailed(String reason)
     {
-        super.setJwtToken(null);
+        FelixSession.getInstance().setToken(null);
         this.textFieldUsername.clear();
         this.textFieldPassword.clear();
         this.textFieldUsername.requestFocus();

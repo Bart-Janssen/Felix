@@ -6,14 +6,17 @@ import felix.client.models.JwtToken;
 import felix.client.models.User;
 import felix.client.service.MainService;
 
+import java.util.UUID;
+
 public class UserService extends MainService implements IUserService
 {
     @Override
-    public JwtToken login(User user) throws NotAuthorizedException, AlreadyLoggedInException
+    public JwtToken login(User user, String encryptedUUID) throws NotAuthorizedException, AlreadyLoggedInException
     {
         try
         {
-            return super.post("authentication/login", user, JwtToken.class);
+            user.setEncryptedUUID(encryptedUUID);
+            return super.post("authentication/login/", user, JwtToken.class);
         }
         catch (Exception e)
         {

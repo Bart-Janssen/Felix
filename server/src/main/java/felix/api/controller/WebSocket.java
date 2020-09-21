@@ -1,17 +1,18 @@
 package felix.api.controller;
 
 import felix.api.configuration.JwtTokenGenerator;
-import felix.api.models.JwtToken;
-import felix.api.models.SessionMap;
-import felix.api.models.User;
-import felix.api.models.UserSession;
+import felix.api.configuration.RsaEncryptionManager;
+import felix.api.models.*;
+
 import javax.websocket.*;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class WebSocket
 {
     public static final String TOKEN = "token";
+    public static final String KEY = "publickey";
 
     public static SessionMap getSessions()
     {
@@ -35,12 +36,12 @@ public abstract class WebSocket
 
     private static SessionMap sessions = new SessionMap();
 
-    protected Boolean setSession(Session session, String token)
+    /*protected Boolean setSession(Session session, String token)
     {
         User user = new JwtTokenGenerator().decodeJWT(token);
         if (user == null) return false;
         return sessions.updateSession(user, session, token);
-    }
+    }*/
 
     public static byte[] getKeyFromSession(String token)
     {
@@ -48,10 +49,13 @@ public abstract class WebSocket
         return userSession == null ? null : userSession.getToken().getKey();
     }
 
-    static Boolean addSession(User user, JwtToken token)
+    static Boolean addSession(User user, JwtToken token) throws Exception
     {
-        if (sessions.get(SessionMap.T.DISPLAY_NAME, user.getDisplayName()) != null) return false;
-        sessions.addSession(user.getDisplayName(), new UserSession(user, token));
+        UUID pendingUUID = UUID.fromString(RsaEncryptionManager.decrypt(user.getEncryptedUUID())); //todo AES decrypt
+        PendingSession pendingSession = sessions.getPending(pendingUUID);
+        if (pendingSession == null) return false;
+        sessions.addSession(user.getDisplayName(), new UserSession(user, pendingSession.getSession(), token, pendingSession.getClientPublicKey()));
+        sessions.removePendingSession(pendingUUID);
         return true;
     }
 
@@ -73,13 +77,13 @@ public abstract class WebSocket
                 & (decodedUser.getName().equals(sessionUser.getUser().getName())) & (decodedUser.isTwoFAEnabled() == sessionUser.getUser().isTwoFAEnabled());
     }
 
-    protected String parseToken(Map<String, String> parameters)
-    {
-        return parameters.get(TOKEN);
-    }
-
     protected Boolean validateToken(String token)
     {
         return this.userHasToken(token);
+    }
+
+    protected UUID putPendingSession(Session session, String clientPublicKey)
+    {
+        return sessions.putPendingSession(session, clientPublicKey);
     }
 }

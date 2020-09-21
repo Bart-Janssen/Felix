@@ -11,6 +11,7 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        FelixSession.connectToServer();
         FXMLLoader loader = new FXMLLoader(super.getClass().getResource("/view/login.fxml"));
         Parent parent = loader.load();
         primaryStage.setTitle("Felix");

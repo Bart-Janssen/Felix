@@ -11,7 +11,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception
     {
-//        log.info("Before Handshake" + request.getHeaders().toString());
+        System.out.println("Before Handshake" + request.getHeaders().toString());
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }
 

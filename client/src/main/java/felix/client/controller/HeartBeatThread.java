@@ -5,15 +5,16 @@ import java.nio.ByteBuffer;
 
 public class HeartBeatThread implements Runnable
 {
-    private boolean exit = false;
+    private Boolean exit = false;
     private Session session;
 
-    void start()
+    public void start()
     {
+        System.out.println("Started...");
         new Thread(this).start();
     }
 
-    HeartBeatThread(Session session)
+    public HeartBeatThread(Session session)
     {
         this.session = session;
     }
@@ -21,19 +22,24 @@ public class HeartBeatThread implements Runnable
     @Override
     public void run()
     {
-        while (!exit)
+        while (!this.exit)
         {
             try
             {
                 Thread.sleep(0x4_45_C0);
+                System.out.println("Heartbeat send!");
                 this.session.getAsyncRemote().sendPing(ByteBuffer.wrap("Ping".getBytes()));
             }
-            catch (Exception ignored) {}
+            catch (Exception ignored)
+            {
+                this.exit = true;
+            }
         }
     }
 
-    void stop()
+    public void stop()
     {
-        exit = true;
+        System.out.println("Stopped...");
+        this.exit = true;
     }
 }
