@@ -1,5 +1,5 @@
 chat-app-felix
 
-TODO:\n
+TODO:
 Quantum networking
 Leerplan nakijken
