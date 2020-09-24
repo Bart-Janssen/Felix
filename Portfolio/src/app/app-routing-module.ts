@@ -13,6 +13,7 @@ import { WorkshopComponent } from './components/projects/workshop/workshop.compo
 import { ResearchapproachComponent } from './components/projects/researchapproach/researchapproach.component';
 import { ConceptComponent } from './components/projects/concept/concept.component';
 import { OsintComponent } from './components/projects/workshop/osint/osint.component';
+import { ChatappprojectComponent } from './components/projects/chatappproject/chatappproject.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,10 @@ const routes: Routes = [
   {
     path: "concept_project",
     component: ConceptComponent,
+  },
+  {
+    path: "chat_app_project",
+    component: ChatappprojectComponent,
   },
   {
     path: "not-implemented-yet",

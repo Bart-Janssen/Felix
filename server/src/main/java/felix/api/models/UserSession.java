@@ -36,4 +36,11 @@ public class UserSession
     {
         return session;
     }
+
+
+
+    public String getPublicKey()
+    {
+        return publicKey;
+    }
 }

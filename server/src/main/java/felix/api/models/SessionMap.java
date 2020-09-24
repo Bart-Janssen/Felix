@@ -10,9 +10,9 @@ public class SessionMap
     private Map<String, String> sessionIdMap = new HashMap<>();
     private Map<UUID, PendingSession> pendingSessions = new HashMap<>();
 
-    public UserSession get(T t, String key)
+    public UserSession get(GETTER_TYPE type, String key)
     {
-        switch (t)
+        switch (type)
         {
             case DISPLAY_NAME: return this.userDisplayNameMap.get(key);
             case TOKEN: return this.userDisplayNameMap.get(this.tokenMap.get(key));
@@ -76,7 +76,7 @@ public class SessionMap
         this.pendingSessions.remove(pendingUUID);
     }
 
-    public enum T
+    public enum GETTER_TYPE
     {
         DISPLAY_NAME,
         TOKEN

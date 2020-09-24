@@ -35,7 +35,7 @@ public abstract class WebSocket
 
     public static byte[] getKeyFromSession(String token)
     {
-        UserSession userSession = sessions.get(SessionMap.T.TOKEN, token);
+        UserSession userSession = sessions.get(SessionMap.GETTER_TYPE.TOKEN, token);
         return userSession == null ? null : userSession.getToken().getKey();
     }
 
@@ -58,7 +58,7 @@ public abstract class WebSocket
     {
         User decodedUser = new JwtTokenGenerator().decodeJWT(token);
         if (decodedUser == null) return false;
-        UserSession sessionUser = sessions.get(SessionMap.T.DISPLAY_NAME, decodedUser.getDisplayName());
+        UserSession sessionUser = sessions.get(SessionMap.GETTER_TYPE.DISPLAY_NAME, decodedUser.getDisplayName());
         if (sessionUser == null) return false;
         JwtToken sessionToken = sessionUser.getToken();
         if (sessionToken == null) return false;

@@ -8,19 +8,12 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
@@ -36,9 +29,8 @@ public class JwtTokenGenerator
 
     public JwtToken createJWT(User account) throws NoSuchAlgorithmException
     {
-        byte[] KEY;
         SecretKey key = KeyGenerator.getInstance(SignatureAlgorithm.HS512.getJcaName()).generateKey();
-        KEY = Arrays.toString(key.getEncoded()).getBytes(StandardCharsets.UTF_8);
+        byte[] KEY = Arrays.toString(key.getEncoded()).getBytes(StandardCharsets.UTF_8);
         Key signingKey = new SecretKeySpec(KEY, SignatureAlgorithm.HS256.getJcaName());
         JwtBuilder builder = Jwts.builder()
                 .setSubject("Felix chat app")
@@ -57,7 +49,7 @@ public class JwtTokenGenerator
         try
         {
             User user = new User();
-            Claims claims = Jwts.parser().setSigningKey(WebSocket.getKeyFromSession(jwt)).parseClaimsJws(jwt.replace("Bearer", "").trim()).getBody();
+            Claims claims = Jwts.parser().setSigningKey(WebSocket.getKeyFromSession(jwt)).parseClaimsJws(jwt).getBody();
             user.setName(claims.get(NAME).toString());
             user.setDisplayName(claims.get(DISPLAY_NAME).toString());
             user.setId(UUID.fromString(claims.get(USER_ID).toString()));

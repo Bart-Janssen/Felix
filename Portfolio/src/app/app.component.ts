@@ -17,11 +17,12 @@ export class AppComponent implements OnInit
   public ngOnInit() : void
   {
     this.resize(window.innerWidth);
+    // this.router.navigate(["/main"]);
+    this.router.navigate(["/chat_app_project"]);
     // this.router.navigate(["/osint_workshop"]);
     // this.router.navigate(["/ethics_project"]);
     // this.router.navigate(["/concept_project"]);
     // this.router.navigate(["/research_approach_project"]);
-    this.router.navigate(["/main"]);
     // this.router.navigate(["/projects"]);
     // this.router.navigate(["/learningplan"]);
     // this.router.navigate(["/specialisation"]);
