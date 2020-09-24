@@ -1,0 +1,27 @@
+<div class="header">
+  <div class="logo-item">
+    <h1 routerLink="/main" routerLinkActive="active" (click)="toggleDropdownFalse()"><b>Portfolio</b></h1>
+  </div>
+  <div *ngIf="showWideNavBar">
+    <a routerLink="/main" class="nav-item" routerLinkActive="active">Home</a>
+    <a routerLink="/learningplan" class="nav-item" routerLinkActive="active">Leerplan</a>
+    <a routerLink="/rdproject" class="nav-item" routerLinkActive="active">R&D Project</a>
+    <a routerLink="/specialisation" class="nav-item" routerLinkActive="active">Specialisatie</a>
+    <a routerLink="/projects" class="nav-item" routerLinkActive="active">Projecten</a>
+    <a routerLink="/reflection" class="nav-item" routerLinkActive="active">Reflectie</a>
+  </div>
+  <div *ngIf="!showWideNavBar">
+    <div class="dropdown" (click)="toggleDropdown()">
+    <p>Menu</p>
+      <div class="dropdown-screen" *ngIf="expandDropdown">
+        <a routerLink="/main" class="dropdown-screen-nav-item" routerLinkActive="active">Home</a>
+        <a routerLink="/learningplan" class="dropdown-screen-nav-item" routerLinkActive="active">Leerplan</a>
+        <a routerLink="/rdproject" class="dropdown-screen-nav-item" routerLinkActive="active">R&D Project</a>
+        <a routerLink="/specialisation" class="dropdown-screen-nav-item" routerLinkActive="active">Specialisatie</a>
+        <a routerLink="/projects" class="dropdown-screen-nav-item" routerLinkActive="active">Projecten</a>
+        <a routerLink="/reflection" class="dropdown-screen-nav-item" routerLinkActive="active">Reflectie</a>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet (activate)="onActivate()" (window:resize)="onResize($event)"></router-outlet>

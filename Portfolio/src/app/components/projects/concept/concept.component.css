@@ -1,0 +1,54 @@
+.center-text
+{
+    font-size: 40px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center;
+    color: antiquewhite;
+}
+
+.text
+{
+    font-size: 18px;
+    color: antiquewhite;
+}
+
+table, th, td
+{
+    font-size: 18px;
+    border: 1px solid antiquewhite;
+    border-collapse: collapse;
+}
+
+table
+{
+    width: 100%;
+}
+
+img
+{
+    width: 100%;
+}
+
+.table-text
+{
+    font-size: 12px;
+    font-style: italic;
+}
+
+.image
+{
+    font-size: 12px;
+    font-style: italic;
+}
+
+th
+{
+    font-style: inherit;
+    color: antiquewhite;
+}
+
+td
+{
+    color: antiquewhite;
+}

@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+
+body
+{
+    background-image: url("../src/assets/background.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.middle-text-space
+{
+    margin: auto;
+    width: 55%;
+    padding: 10px;
+}
+
+.middle-text-space p
+{
+    text-align: justify;
+    font-size: 18px;
+    color: antiquewhite;
+}
+
+h3, h1
+{
+    color: antiquewhite;
+}
+
+.no-bottom-margin
+{
+    margin-bottom: 0px;
+}

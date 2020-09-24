@@ -3,18 +3,15 @@ package felix.api.controller;
 import felix.api.configuration.JwtTokenGenerator;
 import felix.api.configuration.RsaEncryptionManager;
 import felix.api.models.*;
-
 import javax.websocket.*;
 import java.io.IOException;
-import java.util.Map;
 import java.util.UUID;
 
 public abstract class WebSocket
 {
-    public static final String TOKEN = "token";
     public static final String KEY = "publickey";
 
-    public static SessionMap getSessions()
+    static SessionMap getSessions()
     {
         return sessions;
     }
@@ -35,13 +32,6 @@ public abstract class WebSocket
     public abstract void onError(Throwable cause, Session session);
 
     private static SessionMap sessions = new SessionMap();
-
-    /*protected Boolean setSession(Session session, String token)
-    {
-        User user = new JwtTokenGenerator().decodeJWT(token);
-        if (user == null) return false;
-        return sessions.updateSession(user, session, token);
-    }*/
 
     public static byte[] getKeyFromSession(String token)
     {

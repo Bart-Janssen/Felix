@@ -1,0 +1,19 @@
+.center-text
+{
+    font-size: 40px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center;
+    color: antiquewhite;
+}
+
+img
+{
+    width: 200px;
+}
+
+.image
+{
+    font-size: 12px;
+    font-style: italic;
+}

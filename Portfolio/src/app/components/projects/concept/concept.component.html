@@ -1,0 +1,255 @@
+<p class="center-text">Concept chat app</p>
+<div class="middle-text-space">
+  <p>Voor dit semester is het bij software security ook de bedoeling dat ik een applicatie maak waarin verschillende security aspecten ingebouwd zijn, zodat we deze 
+    applicatie kunnen gebruiken bij het Red team vs Blue team event. Tijdens de eerste workshop van Casper hebben we hier aandacht aan besteed. We hebben een concept 
+    opgezet voor een applicatie. Hierbij was het van belang om ook de autorisatie, rechten en privacy te bepalen over de data die binnen deze applicatie gebruikt wordt.</p>
+  <br>
+  <p>Hieronder mijn concept tot zover, zoals ik van Casper heb begrepen, is het de bedoeling dat het concept nog op basis van volgende workshops wordt aangepast. Omdat de 
+    workshops in het engels gegeven werden en omdat we dit ook moesten presenteren in de klas waar ook mensen aanwezig waren die geen Nederlands kunnen verstaan, 
+    is het concept in het Engels geschreven. Ik denk dat ik op basis van dit concept al veel verschillende onderwerpen kan aantonen die gedefinieerd staan in mijn leerplan.</p>
+  <br>
+  <h3><b>1 Hard-software requirements</b></h3>
+  <p class="no-bottom-margin">The chat application has several hardware and software requirements:</p>
+  <ul>
+    <li class="text">Server to run the chat server on;</li>
+    <li class="text">A computer to use the chat client on;</li>
+    <li class="text">Internet connectivity from the computer to the server;</li>
+    <li class="text">Server that runs the database (this can be the same as the one with the chat server).</li>
+  </ul>
+  <br>
+  <h3><b>2 Components</b></h3>
+  <p class="no-bottom-margin">The components needed for the chat application are:</p>
+  <ul>
+    <li class="text">The client for the users;</li>
+    <li class="text">The server that the clients connect with;</li>
+    <li class="text">A database to storage data.</li>
+  </ul>
+  <br>
+  <h3><b>3 Layers</b></h3>
+  <p class="no-bottom-margin">The components of the chat application server and client exists of three layers:</p>
+  <p class="no-bottom-margin"><b>3.1 Client:</b></p>
+  <ul>
+    <li class="text">View layer, basically the design and the view of the client;</li>
+    <li class="text">Logical layer, this does eventually needed logic;</li>
+    <li class="text">Connection layer, this connects to the server.</li>
+  </ul>
+  <p class="no-bottom-margin"><b>3.2 Server:</b></p>
+  <ul>
+    <li class="text">Controller layer, this accepts incoming connections;</li>
+    <li class="text">Logic layer, this handles logic such as user sessions, needed encryption;</li>
+    <li class="text">Database logic, this layer connects and writes to a database.</li>
+  </ul>
+  <br>
+  <h3><b>4 Use cases</b></h3>
+  <p class="no-bottom-margin">The use cases for the chat application are described below:</p>
+  <ul>
+    <li class="text">An user has the possibility to register an account;</li>
+    <li class="text">An user has the possibility to login;</li>
+    <li class="text">An user has the possibility to logout;</li>
+    <li class="text">An user has the possibility to delete her/his account;</li>
+    <li class="text">An user has the possibility to make a chat group;</li>
+    <li class="text">The creator/admin of a group can manage its group;</li>
+    <li class="text">An user has the possibility to send chats in a group;</li>
+    <li class="text">An user has the possibility to send/accept friend invites to other players;</li>
+    <li class="text">An user has the possibility to send messages to friends only.</li>
+  </ul>
+  <br>
+  <p class="no-bottom-margin"><b>4.1 Use/misuse case diagram</b></p>
+  <p>This diagram shows the use cases of the application, but also the misuse cases. I have let the encryption away of the image because this is used in the entire 
+    communication of the application, it would be a little messy if all the arrows go from everywhere to everywhere.</p>
+  <img src="../../../assets/use-misuse-diagram.jpg">
+  <p class="image">Image 1 Use/misuse diagram</p>
+  <br>
+  <h3><b>5 Security</b></h3>
+  <p class="no-bottom-margin">The needed security in the chat application is found both in the client and server:</p>
+  <p class="no-bottom-margin"><b>5.1 Client:</b></p>
+  <ul>
+    <li class="text">Secure connection to the chat server with traffic encryption;</li>
+    <li class="text">Input validation.</li>
+  </ul>
+  <p class="no-bottom-margin"><b>5.2 Server:</b></p>
+  <ul>
+    <li class="text">Secure connection to the client with traffic encryption;</li>
+    <li class="text">Input validation;</li>
+    <li class="text">Authentication (2FA);</li>
+    <li class="text">Authorization;</li>
+    <li class="text">Secure connection to the database;</li>
+    <li class="text">Secure storage of data (hashed passwords, encrypted chats).</li>
+  </ul>
+  <br>
+  <h3><b>6 Data</b></h3>
+  <p class="no-bottom-margin">The data that will be used in the chat application is as follows:</p>
+  <ul>
+    <li class="text">Account data, this contains usernames, passwords (hashed);</li>
+    <li class="text">Two factor authentication data, the 2FA validate code;</li>
+    <li class="text">Chats between users;</li>
+    <li class="text">Database passwords;</li>
+    <li class="text">Private keys for encrypting data (chats).</li>
+  </ul>
+  <p class="no-bottom-margin"><b>6.1 Authorization and permissions</b></p>
+  <p class="no-bottom-margin">The chat application has different permissions that shows as follow, these are written down in a CRUD method:</p>
+  <p class="no-bottom-margin">C: Create;</p>
+  <p class="no-bottom-margin">R: Read;</p>
+  <p class="no-bottom-margin">U: Update;</p>
+  <p class="no-bottom-margin">D: Delete.</p>
+  <br>
+  <table>
+    <tr>
+      <th>Data asset</th>
+      <th>User</th>
+      <th>Group owner</th>
+      <th>System admin</th>
+      <th>Server admin</th>
+    </tr>
+    <tr>
+      <td>Account data</td>
+      <td>CRUD</td>
+      <td>-</td>
+      <td>D</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>2FA Data</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Chats</td>
+      <td>CRUD</td>
+      <td>CRD</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Database passwords</td>
+      <td>-</td>
+      <td>-</td>
+      <td>CU</td>
+      <td>CU</td>
+    </tr>
+    <tr>
+      <td>Private keys</td>
+      <td>-</td>
+      <td>-</td>
+      <td>CUD</td>
+      <td>CUD</td>
+    </tr>
+    <tr>
+      <td>Functionality</td>
+      <td>Chats and friends</td>
+      <td>Group maintain</td>
+      <td>Application maintain</td>
+      <td>Application maintain</td>
+    </tr>
+    <tr>
+      <td>View product</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <td>Add/change product</td>
+      <td>N</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>N</td>
+    </tr>
+  </table>
+  <p class="table-text">Table 1 Authorization and permissions</p>
+  <br>
+  <p class="no-bottom-margin"><b>Account data</b> can only be managed by its own user, the system admin must be able to delete certain accounts if necessary.</p>
+  <p class="no-bottom-margin"><b>2FA data</b> cannot even be seen by the user itself, and should not be in seen or changed.</p>
+  <p class="no-bottom-margin"><b>Chats</b> should be only visible by the ones who are authorized to view them. Within a group, the group owner must be able to delete impropriate chats.</p>
+  <p class="no-bottom-margin"><b>Database passwords</b> should only be created or updated by system/server admins.</p>
+  <p class="no-bottom-margin"><b>Private keys</b> should be only de created, updated or deleted by system/server admins.</p>
+  <p class="no-bottom-margin"><b>Functionality</b> is what the functions should be that the user defined can do with the application.</p>
+  <p class="no-bottom-margin"><b>View product</b> is which user can see or use the product.</p>
+  <p class="no-bottom-margin"><b>Add/change product</b> can only be done by the ones who made the application.</p>
+  <br>
+  <p class="no-bottom-margin"><b>6.2 CIA &  Privacy</b></p>
+  <p class="no-bottom-margin">The chat application has different privacy scales, these are described in the CIAP method;</p>
+  <p class="no-bottom-margin">C: Confidentiality;</p>
+  <p class="no-bottom-margin">I: Integrity;</p>
+  <p class="no-bottom-margin">A: Availability;</p>
+  <p class="no-bottom-margin">P: Privacy.</p>
+  <br>
+  <table>
+    <tr>
+      <th>Data asset</th>
+      <th>Confidentiality</th> 
+      <th>Integrity</th> 
+      <th>Availability</th> 
+      <th>Privacy</th> 
+    </tr>
+    <tr>
+      <td>Account data</td>
+      <td>Confidential</td>
+      <td>High</td>
+      <td>Important</td>
+      <td>Personal</td>
+    </tr>
+    <tr>
+      <td>2FA Data</td>
+      <td>Confidential</td>
+      <td>High</td>
+      <td>Required</td>
+      <td>Personal</td>
+    </tr>
+    <tr>
+      <td>3FA Data</td>
+      <td>Confidential</td>
+      <td>High</td>
+      <td>Required</td>
+      <td>Special personal</td>
+    </tr>
+    <tr>
+      <td>Chats</td>
+      <td>Confidential</td>
+      <td>High</td>
+      <td>Important</td>
+      <td>Special personal</td>
+    </tr>
+    <tr>
+      <td>Database passwords</td>
+      <td>Classified</td>
+      <td>Guaranteed</td>
+      <td>Essential</td>
+      <td>Special personal</td>
+    </tr>
+    <tr>
+      <td>Private keys</td>
+      <td>Classified</td>
+      <td>Guaranteed</td>
+      <td>Essential</td>
+      <td>Special personal</td>
+    </tr>
+  </table>
+  <p class="table-text">Table 2 CIA & Privacy</p>
+  <br>
+  <p class="no-bottom-margin"><b>Account data</b> is private to the user itself. This is completely personal and there might be aspects included in this such as email addresses, which might not wished to be shared.</p>
+  <p class="no-bottom-margin"><b>2FA data</b> is some piece of data which should not be seen by anyone. This is required to be able to login if enabled.</p>
+  <p class="no-bottom-margin"><b>3FA data</b> can contain biometric data, this is highly private data and special personal.</p>
+  <p class="no-bottom-margin"><b>Chats</b> could contain confidential data or other stuff that does not meant to be shared.</p>
+  <p class="no-bottom-margin"><b>Database passwords</b> are important to find connection to that database, nothing or no one else is allowed to make any kind of connectivity with this this database, excluding the chat server itself.</p>
+  <p class="no-bottom-margin"><b>Private keys</b> are used to encrypt traffic or data, this should never be accessible by someone who shouldn’t.</p>
+  <br>
+  <p class="no-bottom-margin"><b>6.3 Multifactor authentication</b></p>
+  <p class="no-bottom-margin"><b>One factor authentication</b></p>
+  <p>When a user will login, the system will ask for an username and password. This is the one factor authentication that will be used in the chat application as most basic 
+    authentication method.</p>
+  <p class="no-bottom-margin"><b>Two factor authentication</b></p>
+  <p>When the user wants to have their account more private secured, there will be an option to enable two factor authentication with Google authentication. This will give 
+    the user an QR-code which can be scanned with the Google authenticator application on their phone. With this enabled, the user will get a 6 digit code which is unique 
+    and which get renewed every 60 seconds.</p>
+  <p class="no-bottom-margin"><b>Three factor authentication</b></p>
+  <p>A third factor method will be some harder to enable. Biometric factors will be hard because not everyone has for example a fingerprint system on their device, this 
+    same goes for a camera or other ways. Also, when using a camera or another method, this has way more privacy risks for the application because there is an extra factor 
+    to save securely and it may be in conflict with article 9 of the AVG law. When this gets leaked or stolen, it has a higher privacy issue since this is human personally 
+    information which can be used for other systems as well.</p>
+  <br>
+  <br>
+  <br>
+</div>

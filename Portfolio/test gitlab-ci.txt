@@ -1,0 +1,25 @@
+image: docker:18-dind
+services:
+  - docker:18-dind
+
+stages:
+  - build
+  - release
+
+build:
+  image: trion/ng-cli-karma
+  stage: build
+  script:
+    - rm ./package-lock.json
+    - npm install
+
+release:
+  stage: release
+  before_script:
+    - docker login registry.gitlab.com -u $GITLAB_REGISTRY_USERNAME -p $GITLAB_REGISTRY_PASSWORD
+  script:
+    - docker build --pull -f Dockerfile -t $GITLAB_REGISTRY/kwetter_frontend .
+    - docker push $GITLAB_REGISTRY/kwetter_frontend
+  only:
+    - master
+    - ci-setup

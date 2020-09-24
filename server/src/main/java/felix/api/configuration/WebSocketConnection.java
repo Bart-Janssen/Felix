@@ -2,9 +2,7 @@ package felix.api.configuration;
 
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
-import felix.api.models.PendingSession;
 import felix.api.models.WebSocketMessage;
-
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -41,32 +39,32 @@ public class WebSocketConnection extends WebSocket
         session.getAsyncRemote().sendText(RsaEncryptionManager.getPubKey());
         try
         {
-            String chipper = RsaEncryptionManager.encrypt(this.setServerPublicKey(clientPublicKey), "UUID:" + pendingUUID.toString());
+            String chipper = RsaEncryptionManager.encrypt(this.stringToKey(clientPublicKey), "UUID:" + pendingUUID.toString());
             session.getAsyncRemote().sendText(chipper);
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            return;
         }
 
         System.out.println("[Connected] SessionID: " + session.getId());
     }
 
-    private PublicKey setServerPublicKey(String serverPublicKey)
+    private PublicKey stringToKey(String serverPublicKey)
     {
-        byte[] data = Base64.getDecoder().decode(serverPublicKey);
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(data);
-        KeyFactory fact;
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(serverPublicKey));
+        KeyFactory keyFactory;
         try
         {
-            fact = KeyFactory.getInstance("RSA");
-            return fact.generatePublic(spec);
+            keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePublic(x509EncodedKeySpec);
         }
         catch (NoSuchAlgorithmException | InvalidKeySpecException e)
         {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
