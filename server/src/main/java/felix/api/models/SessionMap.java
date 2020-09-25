@@ -10,12 +10,13 @@ public class SessionMap
     private Map<String, String> sessionIdMap = new HashMap<>();
     private Map<UUID, PendingSession> pendingSessions = new HashMap<>();
 
-    public UserSession get(GETTER_TYPE type, String key)
+    public UserSession get(GetterType type, String key)
     {
         switch (type)
         {
             case DISPLAY_NAME: return this.userDisplayNameMap.get(key);
             case TOKEN: return this.userDisplayNameMap.get(this.tokenMap.get(key));
+            case SESSION_ID: return this.userDisplayNameMap.get(this.sessionIdMap.get(key));
             default: return null;
         }
     }
@@ -24,18 +25,6 @@ public class SessionMap
     {
         return this.pendingSessions.get(uuid);
     }
-
-    /*public Boolean updateSession(User user, Session session, String token)
-    {
-        UserSession userSession = this.userDisplayNameMap.get(user.getDisplayName());
-        UserSession tokenSession = this.userDisplayNameMap.get(this.tokenMap.get(token));
-        if (!tokenSession.getUser().getDisplayName().equals(userSession.getUser().getDisplayName())) return false;
-        if (!tokenSession.getToken().getToken().equals(userSession.getToken().getToken())) return false;
-        userSession.setSession(session);
-        this.userDisplayNameMap.put(userSession.getUser().getDisplayName(), userSession);
-        //this.sessionIdMap.put(session.getId(), userSession.getToken().getToken());
-        return true;
-    }*/
 
     public void addSession(String displayName, UserSession userSession)
     {
@@ -57,10 +46,10 @@ public class SessionMap
         return this.userDisplayNameMap.values();
     }
 
-    public UUID putPendingSession(Session session, String clientPublicKey)
+    public UUID putPendingSession(Session session, String clientPublicKey, String aesKey)
     {
         UUID uniqueUUID = this.getUniqueUUID();
-        this.pendingSessions.put(uniqueUUID, new PendingSession(clientPublicKey, session));
+        this.pendingSessions.put(uniqueUUID, new PendingSession(clientPublicKey, session, aesKey));
         return uniqueUUID;
     }
 
@@ -74,11 +63,5 @@ public class SessionMap
     public void removePendingSession(UUID pendingUUID)
     {
         this.pendingSessions.remove(pendingUUID);
-    }
-
-    public enum GETTER_TYPE
-    {
-        DISPLAY_NAME,
-        TOKEN
     }
 }

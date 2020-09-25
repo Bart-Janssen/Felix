@@ -1,6 +1,5 @@
 package felix.api.controller;
 
-import felix.api.configuration.RsaEncryptionManager;
 import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import felix.api.service.user.IUserService;
@@ -11,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import felix.api.configuration.JwtTokenGenerator;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -35,15 +33,19 @@ public class AuthenticationController
     }
 
     @PostMapping("/login/")
-    public ResponseEntity<JwtToken> login(@RequestBody User user) throws Exception
+    public ResponseEntity<AesEncryptedMessage> login(@RequestBody User user) throws Exception
     {
+        Map<String, String> decryptedUserInfo = WebSocket.decryptRsaUser(user);
+        user.setName(decryptedUserInfo.get("name"));
+        user.setPassword(decryptedUserInfo.get("password"));
+        user.setEncryptedUUID(decryptedUserInfo.get("uuid"));
         User authenticatedUser = userService.login(user);
         if (authenticatedUser != null)
         {
-            authenticatedUser.setEncryptedUUID(user.getEncryptedUUID()); //todo AES
+            authenticatedUser.setEncryptedUUID(user.getEncryptedUUID());
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(new JwtToken(token.getToken(), null));
+            return ResponseEntity.ok(WebSocket.encrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

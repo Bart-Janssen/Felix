@@ -5,6 +5,8 @@ public class WebSocketMessage
     private String message;
     private JwtToken jwtToken;
 
+    public WebSocketMessage() {}
+
     public WebSocketMessage(String message, JwtToken jwtToken)
     {
         this.message = message;
@@ -19,5 +21,15 @@ public class WebSocketMessage
     public JwtToken getJwtToken()
     {
         return jwtToken;
+    }
+
+    public void setMessage(String message)
+    {
+        this.message = message;
+    }
+
+    public void setJwtToken(JwtToken jwtToken)
+    {
+        this.jwtToken = jwtToken;
     }
 }

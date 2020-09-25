@@ -1,10 +1,17 @@
 package felix.api.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import felix.api.configuration.AesEncryptionManager;
 import felix.api.configuration.JwtTokenGenerator;
 import felix.api.configuration.RsaEncryptionManager;
 import felix.api.models.*;
 import javax.websocket.*;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public abstract class WebSocket
@@ -35,16 +42,16 @@ public abstract class WebSocket
 
     public static byte[] getKeyFromSession(String token)
     {
-        UserSession userSession = sessions.get(SessionMap.GETTER_TYPE.TOKEN, token);
+        UserSession userSession = sessions.get(GetterType.TOKEN, token);
         return userSession == null ? null : userSession.getToken().getKey();
     }
 
-    static Boolean addSession(User user, JwtToken token) throws Exception
+    static Boolean addSession(User user, JwtToken token)
     {
-        UUID pendingUUID = UUID.fromString(RsaEncryptionManager.decrypt(user.getEncryptedUUID())); //todo AES decrypt
+        UUID pendingUUID = UUID.fromString(user.getEncryptedUUID());
         PendingSession pendingSession = sessions.getPending(pendingUUID);
         if (pendingSession == null) return false;
-        sessions.addSession(user.getDisplayName(), new UserSession(user, pendingSession.getSession(), token, pendingSession.getClientPublicKey()));
+        sessions.addSession(user.getDisplayName(), new UserSession(token, user, pendingSession.getSession(), pendingSession.getAesKey()));
         sessions.removePendingSession(pendingUUID);
         return true;
     }
@@ -58,7 +65,7 @@ public abstract class WebSocket
     {
         User decodedUser = new JwtTokenGenerator().decodeJWT(token);
         if (decodedUser == null) return false;
-        UserSession sessionUser = sessions.get(SessionMap.GETTER_TYPE.DISPLAY_NAME, decodedUser.getDisplayName());
+        UserSession sessionUser = sessions.get(GetterType.DISPLAY_NAME, decodedUser.getDisplayName());
         if (sessionUser == null) return false;
         JwtToken sessionToken = sessionUser.getToken();
         if (sessionToken == null) return false;
@@ -72,8 +79,62 @@ public abstract class WebSocket
         return this.userHasToken(token);
     }
 
-    protected UUID putPendingSession(Session session, String clientPublicKey)
+    protected UUID putPendingSession(Session session, String clientPublicKey, String aesKey)
     {
-        return sessions.putPendingSession(session, clientPublicKey);
+        return sessions.putPendingSession(session, clientPublicKey, aesKey);
     }
+
+    static Map<String, String> decryptRsaUser(User user) throws Exception
+    {
+        Map<String, String> decryptedUserInfo = new HashMap<>();
+        decryptedUserInfo.put("name", RsaEncryptionManager.decrypt(user.getName()));
+        decryptedUserInfo.put("password", RsaEncryptionManager.decrypt(user.getPassword()));
+        decryptedUserInfo.put("uuid", RsaEncryptionManager.decrypt(user.getEncryptedUUID()));
+        return decryptedUserInfo;
+    }
+
+    protected static <T> AesEncryptedMessage encrypt(GetterType type, String key, T object)
+    {
+        return new AesEncryptedMessage(AesEncryptionManager.encrypt(sessions.get(type, key).getAesKey(), new Gson().toJson(object)));
+    }
+
+    protected <T> T decrypt(GetterType getterType, String key, String encryptedMessage, Type type)
+    {
+        try
+        {
+            UserSession userSession = sessions.get(getterType, key);
+            String decryptedMessage = AesEncryptionManager.decrypt(userSession.getAesKey(), encryptedMessage);
+            return decryptedMessage == null ? null : new ObjectMapper().readValue(decryptedMessage, this.getType(type));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private <E> TypeReference<E> getType(Type type)
+    {
+        return new TypeReference<E>()
+        {
+            @Override
+            public Type getType()
+            {
+                return type;
+            }
+        };
+    }
+
+    /*
+    protected static <T> AesEncryptedMessage encrypt(GetterType type, String key, T object)
+    {
+        return new AesEncryptedMessage(AesEncryptionManager.encrypt(sessions.get(type, key).getAesKey(), new Gson().toJson(object)));
+    }
+
+    protected WebSocketMessage decrypt(GetterType type, String sessionId, String message)
+    {
+        UserSession userSession = sessions.get(type, sessionId);
+        AesEncryptedMessage aesEncryptedMessage = new Gson().fromJson(AesEncryptionManager.decrypt(userSession.getAesKey(), message), AesEncryptedMessage.class);
+        return new Gson().fromJson(aesEncryptedMessage.getMessage(), WebSocketMessage.class);
+    }*/
 }

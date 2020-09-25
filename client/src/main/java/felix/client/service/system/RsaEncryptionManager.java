@@ -76,9 +76,4 @@ public class RsaEncryptionManager
             e.printStackTrace();
         }
     }
-
-    public static PublicKey getPublicServerKey()
-    {
-        return serverPublicKey;
-    }
 }

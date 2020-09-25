@@ -2,21 +2,21 @@ package felix.client.service.user;
 
 import felix.client.exceptions.AlreadyLoggedInException;
 import felix.client.exceptions.NotAuthorizedException;
+import felix.client.main.FelixSession;
+import felix.client.models.AesEncryptedMessage;
 import felix.client.models.JwtToken;
 import felix.client.models.User;
 import felix.client.service.MainService;
 
-import java.util.UUID;
-
 public class UserService extends MainService implements IUserService
 {
     @Override
-    public JwtToken login(User user, String encryptedUUID) throws NotAuthorizedException, AlreadyLoggedInException
+    public JwtToken login(User user) throws NotAuthorizedException, AlreadyLoggedInException
     {
         try
         {
-            user.setEncryptedUUID(encryptedUUID);
-            return super.post("authentication/login/", user, JwtToken.class);
+            AesEncryptedMessage aesEncryptedMessage = super.post("authentication/login/", user, AesEncryptedMessage.class);
+            return FelixSession.getInstance().decrypt(aesEncryptedMessage.getMessage(), JwtToken.class);
         }
         catch (Exception e)
         {

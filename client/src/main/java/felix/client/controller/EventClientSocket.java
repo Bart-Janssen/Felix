@@ -1,14 +1,15 @@
 package felix.client.controller;
 
+import com.google.gson.Gson;
 import felix.client.main.FelixSession;
+import felix.client.models.AesEncryptedMessage;
+import felix.client.models.InitWebSocketMessage;
 import felix.client.models.View;
-import felix.client.service.system.RsaEncryptionManager;
-
+import felix.client.models.WebSocketMessage;
 import javax.websocket.*;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 @ClientEndpoint
 public class EventClientSocket extends MainController
@@ -22,38 +23,23 @@ public class EventClientSocket extends MainController
         System.out.println("[Connected]");
     }
 
-    private void setPendingUUID(String chipper)
+    private void initializeFelixSession(String encrypted)
     {
-        try
-        {
-            String message = RsaEncryptionManager.decrypt(chipper);
-            if (message.startsWith("UUID:"))
-            {
-                FelixSession.getInstance().setPendingUUID(UUID.fromString(message.replace("UUID:", "")));
-                return;
-            }
-            //todo: disconnect
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        InitWebSocketMessage initWebSocketMessage = new Gson().fromJson(encrypted, InitWebSocketMessage.class);
+        FelixSession.getInstance().initialize(initWebSocketMessage);
     }
 
     @OnMessage
     public void onWebSocketText(String message)
     {
-        if (RsaEncryptionManager.getPublicServerKey() == null)
+        if (!FelixSession.getInstance().isInitialized())
         {
-            RsaEncryptionManager.setPublicServerKey(message);
+            this.initializeFelixSession(message);
             return;
         }
-        if (FelixSession.getInstance().getPendingUUID() == null)
-        {
-            this.setPendingUUID(message);
-            return;
-        }
-        System.out.println(message); //todo decrypt with aes.
+        WebSocketMessage webSocketMessage = FelixSession.getInstance().decrypt(new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
+        System.out.println(message);
+        System.out.println(webSocketMessage.getMessage());
     }
 
     @OnClose

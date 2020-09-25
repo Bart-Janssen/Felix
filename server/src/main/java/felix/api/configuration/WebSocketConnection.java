@@ -2,93 +2,84 @@ package felix.api.configuration;
 
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
+import felix.api.models.AesEncryptedMessage;
+import felix.api.models.GetterType;
+import felix.api.models.InitWebSocketMessage;
 import felix.api.models.WebSocketMessage;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 import java.util.UUID;
 
 @ServerEndpoint(value = "/server/{" + WebSocket.KEY + "}")
 public class WebSocketConnection extends WebSocket
 {
     @Override
-    public void onWebSocketConnect(Session session) throws IOException
+    public void onWebSocketConnect(Session session)
     {
-        /*
-        String token = super.parseToken(session.getPathParameters());
-        if (token == null || !super.validateToken(token))
-        {
-            session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, " Token is not valid"));
-            return;
-        }
-        if (!super.setSession(session, token))
-        {
-            super.removeSession(session.getId());
-            session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER, " Session is already logged in"));
-            return;
-        }*/
-
-        String clientPublicKey = session.getPathParameters().get(WebSocket.KEY).replace("--dash--", "/");
-        UUID pendingUUID = super.putPendingSession(session, clientPublicKey);
-        session.getAsyncRemote().sendText(RsaEncryptionManager.getPubKey());
         try
         {
-            String chipper = RsaEncryptionManager.encrypt(this.stringToKey(clientPublicKey), "UUID:" + pendingUUID.toString());
-            session.getAsyncRemote().sendText(chipper);
+            String clientPublicKey = session.getPathParameters().get(WebSocket.KEY).replace("--dash--", "/");
+            String aesKey = AesEncryptionManager.generateKey();
+            UUID pendingUUID = super.putPendingSession(session, clientPublicKey, aesKey);
+            String encryptedUUID = AesEncryptionManager.encrypt(aesKey, pendingUUID.toString());
+            String encryptedAesKey = RsaEncryptionManager.encrypt(clientPublicKey, aesKey);
+            session.getAsyncRemote().sendText(new Gson().toJson(new InitWebSocketMessage(RsaEncryptionManager.getPubKey(), encryptedAesKey, encryptedUUID)));
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            this.closeSession(session, CloseReason.CloseCodes.TLS_HANDSHAKE_FAILURE, " False handshake.");
             return;
         }
-
         System.out.println("[Connected] SessionID: " + session.getId());
     }
-
-    private PublicKey stringToKey(String serverPublicKey)
-    {
-        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(serverPublicKey));
-        KeyFactory keyFactory;
-        try
-        {
-            keyFactory = KeyFactory.getInstance("RSA");
-            return keyFactory.generatePublic(x509EncodedKeySpec);
-        }
-        catch (NoSuchAlgorithmException | InvalidKeySpecException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void onPong(PongMessage pong) {System.out.println("Heartbeat!");}
 
     @Override
     public void onText(String message, Session session)
     {
-        System.out.println("Validate on text: " + super.validateToken(new Gson().fromJson(message, WebSocketMessage.class).getJwtToken().getToken()));
-        System.out.println("[on msg odin!] " + new Gson().fromJson(message, WebSocketMessage.class));
-        session.getAsyncRemote().sendText("Yay response from server");
+        System.out.println("[Encrypted msg] " + message);
+        WebSocketMessage webSocketMessage = super.decrypt(GetterType.SESSION_ID, session.getId(), new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
+        if (!super.validateToken(webSocketMessage.getJwtToken().getToken()))
+        {
+            this.closeSession(session, CloseReason.CloseCodes.CANNOT_ACCEPT, " JWT token invalid!");
+            return;
+        }
+        System.out.println(webSocketMessage.getMessage());
+        this.sendMessage(session, "Hey from server!");
+    }
+
+    private void sendMessage(Session session, String message)
+    {
+        session.getAsyncRemote().sendText(new Gson().toJson(WebSocket.encrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(message, null))));
+    }
+
+    private void closeSession(Session session, CloseReason.CloseCode closeCode, String reason)
+    {
+        try
+        {
+            super.removeSession(session.getId());
+            session.close(new CloseReason(closeCode, reason));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onClose(CloseReason reason, Session session)
     {
-        super.removeSession(session.getId());
         System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
+        super.removeSession(session.getId());
     }
 
     @Override
     public void onError(Throwable cause, Session session)
     {
         System.out.println("[Session ID] : " + session.getId() + "[ERROR]: ");
+        this.closeSession(session, CloseReason.CloseCodes.TRY_AGAIN_LATER, " An unexpected error has occurred.");
         cause.printStackTrace(System.err);
     }
+
+    @Override
+    public void onPong(PongMessage pong) {System.out.println("Heartbeat!");}
 }

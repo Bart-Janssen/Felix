@@ -9,5 +9,5 @@ import java.util.UUID;
 
 public interface IUserService
 {
-    JwtToken login(User user, String encryptedUUID) throws NotAuthorizedException, AlreadyLoggedInException;
+    JwtToken login(User user) throws NotAuthorizedException, AlreadyLoggedInException;
 }

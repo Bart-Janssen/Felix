@@ -17,7 +17,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class AuthenticationController extends MainController
@@ -78,8 +81,13 @@ public class AuthenticationController extends MainController
         }
         try
         {
-            //todo AES encrypt
-            FelixSession.getInstance().setToken(this.userService.login(new User(this.textFieldUsername.getText(), this.textFieldPassword.getText()), RsaEncryptionManager.encrypt(FelixSession.getInstance().getPendingUUID().toString())));
+            //todo 2FA when implemented.
+            User user = new User(this.textFieldUsername.getText(), this.textFieldPassword.getText());
+            Map<String, String> encryptedUserInfo = FelixSession.getInstance().getEncryptedUserInfo(user);
+            user.setEncryptedUUID(encryptedUserInfo.get("uuid"));
+            user.setName(encryptedUserInfo.get("name"));
+            user.setPassword(encryptedUserInfo.get("password"));
+            FelixSession.getInstance().setToken(this.userService.login(user));
         }
         catch (NotAuthorizedException e)
         {

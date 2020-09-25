@@ -10,4 +10,5 @@ public class PendingSession
 {
     private String clientPublicKey;
     private Session session;
+    private String aesKey;
 }
