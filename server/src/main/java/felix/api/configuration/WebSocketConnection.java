@@ -8,6 +8,7 @@ import felix.api.models.InitWebSocketMessage;
 import felix.api.models.WebSocketMessage;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.security.GeneralSecurityException;
 import java.util.UUID;
 
 @ServerEndpoint(value = "/server/{" + WebSocket.KEY + "}")
@@ -25,8 +26,9 @@ public class WebSocketConnection extends WebSocket
             String encryptedAesKey = RsaEncryptionManager.encrypt(clientPublicKey, aesKey);
             session.getAsyncRemote().sendText(new Gson().toJson(new InitWebSocketMessage(RsaEncryptionManager.getPubKey(), encryptedAesKey, encryptedUUID)));
         }
-        catch (Exception e)
+        catch (GeneralSecurityException e)
         {
+            e.printStackTrace();
             this.closeSession(session, CloseReason.CloseCodes.TLS_HANDSHAKE_FAILURE, " False handshake.");
             return;
         }
@@ -34,20 +36,21 @@ public class WebSocketConnection extends WebSocket
     }
 
     @Override
-    public void onText(String message, Session session)
+    public void onText(String message, Session session) throws GeneralSecurityException
     {
-        System.out.println("[Encrypted msg] " + message);
         WebSocketMessage webSocketMessage = super.decrypt(GetterType.SESSION_ID, session.getId(), new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
         if (!super.validateToken(webSocketMessage.getJwtToken().getToken()))
         {
             this.closeSession(session, CloseReason.CloseCodes.CANNOT_ACCEPT, " JWT token invalid!");
             return;
         }
-        System.out.println(webSocketMessage.getMessage());
+        System.out.println("AES Encrypted msg: " + message);
+        System.out.println("AES Decrypted msg: " + webSocketMessage.getMessage());
+        System.out.println("AES Decrypted jwt: " + webSocketMessage.getJwtToken().getToken());
         this.sendMessage(session, "Hey from server!");
     }
 
-    private void sendMessage(Session session, String message)
+    private void sendMessage(Session session, String message) throws GeneralSecurityException
     {
         session.getAsyncRemote().sendText(new Gson().toJson(WebSocket.encrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(message, null))));
     }

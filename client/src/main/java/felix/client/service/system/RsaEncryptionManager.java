@@ -1,16 +1,14 @@
 package felix.client.service.system;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class RsaEncryptionManager
 {
+    private final static String RSA = "RSA";
+    private final static int KEY_SIZE = 2048;
     private static KeyPair clientKeyPair;
 
     private RsaEncryptionManager(){}
@@ -23,6 +21,7 @@ public class RsaEncryptionManager
         }
         catch (NoSuchAlgorithmException e)
         {
+            clientKeyPair = null;
             e.printStackTrace();
         }
     }
@@ -34,26 +33,23 @@ public class RsaEncryptionManager
 
     private static KeyPair buildKeyPair() throws NoSuchAlgorithmException
     {
-        final int keySize = 2048;
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(keySize);
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA);
+        keyPairGenerator.initialize(KEY_SIZE);
         return keyPairGenerator.genKeyPair();
     }
 
-    public static String encrypt(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException
+    public static String encrypt(String message) throws GeneralSecurityException
     {
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance(RSA);
         cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey);
         return Base64.getEncoder().encodeToString(cipher.doFinal(message.getBytes()));
     }
 
-    public static String decrypt(String encrypted) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException
+    public static String decrypt(String encrypted) throws GeneralSecurityException
     {
-        byte[] d = Base64.getDecoder().decode(encrypted);
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance(RSA);
         cipher.init(Cipher.DECRYPT_MODE, clientPrivateKey);
-        byte[] data = cipher.doFinal(d);
-        return new String(data);
+        return new String(cipher.doFinal(Base64.getDecoder().decode(encrypted)));
     }
 
     public static String getPubKey()
@@ -61,18 +57,15 @@ public class RsaEncryptionManager
         return Base64.getEncoder().encodeToString(clientPublicKey.getEncoded());
     }
 
-    public static void setPublicServerKey(String serverPublicKey)
+    public static void setPublicServerKey(String key)
     {
-        byte[] data = Base64.getDecoder().decode((serverPublicKey));
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(data);
-        KeyFactory fact;
         try
         {
-            fact = KeyFactory.getInstance("RSA");
-            RsaEncryptionManager.serverPublicKey = fact.generatePublic(spec);
+            serverPublicKey = KeyFactory.getInstance(RSA).generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode((key))));
         }
-        catch (NoSuchAlgorithmException | InvalidKeySpecException e)
+        catch (GeneralSecurityException e)
         {
+            serverPublicKey = null;
             e.printStackTrace();
         }
     }

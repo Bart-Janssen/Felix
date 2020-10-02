@@ -38,8 +38,8 @@ public class EventClientSocket extends MainController
             return;
         }
         WebSocketMessage webSocketMessage = FelixSession.getInstance().decrypt(new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
-        System.out.println(message);
-        System.out.println(webSocketMessage.getMessage());
+        System.out.println("AES Encrypted msg: " + message);
+        System.out.println("AES Decrypted msg: " + webSocketMessage.getMessage());
     }
 
     @OnClose

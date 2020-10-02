@@ -10,6 +10,7 @@ import felix.api.models.*;
 import javax.websocket.*;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public abstract class WebSocket
     public abstract void onWebSocketConnect(Session session) throws IOException;
 
     @OnMessage
-    public abstract void onText(String message, Session session);
+    public abstract void onText(String message, Session session) throws GeneralSecurityException;
 
     @OnMessage
     public abstract void onPong(PongMessage pong);
@@ -93,7 +94,7 @@ public abstract class WebSocket
         return decryptedUserInfo;
     }
 
-    protected static <T> AesEncryptedMessage encrypt(GetterType type, String key, T object)
+    protected static <T> AesEncryptedMessage encrypt(GetterType type, String key, T object) throws GeneralSecurityException
     {
         return new AesEncryptedMessage(AesEncryptionManager.encrypt(sessions.get(type, key).getAesKey(), new Gson().toJson(object)));
     }
@@ -124,17 +125,4 @@ public abstract class WebSocket
             }
         };
     }
-
-    /*
-    protected static <T> AesEncryptedMessage encrypt(GetterType type, String key, T object)
-    {
-        return new AesEncryptedMessage(AesEncryptionManager.encrypt(sessions.get(type, key).getAesKey(), new Gson().toJson(object)));
-    }
-
-    protected WebSocketMessage decrypt(GetterType type, String sessionId, String message)
-    {
-        UserSession userSession = sessions.get(type, sessionId);
-        AesEncryptedMessage aesEncryptedMessage = new Gson().fromJson(AesEncryptionManager.decrypt(userSession.getAesKey(), message), AesEncryptedMessage.class);
-        return new Gson().fromJson(aesEncryptedMessage.getMessage(), WebSocketMessage.class);
-    }*/
 }

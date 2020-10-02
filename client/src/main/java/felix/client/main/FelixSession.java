@@ -15,6 +15,7 @@ import javax.websocket.Session;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,14 +24,14 @@ public class FelixSession
 {
     private static AesEncryptionManager aesEncryptionManager = null;
     private static FelixSession felixSession = null;
-    private static Session session;
-    private static HeartBeatThread heartBeatThread;
+    private static Session session = null;
+    private static HeartBeatThread heartBeatThread = null;
     private static JwtToken token = null;
     private static UUID pendingUUID = null;
 
     public static FelixSession getInstance()
     {
-        return FelixSession.felixSession == null ? new FelixSession() : FelixSession.felixSession;
+        return felixSession == null ? new FelixSession() : felixSession;
     }
 
     public void initialize(InitWebSocketMessage initWebSocketMessage)
@@ -42,9 +43,10 @@ public class FelixSession
             aesEncryptionManager = new AesEncryptionManager(decryptedAesKey);
             pendingUUID = UUID.fromString(aesEncryptionManager.decrypt(initWebSocketMessage.getEncryptedUuid()));
         }
-        catch (Exception e)
+        catch (GeneralSecurityException e)
         {
             e.printStackTrace();
+            this.disconnect();
         }
     }
 
@@ -62,8 +64,8 @@ public class FelixSession
     {
         try
         {
-            FelixSession.session = ContainerProvider.getWebSocketContainer().connectToServer(new EventClientSocket(), URI.create("ws://localhost:6666/server/" + RsaEncryptionManager.getPubKey().replace("/", "--dash--")));
-            if (FelixSession.session.isOpen())
+            session = ContainerProvider.getWebSocketContainer().connectToServer(new EventClientSocket(), URI.create("ws://localhost:6666/server/" + RsaEncryptionManager.getPubKey().replace("/", "--dash--")));
+            if (session.isOpen())
             {
                 heartBeatThread = new HeartBeatThread(session);
                 heartBeatThread.start();
@@ -72,23 +74,32 @@ public class FelixSession
         catch (DeploymentException | IOException e)
         {
             e.printStackTrace();
+            FelixSession.getInstance().disconnect();
         }
     }
 
     public void stopHeartBeat()
     {
-        this.clearSession();
         heartBeatThread.stop();
+        this.clearSession();
     }
 
     public void sendMessage(String message)
     {
-        if (FelixSession.token == null)
+        if (token == null)
         {
             this.disconnect();
             return;
         }
-        FelixSession.session.getAsyncRemote().sendText(new Gson().toJson(this.encrypt(new WebSocketMessage(message, FelixSession.token))));
+        try
+        {
+            session.getAsyncRemote().sendText(new Gson().toJson(this.encrypt(new WebSocketMessage(message, token))));
+        }
+        catch (GeneralSecurityException e)
+        {
+            e.printStackTrace();
+            this.disconnect();
+        }
     }
 
     public Map<String, String> getEncryptedUserInfo(User user)
@@ -100,29 +111,15 @@ public class FelixSession
             encryptedUserInfo.put("password", RsaEncryptionManager.encrypt(user.getPassword()));
             encryptedUserInfo.put("uuid", RsaEncryptionManager.encrypt(pendingUUID.toString()));
             return encryptedUserInfo;
-//            return RsaEncryptionManager.encrypt(pendingUUID.toString());
         }
-        catch (Exception e)
+        catch (GeneralSecurityException e)
         {
             e.printStackTrace();
             return null;
         }
     }
 
-    /*public String getEncryptedPendingUUID()
-    {
-        try
-        {
-            return RsaEncryptionManager.encrypt(pendingUUID.toString());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }*/
-
-    private <T> AesEncryptedMessage encrypt(T t)
+    private <T> AesEncryptedMessage encrypt(T t) throws GeneralSecurityException
     {
         return new AesEncryptedMessage(aesEncryptionManager.encrypt(new Gson().toJson(t)));
     }
@@ -144,16 +141,16 @@ public class FelixSession
 
     public void disconnect()
     {
-        this.closeSession(CloseReason.CloseCodes.GOING_AWAY, "Client logged off");
         this.stopHeartBeat();
+        this.closeSession(CloseReason.CloseCodes.GOING_AWAY, "Client logged off");
     }
 
     private void closeSession(CloseReason.CloseCode closeCode, String reason)
     {
         try
         {
-            this.clearSession();
             session.close(new CloseReason(closeCode, reason));
+            this.clearSession();
         }
         catch (Exception e)
         {
@@ -167,6 +164,9 @@ public class FelixSession
         token = null;
         aesEncryptionManager = null;
         felixSession = null;
+        heartBeatThread = null;
+        session = null;
+        pendingUUID = null;
     }
 
     private <E> TypeReference<E> getType(Type type)
