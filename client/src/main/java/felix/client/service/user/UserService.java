@@ -24,4 +24,19 @@ public class UserService extends MainService implements IUserService
             throw new NotAuthorizedException();
         }
     }
+
+    @Override
+    public JwtToken register(User user) throws NotAuthorizedException, AlreadyLoggedInException
+    {
+        try
+        {
+            AesEncryptedMessage aesEncryptedMessage = super.post("authentication/register/", user, AesEncryptedMessage.class);
+            return FelixSession.getInstance().decrypt(aesEncryptedMessage.getMessage(), JwtToken.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new NotAuthorizedException();
+        }
+    }
 }

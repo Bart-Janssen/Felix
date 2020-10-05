@@ -17,6 +17,7 @@ abstract class MainController implements Initializable
 
     void setStage(Node currentView)
     {
+//        System.out.println(currentView.getScene() == null);
         stage = (Stage)currentView.getScene().getWindow();
         stage.setOnCloseRequest(event ->
         {
@@ -41,6 +42,7 @@ abstract class MainController implements Initializable
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 if (view.equals(View.PAGE_NOT_FOUND)) return;
                 openNewView(View.PAGE_NOT_FOUND);
             }

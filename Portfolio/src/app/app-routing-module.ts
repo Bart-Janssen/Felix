@@ -6,14 +6,16 @@ import { RdprojectComponent } from './components/rdproject/rdproject.component';
 import { LearningplanComponent } from './components/learningplan/learningplan.component';
 import { SpecialisationComponent } from './components/specialisation/specialisation.component';
 import { ReflectionComponent } from './components/reflection/reflection.component';
-import { SampleComponent } from './components/projects/sample/sample.component';
 import { EthicsComponent } from './components/projects/ethics/ethics.component';
 import { NotimplementedyetComponent } from './components/notimplementedyet/notimplementedyet.component';
 import { WorkshopComponent } from './components/projects/workshop/workshop.component';
 import { ResearchapproachComponent } from './components/projects/researchapproach/researchapproach.component';
-import { ConceptComponent } from './components/projects/concept/concept.component';
+import { ConceptComponent } from './components/projects/felix/concept/concept.component';
 import { OsintComponent } from './components/projects/workshop/osint/osint.component';
-import { ChatappprojectComponent } from './components/projects/chatappproject/chatappproject.component';
+import { FelixComponent } from './components/projects/felix/felix.component';
+import { ChatappprojectComponent } from './components/projects/felix/chatappproject/chatappproject.component';
+import { ThreatanalysisComponent } from './components/projects/felix/threatanalysis/threatanalysis.component';
+import { RiskanalysisComponent } from './components/projects/felix/riskanalysis/riskanalysis.component';
 
 const routes: Routes = [
   {
@@ -46,10 +48,6 @@ const routes: Routes = [
     component: ReflectionComponent,
   },
   {
-    path: "sample",
-    component: SampleComponent,
-  },
-  {
     path: "ethics_project",
     component: EthicsComponent,
   },
@@ -66,12 +64,24 @@ const routes: Routes = [
     component: ResearchapproachComponent,
   },
   {
-    path: "concept_project",
+    path: "felix",
+    component: FelixComponent,
+  },
+  {
+    path: "concept",
     component: ConceptComponent,
   },
   {
-    path: "chat_app_project",
-    component: ChatappprojectComponent,
+    path: "implementation",
+    component: ChatappprojectComponent
+  },
+  {
+    path: "threat_analysis",
+    component: ThreatanalysisComponent
+  },
+  {
+    path: "risk_analysis",
+    component: RiskanalysisComponent
   },
   {
     path: "not-implemented-yet",

@@ -1,0 +1,130 @@
+<p class="center-text">Felix chat app</p>
+<div class="middle-text-space">
+  <p>Deze pagina beschrijft de uitwerking, implementatie en keuzes van de chat application Felix. Het concept hiervan is te zien op de 
+    <a routerLink="/concept_project" routerLinkActive="active">deze</a> pagina. In deze applicatie komen meerdere security aspecten aan bod
+    die beschreven staan in mijn <a routerLink="/learningplan" routerLinkActive="active">leerplan</a>. De gedetailleerde uitwerking met gemaakte keuzes, onderbouwing en
+    technische details zoals code snippets staan op deze pagina vermeldt. Mijn project staat op <a href="https://git.fhict.nl/I389419/chat-app-felix">Git</a> waar ik ook de 
+    code voor dit portfolio heb staan.</p>
+  <br>
+  <h3><b>1 De applicaties</b></h3>
+  <p class="no-bottom-margin">De benodigde applicaties voor het concept zijn:</p>
+  <ul>
+    <li class="text">De client;</li>
+    <li class="text">De server;</li>
+    <li class="text">De database.</li>
+  </ul>
+  <p><b>De client</b> is in Java geschreven en voor de gebruiker die deze op zijn computer kan installeren. De gebruiker moet een licentie hebben om de applicatie te kunnen 
+    installeren en activeren.</p>
+  <p><b>De server</b> is in Java spring geschreven en is niet voor de gebruiker zelf toegangkelijk. De server wordt gebruikt door de chat client.</p>
+  <p><b>De database</b> is een postgress image die opgestart kan worden als een Docker machine die gebruikt wordt door de server.</p>
+  <br>
+  <h3><b>2 Security</b></h3>
+  <p class="no-bottom-margin">De security van de applicatie is opgedeeld onder de volgende onderdelen:</p>
+  <ul>
+    <li class="text">Encryptie;</li>
+    <li class="text">Autorisatie;</li>
+    <li class="text">Authenticatie;</li>
+    <li class="text">Hashes;</li>
+    <li class="text">Licenties;</li>
+    <li class="text">Database.</li>
+  </ul>
+  <p class="no-bottom-margin"><b>2.1 Encryptie</b></p>
+  <p>Ik heb in mijn applicatie een mix van RSA en AES gebruikt om de versleuteling van de client naar de server te regelen. RSA is een vrij traag algoritme en is daarom niet 
+    geschikt voor het versleutelen van grote berichten, de chats versleutelen met RSA is dan ook geen geschikte optie. AES daarentegen is veel sneller en daarom wel geschikt 
+    om grote berichten te versleutelen. Ik ga RSA alleen gebruiken om de sleutel voor de AES encryptie versleuteld te delen tussen de client en server.</p>
+  <br>
+  <p class="no-bottom-margin"><b>RSA</b></p>
+  <P class="no-bottom-margin">Voor het gebruik van RSA moeten de server en client beide een private en public key genereren. Dit gebeurd bij het opstarten van de systemen 
+    met deze functie:</P>
+  <img src="../../../../assets//code/build-rsa-keypair-code.png">
+  <p class="image">Afbeelding 1 Genereren RSA keypair</p>
+  <p>Ik gebruik een key size van 2048 bit. Het heeft twee redenen waarom ik geen 4096 bit key gebruik. Volgens de NIST (National Institute of Standards and Technology) 
+    is een 2048 bit key meer dan voldoende, plus dat als ik een 4096 bit key gebruik, dan duurt het genereren en encrypten van een bericht ook langer. Ook zijn er 
+    verschillende certificate authorities die nog geen 4096 bit keys ondersteunen. Momenteel gebruik ik geen certificaten omdat ik dan een domain moet hebben waar het 
+    certificaat aan gekoppeld is. Dit maakt het momenteel mogelijk dat er een MitM attack uitgevoerd kan worden. Ik ben hiervan op de hoogte en als deze applicatie 
+    daadwerkelijk online op een server komt te draaien, dan kan dit probleem met een geldig certificaat verholpen worden.</p>
+  <p class="no-bottom-margin">Als een client opstart, maakt deze een websocket verbinding naar de server. Met het verbinden stuurt de client zijn RSA public key mee, de 
+    public key hoeft niet versleuteld te worden.</p>
+  <img src="../../../../assets/code/websocket-connect-code.png">
+  <p class="image">Afbeelding 2 Websocket connect</p>
+  <p class="no-bottom-margin">In de bovenstaande code wordt de public key van de client uit de websocket sessie parameters gehaald, vervolgens wordt er een AES key gegenereerd. 
+    Het genereren van een AES key ziet eruit als volgt:</p>
+  <img src="../../../../assets/code/build-aes-keypair-code.png">
+  <p class="image">Afbeelding 3 Generate AES keypair</p>
+  <p>Na het genereren van een AES key, wordt er een 'pendingUUID' gegenereerd en bijgehouden als een tijdelijke sessie. Omdat ik met websockets de verbinding tot stand laat 
+    komen en het inloggen van een gebruiker via REST gaat, weet ik niet vanuit welke websocket sessie de login komt. Bij de login geef ik diezelfde pendingUUID weer mee zodat 
+    de server weet bij welke websocket die inlog hoort. Die pendingUUID is versleuteld met AES, en de AES key is versleuteld met RSA. Het totale pakketje wat ik naar de client 
+    stuur bevat dan de public key van de server, de met AES versleutelde pendingUUID en de RSA versleutelde AES key.</p>
+  <p class="no-bottom-margin">Het versleutelen en decoderen van RSA ziet er uit als in de onderstaande afbeelding. Voor het versleutelen gebruik ik de megegeven public key 
+    van de client. De client kan het bericht dan decoderen met zijn private key. Voor het decoderen gebruik ik de private key van de server.</p>
+  <img src="../../../../assets//code/rsa-encrypt-decrypt-code.png">
+  <p class="image">Afbeelding 4 Versleutelen/decoderen RSA</p>
+  <p class="no-bottom-margin"><b>AES</b></p>
+  <p>Voor het versleutelen van AES gebruik ik in de server de AES key van die huidige sessie, deze worden per websocket sessie bijgehouden. Als elke sessie een eigen AES key 
+    heeft en bij ieder request naar de server deze key wordt ververst, dan zijn de keys maar een korte tijd in omloop. Als er dan een key onderschept wordt, is deze dan maar 
+    een korte tijd geldig. De NIST heeft drie aanbevolen keuzes voor de AES key size; 128 bit, 192 bit en 256 bit. 256 bit biedt de hoogste beveiliging. Om dit te brute forcen 
+    zijn er 2<sup>256</sup> pogingen mogelijk. Dit duurt zelfs met de huidige computerkracht meerdere miljarden jaren om dit te kraken. 128 bit is dan natuurlijk ook sterk 
+    genoeg, maar het versleutelen van 128 of 256 bit scheelt maar 4 extra rondes en heeft dit geen hele grote impact op de snelheid van de applicatie.</p>
+  <p class="no-bottom-margin"><b>AES-CBC</b></p>
+  <p class="no-bottom-margin">In de onderstaande afbeelding wordt er gebruik gemaakt van 256 bit AES-CBC, dit heeft een IV (initialization vector) nodig om de chain mee te 
+    starten. Deze IV wordt random gegenereerd en deze wordt samen met de versleutelde tekst meegestuurd. De IV mag publiekelijk zichtbaar zijn, maar als deze aan de 
+    versleutelde tekst wordt vastgemaakt, dan is het niet mogelijk om te zien of er een IV gebruikt wordt en hoe groot deze is.</p>
+  <img src="../../../../assets/code/aes-cbc-encrypt-decrypt-code.png">
+  <p class="image">Afbeelding 5 Versleutelen/decoderen AES-CBC</p>
+  <p class="no-bottom-margin"><b>AES-GCM</b></p>
+  <p class="no-bottom-margin">In de onderstaande afbeelding wordt er gebruik gemaakt van 256 bit AES-GCM. AES-GCM is iets veiliger dan AES-CBC omdat deze ook standaard gebruik 
+    maakt van een handshake authenticatie. Ook is AES-GCM sneller dan AES-CBC. In mijn applicatie heb ik ze nu beide geïmplementeerd gehad om er grotendeels ook van te leren. 
+    Ik ga de AES-GCM in de applicatie gebruiken als definitieve methode.</p>
+  <img src="../../../../assets/code/aes-gcm-encrypt-decrypt-code.png">
+  <p class="image">Afbeelding 6 Versleutelen/decoderen AES-GCM</p>
+  <br>
+  <p class="no-bottom-margin"><b>2.2 Autorisatie</b></p>
+  <p class="no-bottom-margin">Voor de authorisatie krijgt de gebruiker na het succesvol inloggen een JWT-token. Hierin kan informatie opgeslagen worden zoals de username, 
+    displayname, id en of deze 2FA geactiveerd heeft, waarmee de client zich kan identificeren. Deze tokens worden uitgedeeld aan de client's door de server, maar worden ook 
+    in server zelf bijghouden met de bijhordende key en websocket sessie.</p>
+  <img src="../../../../assets/code/usersession-code.png">
+  <p class="image">Afbeelding 7 Usersessie informatie</p>
+  <p>Elke sessie heeft een eigen JWT-tokensleutel die bij iedere request van de client ververst wordt, waardoor de JWT-tokensleutel 
+  maar een korte tijd in omloop blijft. Als er gerommeld is met deze token dan zal de server deze niet meer kunnen verifiëren en wordt de token ongeldig verklaard met als 
+  resultaat dat die ingelogde sessie uit de server wordt verwijderd waardoor de client bij iedere volgende request wordt genereerd. Tevens wordt de client uitgelogd. 
+  Mocht een kwaadwillig iemand een andere 'geldige' token kunnen bemachtigen en deze probeerd te gebruiken op een andere inlog, dan komt deze token niet meer overeen met de 
+  key van de websocket sessie, en wordt deze ook verwijderd. De JWT-token zelf wordt ook als encrypted AES verkeer verstuurd, dit maakt het onderscheppen van een dergelijke 
+  token niet mogelijk.</p>
+  <p class="no-bottom-margin">Het genereren en verifiëren van een JWT-token ziet er uit als volgt:</p>
+  <img src="../../../../assets/code/JWT-token-code.png">
+  <p class="image">Afbeelding 8 JWT-token code</p>
+
+
+
+
+
+
+
+
+
+
+  <p class="no-bottom-margin"><b>2.3 Authenticatie</b></p>
+  <p>Not implemented yet</p>
+  <p class="no-bottom-margin"><b>2.4 Hashes</b></p>
+  <p>Not implemented yet</p>
+  <p class="no-bottom-margin"><b>2.5 Licenties</b></p>
+  <p>Not implemented yet</p>
+
+
+
+
+
+
+  <p class="no-bottom-margin"><b>2.6 Database</b></p>
+  <p>Voor de database gebruik ik een postgress database die vanuit een Docker image op te starten is. Dit is handig omdat als ik mijn applicatie wil uitleveren voor het 
+    red team vs blue team event, zij dit makkelijk zelf kunnen opzetten. Er zal qua communicatie richting de database geen specefieke security nodig zijn omdat dit in een live 
+    omgeving achter een Kubernetes cluster draait. Ik heb geen mogelijkheid om een Kubernetes cluster ergens op te zetten omdat dat enorm veel server capaciteit nodig heeft 
+    en dit kost naar onderzoek vorig semester erg veel geld. Dit zal in de scope van dit project bij de server draaien <span style="font-size: 11px;">[1]</span>. Mocht 
+    hier een andere oplossing voor zijn dan kan dit nog veranderen.</p>
+
+
+  <p><span style="font-size: 11px;">[1] Ik nog onderzoek doen of hier iets in te regelen valt binnen Seclab.</span></p>
+  <br>
+  <br>
+  <br>
+</div>

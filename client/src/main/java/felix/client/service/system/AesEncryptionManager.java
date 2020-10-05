@@ -10,7 +10,6 @@ import java.util.Base64;
 
 public class AesEncryptionManager
 {
-
     private String key;
     private static final String AES = "AES";
     private static final int IV_SIZE = 12;

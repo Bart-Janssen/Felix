@@ -50,7 +50,8 @@ public class UserService extends MicroService implements IUserService
     @Override
     public User register(User user) throws IOException, URISyntaxException
     {
-        throw new NotImplementedException();
+        users.put(user.getDisplayName(), User.builder().id(UUID.randomUUID()).displayName(user.getDisplayName()).name(user.getName()).twoFAEnabled(false).password(user.getPassword()).build());
+        return users.get(user.getDisplayName());
     }
 
     @Override

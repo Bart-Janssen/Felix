@@ -81,7 +81,6 @@ public class FelixSession
     public void stopHeartBeat()
     {
         heartBeatThread.stop();
-        this.clearSession();
     }
 
     public void sendMessage(String message)
@@ -108,6 +107,7 @@ public class FelixSession
         {
             Map<String, String> encryptedUserInfo = new HashMap<>();
             encryptedUserInfo.put("name", RsaEncryptionManager.encrypt(user.getName()));
+            if (user.getDisplayName() != null) encryptedUserInfo.put("disp", RsaEncryptionManager.encrypt(user.getDisplayName()));
             encryptedUserInfo.put("password", RsaEncryptionManager.encrypt(user.getPassword()));
             encryptedUserInfo.put("uuid", RsaEncryptionManager.encrypt(pendingUUID.toString()));
             return encryptedUserInfo;

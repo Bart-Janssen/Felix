@@ -17,8 +17,8 @@ export class AppComponent implements OnInit
   public ngOnInit() : void
   {
     this.resize(window.innerWidth);
-    // this.router.navigate(["/main"]);
-    this.router.navigate(["/chat_app_project"]);
+    this.router.navigate(["/main"]);
+    // this.router.navigate(["/chat_app_project"]);
     // this.router.navigate(["/osint_workshop"]);
     // this.router.navigate(["/ethics_project"]);
     // this.router.navigate(["/concept_project"]);

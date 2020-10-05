@@ -1,5 +1,6 @@
 package felix.api.controller;
 
+import com.google.gson.Gson;
 import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import felix.api.service.user.IUserService;
@@ -26,8 +27,17 @@ public class AuthenticationController
         int i = 0;
         for (UserSession s : WebSocket.getSessions().values())
         {
-            i++;
-            s.getSession().getAsyncRemote().sendText("Hello, msg from server: " + s.getUser().getDisplayName());
+            AesEncryptedMessage p;
+            try
+            {
+                i++;
+                p = WebSocket.encrypt(GetterType.SESSION_ID, s.getSession().getId(), WebSocketMessage.builder().message("Hello, msg from server: " + s.getUser().getDisplayName()).build());
+                s.getSession().getAsyncRemote().sendText(new Gson().toJson(p));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         return ResponseEntity.ok("yo " + i);
     }
@@ -50,6 +60,26 @@ public class AuthenticationController
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<AesEncryptedMessage> register(@RequestBody User user) throws Exception
+    {
+        Map<String, String> decryptedUserInfo = WebSocket.decryptRsaUser(user);
+        user.setName(decryptedUserInfo.get("name"));
+        user.setDisplayName(decryptedUserInfo.get("disp"));
+        user.setPassword(decryptedUserInfo.get("password"));
+        user.setEncryptedUUID(decryptedUserInfo.get("uuid"));
+        if (user.getPassword().length() < 8) throw new BadRequestException();
+        User registeredUser = userService.register(user);
+        if (registeredUser != null)
+        {
+            registeredUser.setEncryptedUUID(user.getEncryptedUUID());
+            JwtToken token = new JwtTokenGenerator().createJWT(registeredUser);
+            if (!WebSocket.addSession(registeredUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+            return ResponseEntity.ok(WebSocket.encrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
     @PutMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String jwt) throws IOException, URISyntaxException
     {
@@ -58,16 +88,6 @@ public class AuthenticationController
         userService.logout(user);
         user.setPassword("");
         return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<JwtToken> register(@RequestBody User user) throws Exception
-    {
-        if (user.getPassword().length() < 8) throw new BadRequestException();
-        User registeredUser = userService.register(user);
-        JwtToken token = new JwtTokenGenerator().createJWT(registeredUser);
-        WebSocket.addSession(registeredUser, token);
-        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/2fa/enable")

@@ -1,19 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ChatappprojectComponent } from './felix/chatappproject/chatappproject.component';
 
-describe('ChatappprojectComponent', () => {
-  let component: ChatappprojectComponent;
-  let fixture: ComponentFixture<ChatappprojectComponent>;
+import { ThreatanalysisComponent } from './threatanalysis.component';
+
+describe('ThreatanalysisComponent', () => {
+  let component: ThreatanalysisComponent;
+  let fixture: ComponentFixture<ThreatanalysisComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChatappprojectComponent ]
+      declarations: [ ThreatanalysisComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChatappprojectComponent);
+    fixture = TestBed.createComponent(ThreatanalysisComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

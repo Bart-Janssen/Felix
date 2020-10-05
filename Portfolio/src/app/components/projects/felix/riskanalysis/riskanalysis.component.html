@@ -1,0 +1,131 @@
+<p class="center-text">Risk analysis</p>
+<div class="middle-text-space">
+<p>Deze pagina beschrijft de risico analyse. Hier kijk ik naar de kans en impact van de eerder onderzochte 
+	<a routerLink="/threat_analysis" routerLinkActive="active">threat analysis</a>.</p>
+  <h3><b>De threats</b></h3>
+	<p class="no-bottom-margin">Op deze pagina staat de waarschijnlijkheid en risico’s van de eerder vastgestelde threats beschreven voor mijn applicatie. De eerder beschreven 
+		threats zijn als volgt:</p>
+  <ul>
+    <li class="text">Malware, Trojans;</li>
+    <li class="text">Phishing;</li>
+    <li class="text">MitM;</li>
+    <li class="text">Ransomware;</li>
+    <li class="text">DDoS;</li>
+    <li class="text">Injection;</li>
+    <li class="text">Brute force;</li>
+    <li class="text">Unknown attacks/zero-days.</li>
+	</ul>
+	<p>Niet al deze threats zijn even gevaarlijk, of hebben een even grote impact voor mijn applicatie. Om dit duidelijk in kaart te brengen, is de volgende tabel gemaakt:</p>
+	<table>
+		<tr>
+			<th>Threat</th>
+			<th>Threat	Impact beschrijving</th>
+			<th>Kans</th>
+			<th>Impact</th>
+			<th>Reden</th>
+		</tr>
+		<tr>
+			<td>Malware, Trojans</td>
+			<td>Virussen die bij gebruikers geïnstalleerd kunnen worden</td>
+			<td>Laag</td>
+			<td>Hoog</td>
+			<td>In mijn applicatie is geen directe gebruiker naar gebruiker communicatie</td>
+		</tr>
+		<tr>
+			<td>Phishing</td>
+			<td>Linkjes naar shady websites met mogelijke afpersing of dergelijke</td>
+			<td>Hoog</td>
+			<td>Hoog</td>
+			<td>Een link kan gemakkelijk meegestuurd worden met een chat berichtje</td>
+		</tr>
+		<tr>
+			<td>MitM</td>
+			<td>Tussen de communicatie inzitten om informatie uit te lezen</td>
+			<td>Hoog</td>
+			<td>Hoog</td>
+			<td>Deze aanval kan uitgevoerd worden op de uitwisseling voor encryptie</td>
+		</tr>
+		<tr>
+			<td>Ransomware</td>
+			<td>Gijzelen van een computer</td>
+			<td>Klein</td>
+			<td>Hoog</td>
+			<td>Dit soort dergelijke aanvallen werken op computers, niet op een applicatie. Het is makkelijk mogelijk om een server opnieuw te lanceren</td>
+		</tr>
+		<tr>
+			<td>DDoS</td>
+			<td>Het platleggen van een systeem door overmatig veel aanvragen te doen</td>
+			<td>Hoog</td>
+			<td>Hoog</td>
+			<td>De applicatie kan compleet offline gebracht worden</td>
+		</tr>
+		<tr>
+			<td>Injection</td>
+			<td>Het injecteren van scripts of code</td>
+			<td>Hoog</td>
+			<td>Hoog</td>
+			<td>Dit zou de applicatie kunnen breken of de database kunnen aanpassen</td>
+		</tr>
+		<tr>
+			<td>Brute force</td>
+			<td>Het herhaaldelijk proberen van een actie</td>
+			<td>Middel</td>
+			<td>Hoog</td>
+			<td>Inloggegevens brute forcen</td>
+		</tr>
+		<tr>
+			<td>Unknown attacks</td>
+			<td>Het onbekende</td>
+			<td>Middel</td>
+			<td>Onbekend</td>
+			<td>Dit zijn onbekende aanvallen, tot je weet wat dit is, is het enige wat je eraan kan doen is monitoren en loggen</td>
+		</tr>
+	</table>
+	<p class="table-text">Tabel 1 Risico matrix</p>
+	<br>
+  <h3><b>Maatregelen</b></h3>
+	<p class="no-bottom-margin">Tegen bijna al deze threats is iets te doen. Hieronder een tabel met mogelijke maatregelen:</p>
+	<table>
+		<tr>
+			<th>Threat</th>
+			<th>Maatregel</th>
+		</tr>
+		<tr>
+			<td>Malware, Trojans</td>
+			<td>Een check op bijvoorbeeld bestandsformaten die verstuurd kunnen worden in de applicatie</td>
+		</tr>
+		<tr>
+			<td>Phishing</td>
+			<td>Een waarschuwing bij het openen van linkjes, mogelijk bekende domainen blokkeren</td>
+		</tr>
+		<tr>
+			<td>MitM</td>
+			<td>Werken met checks of certificaten bijvoorbeeld</td>
+		</tr>
+		<tr>
+			<td>Ransomware</td>
+			<td>Een check op bijvoorbeeld bestandsformaten die verstuurd kunnen worden in de applicatie</td>
+		</tr>
+		<tr>
+			<td>DDoS</td>
+			<td>Mogelijk wordt dit soort applicaties gebruikt onder een Kubernets cluster, deze vangt dit al af. Mogelijk een eigen maatregel zou het zijn van blacklisten van 
+				IP-adressen</td>
+		</tr>
+		<tr>
+			<td>Injection</td>
+			<td>Input check in zowel de client als server, veel frameworks hebben dit standaard ingebouwd</td>
+		</tr>
+		<tr>
+			<td>Brute force</td>
+			<td>Blokkeren als een event een bepaalde tijd herhaaldelijk wordt uitgevoerd</td>
+		</tr>
+		<tr>
+			<td>Unknown attacks</td>
+			<td>Zolang je niet weet wat het is kunnen deze alleen gelogd worden</td>
+		</tr>
+	</table>
+	<p class="table-text">Tabel 2 Maatregelen</p>
+	<br>
+	<br>
+	<br>
+</div>

@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface IUserService
 {
     JwtToken login(User user) throws NotAuthorizedException, AlreadyLoggedInException;
+    JwtToken register(User user) throws NotAuthorizedException, AlreadyLoggedInException;
 }

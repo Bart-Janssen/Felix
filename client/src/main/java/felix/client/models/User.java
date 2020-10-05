@@ -20,6 +20,13 @@ public class User
         this.password = password;
     }
 
+    public User(String name, String displayName, String password)
+    {
+        this.name = name;
+        this.displayName = displayName;
+        this.password = password;
+    }
+
     public String getName()
     {
         return name;
@@ -48,5 +55,15 @@ public class User
     public String getEncryptedUUID()
     {
         return encryptedUUID;
+    }
+
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+        this.displayName = displayName;
     }
 }

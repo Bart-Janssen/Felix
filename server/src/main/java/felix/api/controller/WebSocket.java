@@ -87,8 +87,10 @@ public abstract class WebSocket
 
     static Map<String, String> decryptRsaUser(User user) throws Exception
     {
+        System.out.println(user.getDisplayName());
         Map<String, String> decryptedUserInfo = new HashMap<>();
         decryptedUserInfo.put("name", RsaEncryptionManager.decrypt(user.getName()));
+        if (user.getDisplayName() != null) decryptedUserInfo.put("disp", RsaEncryptionManager.decrypt(user.getDisplayName()));
         decryptedUserInfo.put("password", RsaEncryptionManager.decrypt(user.getPassword()));
         decryptedUserInfo.put("uuid", RsaEncryptionManager.decrypt(user.getEncryptedUUID()));
         return decryptedUserInfo;
