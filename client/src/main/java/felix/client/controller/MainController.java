@@ -2,6 +2,7 @@ package felix.client.controller;
 
 import felix.client.main.FelixSession;
 import felix.client.models.View;
+import felix.client.service.EncryptionManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import felix.client.main.Main;
 
-abstract class MainController implements Initializable
+abstract class MainController extends EncryptionManager implements Initializable
 {
     @FXML private static Stage stage;
 

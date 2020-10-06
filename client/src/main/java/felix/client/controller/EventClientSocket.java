@@ -6,6 +6,8 @@ import felix.client.models.AesEncryptedMessage;
 import felix.client.models.InitWebSocketMessage;
 import felix.client.models.View;
 import felix.client.models.WebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
 import javax.websocket.*;
 import java.net.URL;
 import java.util.Date;
@@ -30,16 +32,16 @@ public class EventClientSocket extends MainController
     }
 
     @OnMessage
-    public void onWebSocketText(String message)
+    public void onWebSocketText(String message) throws Exception
     {
         if (!FelixSession.getInstance().isInitialized())
         {
             this.initializeFelixSession(message);
             return;
         }
-        WebSocketMessage webSocketMessage = FelixSession.getInstance().decrypt(new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
+        String msg = super.aesDecrypt(new Gson().fromJson(message, WebSocketMessage.class).getMessage());
         System.out.println("AES Encrypted msg: " + message);
-        System.out.println("AES Decrypted msg: " + webSocketMessage.getMessage());
+        System.out.println("AES Decrypted msg: " + msg);
     }
 
     @OnClose

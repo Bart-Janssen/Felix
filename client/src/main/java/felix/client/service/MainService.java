@@ -1,13 +1,12 @@
 package felix.client.service;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import felix.client.exceptions.AlreadyLoggedInException;
 import felix.client.exceptions.BadRequestException;
 import felix.client.exceptions.NotAuthorizedException;
 import felix.client.exceptions.PageNotFoundException;
+import felix.client.main.FelixSession;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
@@ -18,11 +17,12 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 
-public abstract class MainService
+public abstract class MainService extends EncryptionManager
 {
     private static final String HTTP = "http";
     private static final String CONTENT_TYPE  = "content-type";
     private static final String APPLICATION_JSON = "application/json";
+    private static final String AUTHORIZATION = "Authorization";
 
     private final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
@@ -60,6 +60,7 @@ public abstract class MainService
     {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         http.addHeader(CONTENT_TYPE, APPLICATION_JSON);
+        if (FelixSession.getInstance().getToken() != null) http.addHeader(AUTHORIZATION, FelixSession.getInstance().getToken());
         CloseableHttpResponse response = httpClient.execute(http);
         handleStatusCode(response.getStatusLine().getStatusCode());
         String json = EntityUtils.toString(response.getEntity());

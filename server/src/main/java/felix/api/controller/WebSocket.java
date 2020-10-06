@@ -1,21 +1,14 @@
 package felix.api.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import felix.api.configuration.AesEncryptionManager;
 import felix.api.configuration.JwtTokenGenerator;
-import felix.api.configuration.RsaEncryptionManager;
 import felix.api.models.*;
+import felix.api.service.EncryptionManager;
 import javax.websocket.*;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-public abstract class WebSocket
+public abstract class WebSocket extends EncryptionManager
 {
     public static final String KEY = "publickey";
 
@@ -85,46 +78,8 @@ public abstract class WebSocket
         return sessions.putPendingSession(session, clientPublicKey, aesKey);
     }
 
-    static Map<String, String> decryptRsaUser(User user) throws Exception
+    public static UserSession getSession(GetterType type, String key)
     {
-        System.out.println(user.getDisplayName());
-        Map<String, String> decryptedUserInfo = new HashMap<>();
-        decryptedUserInfo.put("name", RsaEncryptionManager.decrypt(user.getName()));
-        if (user.getDisplayName() != null) decryptedUserInfo.put("disp", RsaEncryptionManager.decrypt(user.getDisplayName()));
-        decryptedUserInfo.put("password", RsaEncryptionManager.decrypt(user.getPassword()));
-        decryptedUserInfo.put("uuid", RsaEncryptionManager.decrypt(user.getEncryptedUUID()));
-        return decryptedUserInfo;
-    }
-
-    protected static <T> AesEncryptedMessage encrypt(GetterType type, String key, T object) throws GeneralSecurityException
-    {
-        return new AesEncryptedMessage(AesEncryptionManager.encrypt(sessions.get(type, key).getAesKey(), new Gson().toJson(object)));
-    }
-
-    protected <T> T decrypt(GetterType getterType, String key, String encryptedMessage, Type type)
-    {
-        try
-        {
-            UserSession userSession = sessions.get(getterType, key);
-            String decryptedMessage = AesEncryptionManager.decrypt(userSession.getAesKey(), encryptedMessage);
-            return decryptedMessage == null ? null : new ObjectMapper().readValue(decryptedMessage, this.getType(type));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private <E> TypeReference<E> getType(Type type)
-    {
-        return new TypeReference<E>()
-        {
-            @Override
-            public Type getType()
-            {
-                return type;
-            }
-        };
+        return sessions.get(type, key);
     }
 }

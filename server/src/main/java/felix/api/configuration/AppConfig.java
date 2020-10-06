@@ -14,15 +14,7 @@ public class AppConfig implements WebMvcConfigurer
                 .addInterceptor(new AuthenticationInterceptor())
                 .addPathPatterns(
                         "/authentication/logout",
-                        "/authentication/2fa/*",
-                        "/chats/*",
-                        "/items/*",
-                        "/items/inventory/*",
-//                        "/player/*",
-                        "/player/friends/*",
-                        "/player/friends/invite/*",
-                        "/player/friends/invites/outgoing/*",
-                        "/player/friends/invites/incoming/*"
+                        "/authentication/test/"
                         );
     }
 }

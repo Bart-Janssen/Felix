@@ -11,7 +11,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
     {
+        System.out.println("pre");
         if (request.getMethod().equals("OPTIONS")) return true;
+        System.out.println("asd " + request.getHeader("Authorization"));
         if (new JwtTokenGenerator().decodeJWT(request.getHeader("Authorization")) == null)
         {
             log.info("Not allowed access");

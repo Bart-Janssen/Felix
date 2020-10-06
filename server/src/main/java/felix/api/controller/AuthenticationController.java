@@ -3,6 +3,7 @@ package felix.api.controller;
 import com.google.gson.Gson;
 import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
+import felix.api.service.EncryptionManager;
 import felix.api.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/authentication")
-public class AuthenticationController
+public class AuthenticationController extends EncryptionManager
 {
     private final IUserService userService;
 
@@ -31,7 +32,7 @@ public class AuthenticationController
             try
             {
                 i++;
-                p = WebSocket.encrypt(GetterType.SESSION_ID, s.getSession().getId(), WebSocketMessage.builder().message("Hello, msg from server: " + s.getUser().getDisplayName()).build());
+                p = super.aesEncrypt(GetterType.SESSION_ID, s.getSession().getId(), WebSocketMessage.builder().message("Hello, msg from server: " + s.getUser().getDisplayName()).build());
                 s.getSession().getAsyncRemote().sendText(new Gson().toJson(p));
             }
             catch (Exception e)
@@ -42,10 +43,19 @@ public class AuthenticationController
         return ResponseEntity.ok("yo " + i);
     }
 
+    /*@PutMapping("/test/")
+    public ResponseEntity<Item> test(@RequestBody Item i) throws Exception
+    {
+        WebSocket.decryptRsaUser()
+        System.out.println("I " + i);
+        return ResponseEntity.ok(Item.builder().aesEncryptedMessage(WebSocket.encrypt(GetterType.TOKEN)).build());
+    }*/
+
+
     @PostMapping("/login/")
     public ResponseEntity<AesEncryptedMessage> login(@RequestBody User user) throws Exception
     {
-        Map<String, String> decryptedUserInfo = WebSocket.decryptRsaUser(user);
+        Map<String, String> decryptedUserInfo = super.decryptRsaUser(user);
         user.setName(decryptedUserInfo.get("name"));
         user.setPassword(decryptedUserInfo.get("password"));
         user.setEncryptedUUID(decryptedUserInfo.get("uuid"));
@@ -55,7 +65,7 @@ public class AuthenticationController
             authenticatedUser.setEncryptedUUID(user.getEncryptedUUID());
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(WebSocket.encrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
+            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -63,7 +73,7 @@ public class AuthenticationController
     @PostMapping("/register")
     public ResponseEntity<AesEncryptedMessage> register(@RequestBody User user) throws Exception
     {
-        Map<String, String> decryptedUserInfo = WebSocket.decryptRsaUser(user);
+        Map<String, String> decryptedUserInfo = super.decryptRsaUser(user);
         user.setName(decryptedUserInfo.get("name"));
         user.setDisplayName(decryptedUserInfo.get("disp"));
         user.setPassword(decryptedUserInfo.get("password"));
@@ -75,7 +85,7 @@ public class AuthenticationController
             registeredUser.setEncryptedUUID(user.getEncryptedUUID());
             JwtToken token = new JwtTokenGenerator().createJWT(registeredUser);
             if (!WebSocket.addSession(registeredUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(WebSocket.encrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
+            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

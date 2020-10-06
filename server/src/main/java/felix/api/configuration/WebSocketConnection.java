@@ -38,7 +38,7 @@ public class WebSocketConnection extends WebSocket
     @Override
     public void onText(String message, Session session) throws GeneralSecurityException
     {
-        WebSocketMessage webSocketMessage = super.decrypt(GetterType.SESSION_ID, session.getId(), new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
+        WebSocketMessage webSocketMessage = super.aesDecrypt(GetterType.SESSION_ID, session.getId(), new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
         if (!super.validateToken(webSocketMessage.getJwtToken().getToken()))
         {
             this.closeSession(session, CloseReason.CloseCodes.CANNOT_ACCEPT, " JWT token invalid!");
@@ -52,7 +52,7 @@ public class WebSocketConnection extends WebSocket
 
     private void sendMessage(Session session, String message) throws GeneralSecurityException
     {
-        session.getAsyncRemote().sendText(new Gson().toJson(WebSocket.encrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(message, null))));
+        session.getAsyncRemote().sendText(new Gson().toJson(super.aesEncrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(message, null))));
     }
 
     private void closeSession(Session session, CloseReason.CloseCode closeCode, String reason)
