@@ -109,7 +109,7 @@ public class AuthenticationController extends MainController
             user.setEncryptedUUID(encryptedUserInfo.get("uuid"));
             user.setName(encryptedUserInfo.get("name"));
             user.setPassword(encryptedUserInfo.get("password"));
-            FelixSession.getInstance().setToken(this.userService.login(user));
+            this.userService.login(user);
         }
         catch (NotAuthorizedException e)
         {
@@ -174,7 +174,7 @@ public class AuthenticationController extends MainController
             user.setDisplayName(encryptedUserInfo.get("disp"));
             user.setEncryptedUUID(encryptedUserInfo.get("uuid"));
             user.setPassword(encryptedUserInfo.get("password"));
-            FelixSession.getInstance().setToken(this.userService.register(user));
+            this.userService.register(user);
         }
         catch (Exception e)
         {

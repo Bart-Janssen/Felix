@@ -6,9 +6,7 @@ import com.google.gson.Gson;
 import felix.api.configuration.AesEncryptionManager;
 import felix.api.configuration.RsaEncryptionManager;
 import felix.api.controller.WebSocket;
-import felix.api.models.AesEncryptedMessage;
-import felix.api.models.GetterType;
-import felix.api.models.User;
+import felix.api.models.*;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
@@ -18,7 +16,8 @@ public abstract class EncryptionManager
 {
     protected <T> AesEncryptedMessage aesEncrypt(GetterType type, String key, T object) throws GeneralSecurityException
     {
-        return new AesEncryptedMessage(AesEncryptionManager.encrypt(WebSocket.getSession(type, key).getAesKey(), new Gson().toJson(object)));
+        UserSession session = WebSocket.getSession(type, key);
+        return new AesEncryptedMessage(AesEncryptionManager.encrypt(session.getAesKey(), WebSocket.updateJwtToken(type, key).getToken().getToken()), AesEncryptionManager.encrypt(session.getAesKey(), new Gson().toJson(object)));
     }
 
     protected <T> T aesDecrypt(GetterType getterType, String key, String encryptedMessage, Type type)

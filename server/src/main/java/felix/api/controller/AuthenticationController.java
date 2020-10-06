@@ -43,13 +43,13 @@ public class AuthenticationController extends EncryptionManager
         return ResponseEntity.ok("yo " + i);
     }
 
-    /*@PutMapping("/test/")
-    public ResponseEntity<Item> test(@RequestBody Item i) throws Exception
+    @PutMapping("/test/")
+    public ResponseEntity<AesEncryptedMessage> test(@RequestHeader("Authorization") String jwt, @RequestBody AesEncryptedMessage aesEncryptedMessage) throws Exception
     {
-        WebSocket.decryptRsaUser()
-        System.out.println("I " + i);
-        return ResponseEntity.ok(Item.builder().aesEncryptedMessage(WebSocket.encrypt(GetterType.TOKEN)).build());
-    }*/
+        User user = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), User.class);
+        System.out.println(new Gson().toJson(user));
+        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, user));
+    }
 
 
     @PostMapping("/login/")
@@ -65,7 +65,7 @@ public class AuthenticationController extends EncryptionManager
             authenticatedUser.setEncryptedUUID(user.getEncryptedUUID());
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
+            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), null));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -85,7 +85,7 @@ public class AuthenticationController extends EncryptionManager
             registeredUser.setEncryptedUUID(user.getEncryptedUUID());
             JwtToken token = new JwtTokenGenerator().createJWT(registeredUser);
             if (!WebSocket.addSession(registeredUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), new JwtToken(token.getToken(), null)));
+            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), null));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

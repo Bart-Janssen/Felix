@@ -1,5 +1,7 @@
 package felix.api.models;
 
+import felix.api.configuration.JwtTokenGenerator;
+
 import javax.websocket.Session;
 import java.util.*;
 
@@ -63,5 +65,14 @@ public class SessionMap
     public void removePendingSession(UUID pendingUUID)
     {
         this.pendingSessions.remove(pendingUUID);
+    }
+
+    public UserSession updateJwtToken(GetterType type, String key)
+    {
+        UserSession session = this.get(type, key);
+        this.tokenMap.remove(session.getToken().getToken());
+        session.setToken(new JwtTokenGenerator().createJWT(session.getUser()));
+        this.tokenMap.put(session.getToken().getToken(), session.getUser().getDisplayName());
+        return this.userDisplayNameMap.put(session.getUser().getDisplayName(), session);
     }
 }

@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -27,7 +28,8 @@ public class JwtTokenGenerator
     private static final String USER_ID = "id";
     private static final String TWO_FA = "twofa";
 
-    public JwtToken createJWT(User account) throws NoSuchAlgorithmException
+    @SneakyThrows
+    public JwtToken createJWT(User account)
     {
         SecretKey key = KeyGenerator.getInstance(SignatureAlgorithm.HS512.getJcaName()).generateKey();
         byte[] KEY = Arrays.toString(key.getEncoded()).getBytes(StandardCharsets.UTF_8);

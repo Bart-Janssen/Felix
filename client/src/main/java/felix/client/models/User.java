@@ -14,6 +14,8 @@ public class User
     private boolean online;
     private boolean twoFAEnabled;
 
+    public User() {}
+
     public User(String name, String password)
     {
         this.name = name;

@@ -1,7 +1,9 @@
 package felix.client.service;
 
 import com.google.gson.Gson;
+import felix.client.main.FelixSession;
 import felix.client.models.AesEncryptedMessage;
+import felix.client.models.JwtToken;
 import felix.client.service.system.AesEncryptionManager;
 import java.security.GeneralSecurityException;
 
@@ -32,5 +34,17 @@ public abstract class EncryptionManager
     protected void kill()
     {
         aesEncryptionManager = null;
+    }
+
+    protected String refreshJwtToken(String message) throws GeneralSecurityException
+    {
+        AesEncryptedMessage aesEncryptedMessage = new Gson().fromJson(message, AesEncryptedMessage.class);
+        FelixSession.getInstance().setToken(new JwtToken(this.aesDecrypt(aesEncryptedMessage.getToken())));
+        return this.aesDecrypt(aesEncryptedMessage.getMessage());
+    }
+
+    protected void refreshJwtToken(JwtToken token) throws GeneralSecurityException
+    {
+        FelixSession.getInstance().setToken(new JwtToken(this.aesDecrypt(token.getToken())));
     }
 }

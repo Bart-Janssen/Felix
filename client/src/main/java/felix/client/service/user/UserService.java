@@ -11,31 +11,31 @@ import felix.client.service.MainService;
 public class UserService extends MainService implements IUserService
 {
     @Override
-    public JwtToken login(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException
+    public void login(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException
     {
         try
         {
             AesEncryptedMessage aesEncryptedMessage = super.post("authentication/login/", encryptedUser, AesEncryptedMessage.class);
-            return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), JwtToken.class);
+            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             if (e instanceof AlreadyLoggedInException) throw new AlreadyLoggedInException();
             throw new NotAuthorizedException();
         }
     }
 
     @Override
-    public JwtToken register(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException
+    public void register(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException
     {
         try
         {
             AesEncryptedMessage aesEncryptedMessage = super.post("authentication/register/", encryptedUser, AesEncryptedMessage.class);
-            return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), JwtToken.class);
+            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             throw new NotAuthorizedException();
         }
     }
@@ -45,7 +45,9 @@ public class UserService extends MainService implements IUserService
     {
         try
         {
-            AesEncryptedMessage aesEncryptedMessage = super.post("authentication/test/", super.aesEncrypt("hey"), void.class);
+            AesEncryptedMessage aesEncryptedMessage = super.put("authentication/test/", super.aesEncrypt(new User("hai", "pass")), AesEncryptedMessage.class);
+            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
+            System.out.println(new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), User.class).getName());
         }
         catch (Exception e)
         {

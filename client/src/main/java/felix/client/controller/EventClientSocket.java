@@ -2,10 +2,7 @@ package felix.client.controller;
 
 import com.google.gson.Gson;
 import felix.client.main.FelixSession;
-import felix.client.models.AesEncryptedMessage;
-import felix.client.models.InitWebSocketMessage;
-import felix.client.models.View;
-import felix.client.models.WebSocketMessage;
+import felix.client.models.*;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import javax.websocket.*;
@@ -39,9 +36,9 @@ public class EventClientSocket extends MainController
             this.initializeFelixSession(message);
             return;
         }
-        String msg = super.aesDecrypt(new Gson().fromJson(message, WebSocketMessage.class).getMessage());
         System.out.println("AES Encrypted msg: " + message);
-        System.out.println("AES Decrypted msg: " + msg);
+        message = super.refreshJwtToken(message);
+        System.out.println("AES Decrypted msg: " + message);
     }
 
     @OnClose

@@ -82,4 +82,9 @@ public abstract class WebSocket extends EncryptionManager
     {
         return sessions.get(type, key);
     }
+
+    public static UserSession updateJwtToken(GetterType type, String key)
+    {
+        return sessions.updateJwtToken(type, key);
+    }
 }
