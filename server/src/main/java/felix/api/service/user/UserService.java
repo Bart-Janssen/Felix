@@ -1,6 +1,7 @@
 package felix.api.service.user;
 
 import felix.api.exceptions.NotImplementedException;
+import felix.api.repository.UserRepository;
 import felix.api.service.MicroService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -12,8 +13,10 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class UserService extends MicroService implements IUserService
+public class UserService/* extends MicroService */implements IUserService
 {
+    private final UserRepository userRepository;
+
     private Map<String, User> users = new HashMap<String, User>() //TODO db connectie
     {{
         super.put("Henk", User.builder().id(UUID.randomUUID()).displayName("Henk123").name("Henk").twoFAEnabled(false).password("123").build()); //todo db connectie

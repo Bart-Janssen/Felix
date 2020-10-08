@@ -5,6 +5,7 @@ import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import felix.api.service.EncryptionManager;
 import felix.api.service.user.IUserService;
+import felix.api.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/authentication")
 public class AuthenticationController extends EncryptionManager
 {
-    private final IUserService userService;
+    private final UserService userService;
 
     @GetMapping("/hai")
     public ResponseEntity logins()

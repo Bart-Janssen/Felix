@@ -2,11 +2,22 @@ server:
   port: 29805
 
 spring:
-  rabbitmq:
-    host: ${PRODUCTION_RABBIT_SERVER:192.168.52.131}
-    port: 5672
-    username: guest
-    password: guest
-
   main:
     allow-bean-definition-overriding: true
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://192.168.52.129:5432/abc
+    driverClassName: org.postgresql.Driver
+    username: felix
+    password: password

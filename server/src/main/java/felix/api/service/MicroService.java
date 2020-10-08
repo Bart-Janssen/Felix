@@ -2,6 +2,7 @@ package felix.api.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
@@ -12,11 +13,14 @@ import org.apache.http.util.EntityUtils;
 import felix.api.exceptions.BadRequestException;
 import felix.api.exceptions.ItemNotFoundException;
 import felix.api.exceptions.NotAuthorizedException;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 
 @Slf4j
+@RequiredArgsConstructor
 public abstract class MicroService
 {
     private static final String HTTP = "http";
