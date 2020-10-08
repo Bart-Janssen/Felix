@@ -50,9 +50,9 @@ public abstract class WebSocket extends EncryptionManager
         return true;
     }
 
-    protected void removeSession(String sessionId)
+    protected static void removeSession(GetterType type, String key)
     {
-        sessions.removeSession(sessionId);
+        sessions.removeSession(type, key);
     }
 
     private Boolean userHasToken(String token)
@@ -86,5 +86,10 @@ public abstract class WebSocket extends EncryptionManager
     public static UserSession updateJwtToken(GetterType type, String key)
     {
         return sessions.updateJwtToken(type, key);
+    }
+
+    protected void checkRemovePendingSession(String sessionId)
+    {
+        
     }
 }

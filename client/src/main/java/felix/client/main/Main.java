@@ -16,6 +16,7 @@ public class Main extends Application
         Parent parent = loader.load();
         primaryStage.setTitle("Felix");
         Scene scene = new Scene(parent, 800, 550);
+        scene.getStylesheets().add(getClass().getResource("/custom/navstyle.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

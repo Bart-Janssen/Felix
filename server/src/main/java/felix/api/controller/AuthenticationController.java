@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import felix.api.configuration.JwtTokenGenerator;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 @CrossOrigin
@@ -51,6 +49,7 @@ public class AuthenticationController extends EncryptionManager
         return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, user));
     }
 
+    //tuwafjkse8y67sB^5be%EB^v5e4s6gh
 
     @PostMapping("/login/")
     public ResponseEntity<AesEncryptedMessage> login(@RequestBody User user) throws Exception
@@ -90,17 +89,17 @@ public class AuthenticationController extends EncryptionManager
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    /*@PutMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Authorization") String jwt) throws IOException, URISyntaxException
+    @PutMapping("/logout")
+    public ResponseEntity logout(@RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
-//        WebSocket.removeSession(jwt);
-        userService.logout(user);
-        user.setPassword("");
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        WebSocket.removeSession(GetterType.TOKEN, jwt);
+//        userService.logout(user); //todo set online status
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/2fa/enable")
+    /*@PostMapping("/2fa/enable")
     public ResponseEntity<String> enable2FA(@RequestHeader("Authorization") String jwt) throws IOException, URISyntaxException
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);

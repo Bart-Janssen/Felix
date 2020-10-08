@@ -8,6 +8,7 @@ public enum View
     HOME("home"),
     LOGIN("login"),
     REGISTER("register"),
+    TEST("test"),
     CHAT("chat");
 
     private final String page;

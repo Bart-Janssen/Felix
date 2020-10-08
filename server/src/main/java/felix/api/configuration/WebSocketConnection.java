@@ -59,7 +59,7 @@ public class WebSocketConnection extends WebSocket
     {
         try
         {
-            super.removeSession(session.getId());
+            removeSession(GetterType.SESSION_ID, session.getId());
             session.close(new CloseReason(closeCode, reason));
         }
         catch (Exception e)
@@ -72,7 +72,8 @@ public class WebSocketConnection extends WebSocket
     public void onClose(CloseReason reason, Session session)
     {
         System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
-        super.removeSession(session.getId());
+        removeSession(GetterType.SESSION_ID, session.getId());
+        super.checkRemovePendingSession(session.getId());
     }
 
     @Override

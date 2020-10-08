@@ -41,12 +41,12 @@
             <Label text="Username" GridPane.valignment="BOTTOM" />
             <Label text="Password" GridPane.rowIndex="4" />
             <TextField fx:id="textFieldUsername" prefHeight="25.0" prefWidth="113.0" GridPane.rowIndex="1" />
+             <TextField fx:id="textFieldDisplayName" GridPane.rowIndex="3" />
             <PasswordField fx:id="textFieldPassword" GridPane.rowIndex="5" />
             <Label text="Retype password" GridPane.rowIndex="6" />
             <PasswordField fx:id="textFieldRetypePassword" GridPane.rowIndex="7" />
             <Label fx:id="loginFailedLabel" text="Login failed" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
             <Label text="Displayname" GridPane.rowIndex="2" />
-            <TextField fx:id="textFieldDisplayName" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

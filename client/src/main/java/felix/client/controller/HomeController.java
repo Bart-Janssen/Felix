@@ -9,12 +9,13 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-
+import javafx.scene.layout.Pane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class HomeController extends MainController
 {
+    @FXML private Pane paneLogout;
     @FXML private Button restButton;
     @FXML private Button button;
     private IUserService userService = new UserService();
@@ -24,6 +25,14 @@ public class HomeController extends MainController
     {
         Platform.runLater(() -> super.setStage(this.button));
         this.listenPrivateChat();
+    }
+
+    private void initializeEvents()
+    {
+        paneLogout.addEventHandler(MouseEvent.MOUSE_CLICKED, key ->
+        {
+//            this.logout();
+        });
     }
 
     private void listenPrivateChat()

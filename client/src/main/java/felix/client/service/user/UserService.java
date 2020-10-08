@@ -8,6 +8,9 @@ import felix.client.models.JwtToken;
 import felix.client.models.User;
 import felix.client.service.MainService;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 public class UserService extends MainService implements IUserService
 {
     @Override
@@ -39,6 +42,12 @@ public class UserService extends MainService implements IUserService
             if (e instanceof AlreadyLoggedInException) throw new AlreadyLoggedInException();
             throw new NotAuthorizedException();
         }
+    }
+
+    @Override
+    public void logout() throws IOException, URISyntaxException
+    {
+        super.put("authentication/logout", null, void.class);
     }
 
     @Override
