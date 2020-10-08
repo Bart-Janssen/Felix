@@ -4,7 +4,6 @@ import felix.client.fxml.NavigationAnchor;
 import felix.client.main.FelixSession;
 import felix.client.models.View;
 import felix.client.service.EncryptionManager;
-import felix.client.service.system.RsaEncryptionManager;
 import felix.client.service.user.IUserService;
 import felix.client.service.user.UserService;
 import javafx.application.Platform;
@@ -69,5 +68,11 @@ abstract class MainController extends EncryptionManager implements Initializable
             e.printStackTrace();
         }
         this.openNewView(View.LOGIN);
+    }
+
+    @FXML
+    public void switchToProfile()
+    {
+        this.openNewView(View.PROFILE);
     }
 }

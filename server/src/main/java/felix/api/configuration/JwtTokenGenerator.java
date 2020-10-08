@@ -3,10 +3,7 @@ package felix.api.configuration;
 import felix.api.controller.WebSocket;
 import felix.api.models.JwtToken;
 import felix.api.models.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import javax.crypto.KeyGenerator;
@@ -54,7 +51,7 @@ public class JwtTokenGenerator
             user.setName(claims.get(NAME).toString());
             user.setDisplayName(claims.get(DISPLAY_NAME).toString());
             user.setId(UUID.fromString(claims.get(USER_ID).toString()));
-            user.setTwoFAEnabled(Boolean.getBoolean(claims.get(TWO_FA).toString()));
+            user.setTwoFAEnabled(Boolean.parseBoolean(claims.get(TWO_FA).toString()));
             return user;
         }
         catch (Exception ex)

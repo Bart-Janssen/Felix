@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -26,10 +25,13 @@ public class User
     private String name;
     private String password;
     private String sessionId;
-    private int coins;
-    private int level;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private TOTP totp;
+
     @Column(unique = true)
     private String displayName;
+
     @Transient
     private boolean online;
     private boolean twoFAEnabled;

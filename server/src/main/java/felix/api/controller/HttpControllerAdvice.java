@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import felix.api.models.Event;
 import felix.api.models.EventType;
-
 import javax.persistence.EntityNotFoundException;
 import java.security.NoSuchAlgorithmException;
 
@@ -63,6 +62,7 @@ public class HttpControllerAdvice
     @ExceptionHandler(NotAuthorizedException.class)
     public ResponseEntity handleNotAuthorizedException(final NotAuthorizedException e)
     {
+        e.printStackTrace();
         this.createEvent(e, EventType.WARNING);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

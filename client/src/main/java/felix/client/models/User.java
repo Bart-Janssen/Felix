@@ -8,8 +8,6 @@ public class User
     private String name;
     private String password;
     private String sessionId;
-    private int coins;
-    private int level;
     private String displayName;
     private boolean online;
     private boolean twoFAEnabled;
@@ -27,6 +25,14 @@ public class User
         this.name = name;
         this.displayName = displayName;
         this.password = password;
+    }
+
+    public User(UUID id, String name, String displayName, boolean twoFAEnabled)
+    {
+        this.id = id;
+        this.name = name;
+        this.displayName = displayName;
+        this.twoFAEnabled = twoFAEnabled;
     }
 
     public String getName()
@@ -67,5 +73,10 @@ public class User
     public void setDisplayName(String displayName)
     {
         this.displayName = displayName;
+    }
+
+    public boolean hasTwoFAEnabled()
+    {
+        return this.twoFAEnabled;
     }
 }

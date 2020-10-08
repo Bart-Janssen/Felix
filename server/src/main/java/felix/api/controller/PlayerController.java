@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import felix.api.exceptions.NotAuthorizedException;
 import felix.api.service.user.IUserService;
-import felix.api.models.Chat;
 import felix.api.models.Event;
-import felix.api.models.User;
 import felix.api.service.event.IEventService;
 import lombok.*;
 import org.apache.http.client.methods.HttpGet;
@@ -16,10 +14,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import felix.api.configuration.JwtTokenGenerator;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 @CrossOrigin

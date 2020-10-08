@@ -4,7 +4,6 @@ import javax.crypto.Cipher;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RsaEncryptionManager

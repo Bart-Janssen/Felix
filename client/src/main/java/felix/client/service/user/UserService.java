@@ -50,6 +50,22 @@ public class UserService extends MainService implements IUserService
     }
 
     @Override
+    public String enable2Fa()
+    {
+        try
+        {
+            AesEncryptedMessage aesEncryptedMessage = super.post("authentication/2fa/enable/", null, AesEncryptedMessage.class);
+            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
+            return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), String.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public void rest()
     {
         try

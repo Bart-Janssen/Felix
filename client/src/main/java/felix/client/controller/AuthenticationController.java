@@ -103,7 +103,6 @@ public class AuthenticationController extends MainController
         }
         try
         {
-            //todo 2FA when implemented.
             User user = new User(this.textFieldUsername.getText(), this.textFieldPassword.getText());
             Map<String, String> encryptedUserInfo = FelixSession.getInstance().getEncryptedUserInfo(user);
             user.setSessionId(encryptedUserInfo.get("sessionId"));

@@ -45,7 +45,6 @@ public class AuthenticationController extends EncryptionManager
     public ResponseEntity<AesEncryptedMessage> test(@RequestHeader("Authorization") String jwt, @RequestBody AesEncryptedMessage aesEncryptedMessage) throws Exception
     {
         User user = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), User.class);
-        System.out.println(new Gson().toJson(user));
         return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, user));
     }
 
@@ -97,18 +96,27 @@ public class AuthenticationController extends EncryptionManager
         return ResponseEntity.ok().build();
     }
 
-    /*@PostMapping("/2fa/enable")
-    public ResponseEntity<String> enable2FA(@RequestHeader("Authorization") String jwt) throws IOException, URISyntaxException
+    @PostMapping("/2fa/enable")
+    public ResponseEntity<AesEncryptedMessage> enable2FA(@RequestHeader("Authorization") String jwt) throws Exception
     {
-        User user = new JwtTokenGenerator().decodeJWT(jwt);
-        return ResponseEntity.ok(new String(userService.enable2FA(user.getId(), user.getName())));
+        try
+        {
+            User user = new JwtTokenGenerator().decodeJWT(jwt);
+            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, userService.enable2FA(user.getId(), user.getName())));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     @DeleteMapping("/2fa/disable")
-    public ResponseEntity disable2FA(@RequestHeader("Authorization") String jwt) throws IOException, URISyntaxException
+    public ResponseEntity disable2FA(@RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         userService.disable2FA(user.getId());
         return ResponseEntity.ok().build();
-    }*/
+    }
 }

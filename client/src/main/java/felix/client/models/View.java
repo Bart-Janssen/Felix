@@ -3,12 +3,11 @@ package felix.client.models;
 public enum View
 {
     PAGE_NOT_FOUND("404"),
-    CRITICAL_ERROR("criticalError"),
 
     HOME("home"),
     LOGIN("login"),
     REGISTER("register"),
-    TEST("test"),
+    PROFILE("profile"),
     CHAT("chat");
 
     private final String page;

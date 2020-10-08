@@ -13,6 +13,7 @@ import java.io.IOException;
 public class NavigationAnchor extends AnchorPane
 {
     @FXML private Button buttonLogout;
+    @FXML private Button buttonSwitchToProfile;
 
     public NavigationAnchor()
     {
@@ -32,23 +33,41 @@ public class NavigationAnchor extends AnchorPane
     @FXML
     public void initialize()
     {
-        buttonLogout.setOnMouseClicked(event -> onActionPropertySwitchToTellen().get().handle(event));
+        buttonLogout.setOnMouseClicked(event -> onActionPropertyLogout().get().handle(event));
+        buttonSwitchToProfile.setOnMouseClicked(event -> onActionPropertySwitchToProfile().get().handle(event));
     }
 
-    private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionSwitchToTellen = new SimpleObjectProperty<>();
+    private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionLogout = new SimpleObjectProperty<>();
 
-    private ObjectProperty<EventHandler<MouseEvent>> onActionPropertySwitchToTellen()
+    private ObjectProperty<EventHandler<MouseEvent>> onActionPropertyLogout()
     {
-        return propertyOnActionSwitchToTellen;
+        return propertyOnActionLogout;
     }
 
-    public final void setOnActionSwitchToTellen(EventHandler<MouseEvent> handler)
+    public final void setOnActionLogout(EventHandler<MouseEvent> handler)
     {
-        propertyOnActionSwitchToTellen.set(handler);
+        propertyOnActionLogout.set(handler);
     }
 
-    public final EventHandler<MouseEvent> getOnActionSwitchToTellen()
+    public final EventHandler<MouseEvent> getOnActionLogout()
     {
-        return propertyOnActionSwitchToTellen.get();
+        return propertyOnActionLogout.get();
+    }
+
+    private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionSwitchToProfile = new SimpleObjectProperty<>();
+
+    private ObjectProperty<EventHandler<MouseEvent>> onActionPropertySwitchToProfile()
+    {
+        return propertyOnActionSwitchToProfile;
+    }
+
+    public final void setOnActionSwitchToProfile(EventHandler<MouseEvent> handler)
+    {
+        propertyOnActionSwitchToProfile.set(handler);
+    }
+
+    public final EventHandler<MouseEvent> getOnActionSwitchToProfile()
+    {
+        return propertyOnActionSwitchToProfile.get();
     }
 }

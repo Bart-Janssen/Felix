@@ -3,8 +3,6 @@ package felix.client.controller;
 import com.google.gson.Gson;
 import felix.client.main.FelixSession;
 import felix.client.models.*;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import javax.websocket.*;
 import java.net.URL;
 import java.util.Date;

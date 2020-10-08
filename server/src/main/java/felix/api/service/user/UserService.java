@@ -1,34 +1,81 @@
 package felix.api.service.user;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
+import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
+import felix.api.configuration.PasswordHasher;
+import felix.api.exceptions.NotAuthorizedException;
+import felix.api.exceptions.NotImplementedException;
+import felix.api.repository.CredentialRepository;
 import felix.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import felix.api.models.User;
 import javax.persistence.EntityNotFoundException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Base64;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService
 {
     private final UserRepository userRepository;
+    private final GoogleAuthenticator googleAuthenticator;
+    private final CredentialRepository credentialRepository;
+    private static final int TWO_FACTOR_AUTHENTICATION_CODE_LENGTH = 6;
 
     @Override
     public User login(User user) throws EntityNotFoundException
     {
-        return userRepository.findByNameAndPassword(user.getName(), user.getPassword()).orElseThrow(EntityNotFoundException::new);
+        User authenticatedUser = userRepository.findByName(user.getName()).orElseThrow(EntityNotFoundException::new);
+        if (authenticatedUser.getTotp() == null)
+        {
+
+            if (new PasswordHasher().verifyHash(user.getPassword(), authenticatedUser.getPassword()))
+            {
+                authenticatedUser.setPassword("");
+                authenticatedUser.setTwoFAEnabled(false);
+                return authenticatedUser;
+            }
+            throw new NotAuthorizedException();
+        }
+        int code = Integer.parseInt(user.getPassword().substring(user.getPassword().length() - TWO_FACTOR_AUTHENTICATION_CODE_LENGTH));
+        if (!new PasswordHasher().verifyHash(user.getPassword().substring(0, user.getPassword().length() - TWO_FACTOR_AUTHENTICATION_CODE_LENGTH), authenticatedUser.getPassword()))
+        if (!googleAuthenticator.authorizeUser(authenticatedUser.getId().toString(), code))
+        {
+            throw new NotAuthorizedException();
+        }
+        authenticatedUser.setPassword("");
+        authenticatedUser.setTwoFAEnabled(true);
+        return authenticatedUser;
     }
 
     @Override
     public User register(User user) throws DataIntegrityViolationException
     {
+        user.setPassword(new PasswordHasher().hash(user.getPassword()));
         return userRepository.save(user);
     }
 
-    /*@Override
-    public String enable2FA(UUID userId, String username) throws IOException, URISyntaxException
+    @Override
+    public String enable2FA(UUID userId, String username) throws IOException, WriterException
     {
-        throw new NotImplementedException();
+        final GoogleAuthenticatorKey key = googleAuthenticator.createCredentials(userId.toString());
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        String authURL = GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL("Felix", username, key);
+        BitMatrix bitMatrix = qrCodeWriter.encode(authURL, BarcodeFormat.QR_CODE, 200, 200);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", stream);
+        return Base64.getEncoder().encodeToString((byte[])stream.toByteArray());
     }
 
     @Override
@@ -37,7 +84,7 @@ public class UserService implements IUserService
         throw new NotImplementedException();
     }
 
-    @Override
+    /*@Override
     public void logout(User user) throws IOException, URISyntaxException
     {
         throw new NotImplementedException();

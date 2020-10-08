@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -17,7 +18,12 @@
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
-               <Button fx:id="buttonLogout" mnemonicParsing="false" prefHeight="40.0" styleClass="navbutton" text="Logout" GridPane.halignment="RIGHT" />
+               <Button fx:id="buttonLogout" mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" styleClass="navbutton" text="Logout" GridPane.halignment="RIGHT" />
+               <Button fx:id="buttonSwitchToProfile" mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" styleClass="navbutton" text="Profile" GridPane.halignment="RIGHT">
+                  <GridPane.margin>
+                     <Insets right="60.0" />
+                  </GridPane.margin>
+               </Button>
             </children>
          </GridPane>
       </children>

@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class FelixSession extends EncryptionManager
 {
-    private static FelixSession felixSession = null;
+    private static FelixSession instance = null;
     private static Session session = null;
     private static HeartBeatThread heartBeatThread = null;
     private static JwtToken token = null;
@@ -26,7 +26,7 @@ public class FelixSession extends EncryptionManager
 
     public static FelixSession getInstance()
     {
-        return felixSession == null ? new FelixSession() : felixSession;
+        return instance == null ? new FelixSession() : instance;
     }
 
     public void initialize(InitWebSocketMessage initWebSocketMessage)
@@ -138,7 +138,7 @@ public class FelixSession extends EncryptionManager
     {
         token = null;
         super.kill();
-        felixSession = null;
+        instance = null;
         heartBeatThread = null;
         session = null;
         sessionId = null;
