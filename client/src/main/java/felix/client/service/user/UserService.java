@@ -36,6 +36,7 @@ public class UserService extends MainService implements IUserService
         }
         catch (Exception e)
         {
+            if (e instanceof AlreadyLoggedInException) throw new AlreadyLoggedInException();
             throw new NotAuthorizedException();
         }
     }

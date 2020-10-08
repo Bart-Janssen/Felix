@@ -1,6 +1,9 @@
 package felix.api.service.user;
 
 import felix.api.models.User;
+import org.springframework.dao.DataIntegrityViolationException;
+
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.UUID;
@@ -8,9 +11,9 @@ import java.util.List;
 
 public interface IUserService
 {
-    User login(User user) throws IOException, URISyntaxException;
-    User register(User user) throws IOException, URISyntaxException;
-    List<User> getFriendsByUserId(UUID fromString) throws IOException, URISyntaxException;
+    User login(User user) throws EntityNotFoundException;
+    User register(User user) throws DataIntegrityViolationException;
+    /*List<User> getFriendsByUserId(UUID fromString) throws IOException, URISyntaxException;
     void logout(User user) throws IOException, URISyntaxException;
     String enable2FA(UUID userId, String username) throws IOException, URISyntaxException;
     void disable2FA(UUID userId) throws IOException, URISyntaxException;
@@ -21,5 +24,5 @@ public interface IUserService
     void acceptInvite(String invite, UUID userId) throws IOException, URISyntaxException;
     void declineInvite(String invite, UUID userId) throws IOException, URISyntaxException;
     void removeFriend(String friendDisplayName, UUID userId) throws IOException, URISyntaxException;
-    void deleteAccount(UUID userId);
+    void deleteAccount(UUID userId);*/
 }

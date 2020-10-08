@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import felix.api.models.Event;
 import felix.api.models.EventType;
 
+import javax.persistence.EntityNotFoundException;
 import java.security.NoSuchAlgorithmException;
 
 @Slf4j
@@ -30,6 +32,18 @@ public class HttpControllerAdvice
     {
         this.createEvent(e, EventType.INFO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity handleDataIntegrityViolationException(final DataIntegrityViolationException e)
+    {
+        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity handleEntityNotFoundException(final EntityNotFoundException e)
+    {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @ExceptionHandler(ItemNotFoundException.class)

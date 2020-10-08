@@ -1,44 +1,31 @@
 package felix.api.service.user;
 
-import felix.api.exceptions.NotImplementedException;
 import felix.api.repository.UserRepository;
-import felix.api.service.MicroService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import felix.api.models.User;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.*;
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
-public class UserService/* extends MicroService */implements IUserService
+public class UserService implements IUserService
 {
     private final UserRepository userRepository;
 
-    private Map<String, User> users = new HashMap<String, User>() //TODO db connectie
-    {{
-        super.put("Henk", User.builder().id(UUID.randomUUID()).displayName("Henk123").name("Henk").twoFAEnabled(false).password("123").build()); //todo db connectie
-        super.put("Bart", User.builder().id(UUID.randomUUID()).displayName("Bart123").name("Bart").twoFAEnabled(false).password("123").build()); //todo db connectie
-    }};
-
     @Override
-    public User login(User user) throws IOException, URISyntaxException
+    public User login(User user) throws EntityNotFoundException
     {
-        User authenticatedUser = this.users.get(user.getName()); //todo db connectie
-        if (authenticatedUser == null) return null;
-        if (!authenticatedUser.getPassword().equals(user.getPassword())) return null;
-        return User.builder().id(authenticatedUser.getId()).twoFAEnabled(authenticatedUser.isTwoFAEnabled()).name(authenticatedUser.getName()).displayName(authenticatedUser.getDisplayName()).build(); //throw new NotImplementedException();
+        return userRepository.findByNameAndPassword(user.getName(), user.getPassword()).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
-    public void logout(User user) throws IOException, URISyntaxException
+    public User register(User user) throws DataIntegrityViolationException
     {
-        throw new NotImplementedException();
+        return userRepository.save(user);
     }
 
-    @Override
+    /*@Override
     public String enable2FA(UUID userId, String username) throws IOException, URISyntaxException
     {
         throw new NotImplementedException();
@@ -51,10 +38,9 @@ public class UserService/* extends MicroService */implements IUserService
     }
 
     @Override
-    public User register(User user) throws IOException, URISyntaxException
+    public void logout(User user) throws IOException, URISyntaxException
     {
-        users.put(user.getDisplayName(), User.builder().id(UUID.randomUUID()).displayName(user.getDisplayName()).name(user.getName()).twoFAEnabled(false).password(user.getPassword()).build());
-        return users.get(user.getDisplayName());
+        throw new NotImplementedException();
     }
 
     @Override
@@ -109,5 +95,5 @@ public class UserService/* extends MicroService */implements IUserService
     public void deleteAccount(UUID userId)
     {
         throw new NotImplementedException();
-    }
+    }*/
 }

@@ -55,7 +55,7 @@ public class PlayerController
     }
     ///////////////////////////TESTS//////////////////////////////////////
 
-    @DeleteMapping("/")
+    /*@DeleteMapping("/")
     public ResponseEntity deleteAccount(@RequestHeader("Authorization") String jwt)
     {
         userService.deleteAccount(new JwtTokenGenerator().decodeJWT(jwt).getId());
@@ -123,5 +123,5 @@ public class PlayerController
     {
         userService.declineInvite(invite, new JwtTokenGenerator().decodeJWT(jwt).getId());
         return ResponseEntity.ok(userService.getIncomingPendingInvites(new JwtTokenGenerator().decodeJWT(jwt).getId()));
-    }
+    }*/
 }

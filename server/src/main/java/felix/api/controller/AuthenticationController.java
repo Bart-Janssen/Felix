@@ -5,7 +5,6 @@ import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import felix.api.service.EncryptionManager;
 import felix.api.service.user.IUserService;
-import felix.api.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/authentication")
 public class AuthenticationController extends EncryptionManager
 {
-    private final UserService userService;
+    private final IUserService userService;
 
     @GetMapping("/hai")
     public ResponseEntity logins()
@@ -91,7 +90,7 @@ public class AuthenticationController extends EncryptionManager
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @PutMapping("/logout")
+    /*@PutMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String jwt) throws IOException, URISyntaxException
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
@@ -114,5 +113,5 @@ public class AuthenticationController extends EncryptionManager
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         userService.disable2FA(user.getId());
         return ResponseEntity.ok().build();
-    }
+    }*/
 }

@@ -176,6 +176,11 @@ public class AuthenticationController extends MainController
             user.setPassword(encryptedUserInfo.get("password"));
             this.userService.register(user);
         }
+        catch (AlreadyLoggedInException e)
+        {
+            this.loginFailed("This name is not available now.");
+            return;
+        }
         catch (Exception e)
         {
             e.printStackTrace();
