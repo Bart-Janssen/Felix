@@ -7,7 +7,7 @@ public class User
     private UUID id;
     private String name;
     private String password;
-    private String encryptedUUID;
+    private String sessionId;
     private int coins;
     private int level;
     private String displayName;
@@ -49,14 +49,14 @@ public class User
         this.password = password;
     }
 
-    public void setEncryptedUUID(String encryptedUUID)
+    public void setSessionId(String sessionId)
     {
-        this.encryptedUUID = encryptedUUID;
+        this.sessionId = sessionId;
     }
 
-    public String getEncryptedUUID()
+    public String getSessionId()
     {
-        return encryptedUUID;
+        return sessionId;
     }
 
     public String getDisplayName()

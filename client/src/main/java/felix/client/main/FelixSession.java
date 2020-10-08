@@ -15,7 +15,6 @@ import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class FelixSession extends EncryptionManager
 {
@@ -23,7 +22,7 @@ public class FelixSession extends EncryptionManager
     private static Session session = null;
     private static HeartBeatThread heartBeatThread = null;
     private static JwtToken token = null;
-    private static UUID pendingUUID = null;
+    private static String sessionId = null;
 
     public static FelixSession getInstance()
     {
@@ -37,7 +36,7 @@ public class FelixSession extends EncryptionManager
             RsaEncryptionManager.setPublicServerKey(initWebSocketMessage.getServerPublicKey());
             String decryptedAesKey = RsaEncryptionManager.decrypt(initWebSocketMessage.getEncryptedAesKey());
             super.init(decryptedAesKey);
-            pendingUUID = UUID.fromString(super.aesDecrypt(initWebSocketMessage.getEncryptedUuid()));
+            sessionId = super.aesDecrypt(initWebSocketMessage.getEncryptedSessionId());
         }
         catch (GeneralSecurityException e)
         {
@@ -105,7 +104,7 @@ public class FelixSession extends EncryptionManager
             encryptedUserInfo.put("name", RsaEncryptionManager.encrypt(user.getName()));
             if (user.getDisplayName() != null) encryptedUserInfo.put("disp", RsaEncryptionManager.encrypt(user.getDisplayName()));
             encryptedUserInfo.put("password", RsaEncryptionManager.encrypt(user.getPassword()));
-            encryptedUserInfo.put("uuid", RsaEncryptionManager.encrypt(pendingUUID.toString()));
+            encryptedUserInfo.put("sessionId", RsaEncryptionManager.encrypt(sessionId));
             return encryptedUserInfo;
         }
         catch (GeneralSecurityException e)
@@ -142,7 +141,7 @@ public class FelixSession extends EncryptionManager
         felixSession = null;
         heartBeatThread = null;
         session = null;
-        pendingUUID = null;
+        sessionId = null;
     }
 
     public String getToken()

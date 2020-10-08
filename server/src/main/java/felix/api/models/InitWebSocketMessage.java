@@ -9,5 +9,5 @@ public class InitWebSocketMessage
 {
     private String serverPublicKey;
     private String encryptedAesKey;
-    private String encryptedUuid;
+    private String encryptedSessionId;
 }

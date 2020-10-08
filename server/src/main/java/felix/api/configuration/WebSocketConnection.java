@@ -9,7 +9,6 @@ import felix.api.models.WebSocketMessage;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.security.GeneralSecurityException;
-import java.util.UUID;
 
 @ServerEndpoint(value = "/server/{" + WebSocket.KEY + "}")
 public class WebSocketConnection extends WebSocket
@@ -21,10 +20,10 @@ public class WebSocketConnection extends WebSocket
         {
             String clientPublicKey = session.getPathParameters().get(WebSocket.KEY).replace("--dash--", "/");
             String aesKey = AesEncryptionManager.generateKey();
-            UUID pendingUUID = super.putPendingSession(session, clientPublicKey, aesKey);
-            String encryptedUUID = AesEncryptionManager.encrypt(aesKey, pendingUUID.toString());
+            super.putPendingSession(session, clientPublicKey, aesKey);
+            String encryptedSessionId = AesEncryptionManager.encrypt(aesKey, session.getId());
             String encryptedAesKey = RsaEncryptionManager.encrypt(clientPublicKey, aesKey);
-            session.getAsyncRemote().sendText(new Gson().toJson(new InitWebSocketMessage(RsaEncryptionManager.getPubKey(), encryptedAesKey, encryptedUUID)));
+            session.getAsyncRemote().sendText(new Gson().toJson(new InitWebSocketMessage(RsaEncryptionManager.getPubKey(), encryptedAesKey, encryptedSessionId)));
         }
         catch (GeneralSecurityException e)
         {
@@ -59,7 +58,7 @@ public class WebSocketConnection extends WebSocket
     {
         try
         {
-            removeSession(GetterType.SESSION_ID, session.getId());
+            super.killSession(session.getId());
             session.close(new CloseReason(closeCode, reason));
         }
         catch (Exception e)
@@ -72,7 +71,7 @@ public class WebSocketConnection extends WebSocket
     public void onClose(CloseReason reason, Session session)
     {
         System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
-        removeSession(GetterType.SESSION_ID, session.getId());
+        super.killSession(session.getId());
         super.checkRemovePendingSession(session.getId());
     }
 

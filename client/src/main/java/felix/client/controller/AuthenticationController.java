@@ -106,7 +106,7 @@ public class AuthenticationController extends MainController
             //todo 2FA when implemented.
             User user = new User(this.textFieldUsername.getText(), this.textFieldPassword.getText());
             Map<String, String> encryptedUserInfo = FelixSession.getInstance().getEncryptedUserInfo(user);
-            user.setEncryptedUUID(encryptedUserInfo.get("uuid"));
+            user.setSessionId(encryptedUserInfo.get("sessionId"));
             user.setName(encryptedUserInfo.get("name"));
             user.setPassword(encryptedUserInfo.get("password"));
             this.userService.login(user);
@@ -172,7 +172,7 @@ public class AuthenticationController extends MainController
             Map<String, String> encryptedUserInfo = FelixSession.getInstance().getEncryptedUserInfo(user);
             user.setName(encryptedUserInfo.get("name"));
             user.setDisplayName(encryptedUserInfo.get("disp"));
-            user.setEncryptedUUID(encryptedUserInfo.get("uuid"));
+            user.setSessionId(encryptedUserInfo.get("sessionId"));
             user.setPassword(encryptedUserInfo.get("password"));
             this.userService.register(user);
         }

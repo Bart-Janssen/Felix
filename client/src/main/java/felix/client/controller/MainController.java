@@ -4,6 +4,7 @@ import felix.client.fxml.NavigationAnchor;
 import felix.client.main.FelixSession;
 import felix.client.models.View;
 import felix.client.service.EncryptionManager;
+import felix.client.service.system.RsaEncryptionManager;
 import felix.client.service.user.IUserService;
 import felix.client.service.user.UserService;
 import javafx.application.Platform;

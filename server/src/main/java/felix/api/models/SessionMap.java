@@ -9,7 +9,7 @@ public class SessionMap
     private Map<String, UserSession> userDisplayNameMap = new HashMap<>();
     private Map<String, String> tokenMap = new HashMap<>();
     private Map<String, String> sessionIdMap = new HashMap<>();
-    private Map<UUID, PendingSession> pendingSessions = new HashMap<>();
+    private Map<String, PendingSession> pendingSessions = new HashMap<>();
 
     public UserSession get(GetterType type, String key)
     {
@@ -22,9 +22,9 @@ public class SessionMap
         }
     }
 
-    public PendingSession getPending(UUID uuid)
+    public PendingSession getPending(String sessionId)
     {
-        return this.pendingSessions.get(uuid);
+        return this.pendingSessions.get(sessionId);
     }
 
     public void addSession(String displayName, UserSession userSession)
@@ -34,12 +34,17 @@ public class SessionMap
         this.sessionIdMap.put(userSession.getSession().getId(), displayName);
     }
 
-    public void removeSession(GetterType type, String key)
+    public void logout(String jwtToken)
     {
-        UserSession session = this.get(type, key);
+        UserSession session = this.get(GetterType.TOKEN, jwtToken);
+        this.putPendingSession(session.getSession(), session.getRsaPublicKey(), session.getAesKey());
+        this.killSession(session.getSession().getId());
 
+    }
 
-       // UserSession userSession = this.userDisplayNameMap.get(this.sessionIdMap.get(sessionId));
+    public void killSession(String sessionId)
+    {
+        UserSession session = this.get(GetterType.SESSION_ID, sessionId);
         this.userDisplayNameMap.remove(session.getUser().getDisplayName());
         this.tokenMap.remove(session.getToken().getToken());
         this.sessionIdMap.remove(session.getSession().getId());
@@ -50,23 +55,14 @@ public class SessionMap
         return this.userDisplayNameMap.values();
     }
 
-    public UUID putPendingSession(Session session, String clientPublicKey, String aesKey)
+    public void putPendingSession(Session session, String clientPublicKey, String aesKey)
     {
-        UUID uniqueUUID = this.getUniqueUUID();
-        this.pendingSessions.put(uniqueUUID, new PendingSession(clientPublicKey, session, aesKey));
-        return uniqueUUID;
+        this.pendingSessions.put(session.getId(), new PendingSession(clientPublicKey, session, aesKey));
     }
 
-    private UUID getUniqueUUID()
+    public void removePendingSession(String sessionId)
     {
-        UUID uuid = UUID.randomUUID();
-        if (this.pendingSessions.get(uuid) == null) return uuid;
-        return this.getUniqueUUID();
-    }
-
-    public void removePendingSession(UUID pendingUUID)
-    {
-        this.pendingSessions.remove(pendingUUID);
+        this.pendingSessions.remove(sessionId);
     }
 
     public UserSession updateJwtToken(GetterType type, String key)

@@ -40,7 +40,7 @@ public abstract class EncryptionManager
         decryptedUserInfo.put("name", RsaEncryptionManager.decrypt(user.getName()));
         if (user.getDisplayName() != null) decryptedUserInfo.put("disp", RsaEncryptionManager.decrypt(user.getDisplayName()));
         decryptedUserInfo.put("password", RsaEncryptionManager.decrypt(user.getPassword()));
-        decryptedUserInfo.put("uuid", RsaEncryptionManager.decrypt(user.getEncryptedUUID()));
+        decryptedUserInfo.put("sessionId", RsaEncryptionManager.decrypt(user.getSessionId()));
         return decryptedUserInfo;
     }
 

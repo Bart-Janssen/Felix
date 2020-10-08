@@ -6,7 +6,6 @@ import felix.api.service.EncryptionManager;
 import javax.websocket.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.UUID;
 
 public abstract class WebSocket extends EncryptionManager
 {
@@ -42,17 +41,22 @@ public abstract class WebSocket extends EncryptionManager
 
     static Boolean addSession(User user, JwtToken token)
     {
-        UUID pendingUUID = UUID.fromString(user.getEncryptedUUID());
-        PendingSession pendingSession = sessions.getPending(pendingUUID);
+        String sessionId = user.getSessionId();
+        PendingSession pendingSession = sessions.getPending(user.getSessionId());
         if (pendingSession == null) return false;
-        sessions.addSession(user.getDisplayName(), new UserSession(token, user, pendingSession.getSession(), pendingSession.getAesKey()));
-        sessions.removePendingSession(pendingUUID);
+        sessions.addSession(user.getDisplayName(), new UserSession(token, user, pendingSession.getSession(), pendingSession.getClientPublicKey(), pendingSession.getAesKey()));
+        sessions.removePendingSession(sessionId);
         return true;
     }
 
-    protected static void removeSession(GetterType type, String key)
+    static void logout(String jwtToken)
     {
-        sessions.removeSession(type, key);
+        sessions.logout(jwtToken);
+    }
+
+    protected void killSession(String sessionId)
+    {
+        sessions.killSession(sessionId);
     }
 
     private Boolean userHasToken(String token)
@@ -73,9 +77,9 @@ public abstract class WebSocket extends EncryptionManager
         return this.userHasToken(token);
     }
 
-    protected UUID putPendingSession(Session session, String clientPublicKey, String aesKey)
+    protected void putPendingSession(Session session, String clientPublicKey, String aesKey)
     {
-        return sessions.putPendingSession(session, clientPublicKey, aesKey);
+        sessions.putPendingSession(session, clientPublicKey, aesKey);
     }
 
     public static UserSession getSession(GetterType type, String key)
@@ -90,6 +94,6 @@ public abstract class WebSocket extends EncryptionManager
 
     protected void checkRemovePendingSession(String sessionId)
     {
-        
+
     }
 }
