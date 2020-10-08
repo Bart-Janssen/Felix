@@ -49,19 +49,17 @@ public class AuthenticationController extends EncryptionManager
         return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, user));
     }
 
-    //tuwafjkse8y67sB^5be%EB^v5e4s6gh
-
     @PostMapping("/login/")
     public ResponseEntity<AesEncryptedMessage> login(@RequestBody User user) throws Exception
     {
         Map<String, String> decryptedUserInfo = super.decryptRsaUser(user);
         user.setName(decryptedUserInfo.get("name"));
         user.setPassword(decryptedUserInfo.get("password"));
-        user.setEncryptedUUID(decryptedUserInfo.get("uuid"));
+        user.setSessionId(decryptedUserInfo.get("sessionId"));
         User authenticatedUser = userService.login(user);
         if (authenticatedUser != null)
         {
-            authenticatedUser.setEncryptedUUID(user.getEncryptedUUID());
+            authenticatedUser.setSessionId(user.getSessionId());
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
             return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), null));
@@ -76,12 +74,12 @@ public class AuthenticationController extends EncryptionManager
         user.setName(decryptedUserInfo.get("name"));
         user.setDisplayName(decryptedUserInfo.get("disp"));
         user.setPassword(decryptedUserInfo.get("password"));
-        user.setEncryptedUUID(decryptedUserInfo.get("uuid"));
+        user.setSessionId(decryptedUserInfo.get("sessionId"));
         if (user.getPassword().length() < 8) throw new BadRequestException();
         User registeredUser = userService.register(user);
         if (registeredUser != null)
         {
-            registeredUser.setEncryptedUUID(user.getEncryptedUUID());
+            registeredUser.setSessionId(user.getSessionId());
             JwtToken token = new JwtTokenGenerator().createJWT(registeredUser);
             if (!WebSocket.addSession(registeredUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
             return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), null));
@@ -94,7 +92,7 @@ public class AuthenticationController extends EncryptionManager
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        WebSocket.removeSession(GetterType.TOKEN, jwt);
+        WebSocket.logout(jwt);
 //        userService.logout(user); //todo set online status
         return ResponseEntity.ok().build();
     }

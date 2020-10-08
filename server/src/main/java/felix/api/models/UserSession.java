@@ -11,5 +11,6 @@ public class UserSession
     private JwtToken token;
     private User user;
     private Session session;
+    private String rsaPublicKey;
     private String aesKey;
 }

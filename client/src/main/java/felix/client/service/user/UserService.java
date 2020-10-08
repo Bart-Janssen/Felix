@@ -7,7 +7,6 @@ import felix.client.models.AesEncryptedMessage;
 import felix.client.models.JwtToken;
 import felix.client.models.User;
 import felix.client.service.MainService;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 

@@ -4,15 +4,15 @@ public class InitWebSocketMessage
 {
     private String serverPublicKey;
     private String encryptedAesKey;
-    private String encryptedUuid;
+    private String encryptedSessionId;
 
     public InitWebSocketMessage() {}
 
-    public InitWebSocketMessage(String serverPublicKey, String encryptedAesKey, String encryptedUuid)
+    public InitWebSocketMessage(String serverPublicKey, String encryptedAesKey, String encryptedSessionId)
     {
         this.serverPublicKey = serverPublicKey;
         this.encryptedAesKey = encryptedAesKey;
-        this.encryptedUuid = encryptedUuid;
+        this.encryptedSessionId = encryptedSessionId;
     }
 
     public String getServerPublicKey()
@@ -35,13 +35,13 @@ public class InitWebSocketMessage
         this.encryptedAesKey = encryptedAesKey;
     }
 
-    public String getEncryptedUuid()
+    public String getEncryptedSessionId()
     {
-        return encryptedUuid;
+        return encryptedSessionId;
     }
 
-    public void setEncryptedUuid(String encryptedUuid)
+    public void setEncryptedSessionId(String encryptedSessionId)
     {
-        this.encryptedUuid = encryptedUuid;
+        this.encryptedSessionId = encryptedSessionId;
     }
 }
