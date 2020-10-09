@@ -75,4 +75,10 @@ abstract class MainController extends EncryptionManager implements Initializable
     {
         this.openNewView(View.PROFILE);
     }
+
+    @FXML
+    public void switchToHome()
+    {
+        this.openNewView(View.HOME);
+    }
 }
