@@ -17,6 +17,7 @@ public abstract class EncryptionManager
     protected <T> AesEncryptedMessage aesEncrypt(GetterType type, String key, T object) throws GeneralSecurityException
     {
         UserSession session = WebSocket.getSession(type, key);
+        if (object == null) return new AesEncryptedMessage(AesEncryptionManager.encrypt(session.getAesKey(), WebSocket.updateJwtToken(type, key).getToken().getToken()), null);
         return new AesEncryptedMessage(AesEncryptionManager.encrypt(session.getAesKey(), WebSocket.updateJwtToken(type, key).getToken().getToken()), AesEncryptionManager.encrypt(session.getAesKey(), new Gson().toJson(object)));
     }
 

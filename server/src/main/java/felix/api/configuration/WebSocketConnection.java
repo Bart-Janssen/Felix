@@ -71,8 +71,8 @@ public class WebSocketConnection extends WebSocket
     public void onClose(CloseReason reason, Session session)
     {
         System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
-        super.killSession(session.getId());
-        super.checkRemovePendingSession(session.getId());
+
+        if (!super.checkRemovePendingSession(session.getId())) super.killSession(session.getId());
     }
 
     @Override

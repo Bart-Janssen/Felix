@@ -92,8 +92,13 @@ public abstract class WebSocket extends EncryptionManager
         return sessions.updateJwtToken(type, key);
     }
 
-    protected void checkRemovePendingSession(String sessionId)
+    static void set2Fa(GetterType type, String key, boolean enable)
     {
+        sessions.set2Fa(type, key, enable);
+    }
 
+    protected boolean checkRemovePendingSession(String sessionId)
+    {
+        return sessions.checkRemovePendingSession(sessionId);
     }
 }

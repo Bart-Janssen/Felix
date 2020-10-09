@@ -10,7 +10,6 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 import felix.api.configuration.PasswordHasher;
 import felix.api.exceptions.NotAuthorizedException;
-import felix.api.exceptions.NotImplementedException;
 import felix.api.repository.CredentialRepository;
 import felix.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +80,7 @@ public class UserService implements IUserService
     @Override
     public void disable2FA(UUID userId) throws IOException, URISyntaxException
     {
-        throw new NotImplementedException();
+        credentialRepository.disable2FA(userId);
     }
 
     /*@Override

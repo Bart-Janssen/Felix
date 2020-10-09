@@ -32,14 +32,16 @@ public class ProfileController extends MainController
     public void initialize(URL location, ResourceBundle resources)
     {
         Platform.runLater(() -> super.setStage(this.main));
-        Platform.runLater(() ->
-        {
-            this.user = new JwtDecoder().decode(FelixSession.getInstance().getToken());
-            this.labelName.setText("Name: " + this.user.getName());
-            this.labelDisplayName.setText("Displayname: " + this.user.getDisplayName());
-            this.buttonTwoFa.setText(this.user.hasTwoFAEnabled() ? "Disable 2FA" : "Enable 2FA");
-        });
+        Platform.runLater(this::setUser);
         this.initializeEvents();
+    }
+
+    private void setUser()
+    {
+        this.user = new JwtDecoder().decode(FelixSession.getInstance().getToken());
+        this.labelName.setText("Name: " + this.user.getName());
+        this.labelDisplayName.setText("Displayname: " + this.user.getDisplayName());
+        this.buttonTwoFa.setText(this.user.hasTwoFAEnabled() ? "Disable 2FA" : "Enable 2FA");
     }
 
     private void initializeEvents()
@@ -49,11 +51,14 @@ public class ProfileController extends MainController
             if (this.user.hasTwoFAEnabled())
             {
                 disable2Fa();
+                qrCode.setImage(null);
+                this.setUser();
                 return;
             }
             try
             {
                 qrCode.setImage(new Image(new ByteArrayInputStream(new BASE64Decoder().decodeBuffer(enable2Fa()))));
+                this.setUser();
             }
             catch (Exception e)
             {
@@ -77,6 +82,6 @@ public class ProfileController extends MainController
 
     private void disable2Fa()
     {
-
+        this.userService.disable2Fa();
     }
 }

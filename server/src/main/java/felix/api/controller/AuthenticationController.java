@@ -102,7 +102,9 @@ public class AuthenticationController extends EncryptionManager
         try
         {
             User user = new JwtTokenGenerator().decodeJWT(jwt);
-            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, userService.enable2FA(user.getId(), user.getName())));
+            String qrCode = userService.enable2FA(user.getId(), user.getName());
+            WebSocket.set2Fa(GetterType.DISPLAY_NAME, user.getDisplayName(), true);
+            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, qrCode));
         }
         catch (Exception e)
         {
@@ -113,10 +115,11 @@ public class AuthenticationController extends EncryptionManager
     }
 
     @DeleteMapping("/2fa/disable")
-    public ResponseEntity disable2FA(@RequestHeader("Authorization") String jwt) throws Exception
+    public ResponseEntity<AesEncryptedMessage> disable2FA(@RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         userService.disable2FA(user.getId());
-        return ResponseEntity.ok().build();
+        WebSocket.set2Fa(GetterType.DISPLAY_NAME, user.getDisplayName(), false);
+        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, null));
     }
 }

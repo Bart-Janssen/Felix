@@ -12,5 +12,6 @@ public interface IUserService
     void register(User user) throws NotAuthorizedException, AlreadyLoggedInException;
     void logout() throws IOException, URISyntaxException;
     String enable2Fa() throws IOException, URISyntaxException;
+    void disable2Fa();
     void rest();
 }

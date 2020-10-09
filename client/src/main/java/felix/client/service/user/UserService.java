@@ -66,6 +66,20 @@ public class UserService extends MainService implements IUserService
     }
 
     @Override
+    public void disable2Fa()
+    {
+        try
+        {
+            AesEncryptedMessage aesEncryptedMessage = super.delete("authentication/2fa/disable/", AesEncryptedMessage.class);
+            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void rest()
     {
         try

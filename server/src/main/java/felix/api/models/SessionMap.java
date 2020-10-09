@@ -73,4 +73,16 @@ public class SessionMap
         this.tokenMap.put(session.getToken().getToken(), session.getUser().getDisplayName());
         return this.userDisplayNameMap.put(session.getUser().getDisplayName(), session);
     }
+
+    public void set2Fa(GetterType type, String key, boolean enable)
+    {
+        this.get(type, key).getUser().setTwoFAEnabled(enable);
+    }
+
+    public boolean checkRemovePendingSession(String sessionId)
+    {
+        if (this.pendingSessions.get(sessionId) == null) return false;
+        this.pendingSessions.remove(sessionId);
+        return true;
+    }
 }
