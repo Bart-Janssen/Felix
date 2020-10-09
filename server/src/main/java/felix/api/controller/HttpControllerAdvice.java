@@ -1,8 +1,6 @@
 package felix.api.controller;
 
-import felix.api.exceptions.BadRequestException;
-import felix.api.exceptions.ItemNotFoundException;
-import felix.api.exceptions.NotAuthorizedException;
+import felix.api.exceptions.*;
 import felix.api.service.event.IEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +29,18 @@ public class HttpControllerAdvice
     {
         this.createEvent(e, EventType.INFO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @ExceptionHandler(AlreadyFriendsException.class)
+    public ResponseEntity handleAlreadyFriendsException(final AlreadyFriendsException e)
+    {
+        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+    }
+
+    @ExceptionHandler(AlreadyPendingInviteException.class)
+    public ResponseEntity handleAlreadyPendingInviteException(final AlreadyPendingInviteException e)
+    {
+        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

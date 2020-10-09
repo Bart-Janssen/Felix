@@ -11,6 +11,7 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 import felix.api.configuration.PasswordHasher;
 import felix.api.exceptions.NotAuthorizedException;
 import felix.api.repository.CredentialRepository;
+import felix.api.repository.PendingFriendInviteRepository;
 import felix.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,7 +20,6 @@ import felix.api.models.User;
 import javax.persistence.EntityNotFoundException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -30,12 +30,13 @@ public class UserService implements IUserService
     private final UserRepository userRepository;
     private final GoogleAuthenticator googleAuthenticator;
     private final CredentialRepository credentialRepository;
+    private final PendingFriendInviteRepository pendingFriendInviteRepository;
     private static final int TWO_FACTOR_AUTHENTICATION_CODE_LENGTH = 6;
 
     @Override
     public User login(User user) throws EntityNotFoundException
     {
-        User authenticatedUser = userRepository.findByName(user.getName()).orElseThrow(EntityNotFoundException::new);
+        User authenticatedUser = this.userRepository.findByName(user.getName()).orElseThrow(EntityNotFoundException::new);
         if (authenticatedUser.getTotp() == null)
         {
 
@@ -49,7 +50,7 @@ public class UserService implements IUserService
         }
         int code = Integer.parseInt(user.getPassword().substring(user.getPassword().length() - TWO_FACTOR_AUTHENTICATION_CODE_LENGTH));
         if (!new PasswordHasher().verifyHash(user.getPassword().substring(0, user.getPassword().length() - TWO_FACTOR_AUTHENTICATION_CODE_LENGTH), authenticatedUser.getPassword()))
-        if (!googleAuthenticator.authorizeUser(authenticatedUser.getId().toString(), code))
+        if (!this.googleAuthenticator.authorizeUser(authenticatedUser.getId().toString(), code))
         {
             throw new NotAuthorizedException();
         }
@@ -62,13 +63,13 @@ public class UserService implements IUserService
     public User register(User user) throws DataIntegrityViolationException
     {
         user.setPassword(new PasswordHasher().hash(user.getPassword()));
-        return userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     @Override
     public String enable2FA(UUID userId, String username) throws IOException, WriterException
     {
-        final GoogleAuthenticatorKey key = googleAuthenticator.createCredentials(userId.toString());
+        final GoogleAuthenticatorKey key = this.googleAuthenticator.createCredentials(userId.toString());
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         String authURL = GoogleAuthenticatorQRGenerator.getOtpAuthTotpURL("Felix", username, key);
         BitMatrix bitMatrix = qrCodeWriter.encode(authURL, BarcodeFormat.QR_CODE, 200, 200);
@@ -78,9 +79,9 @@ public class UserService implements IUserService
     }
 
     @Override
-    public void disable2FA(UUID userId) throws IOException, URISyntaxException
+    public void disable2FA(UUID userId)
     {
-        credentialRepository.disable2FA(userId);
+        this.credentialRepository.disable2FA(userId);
     }
 
     /*@Override
@@ -97,18 +98,6 @@ public class UserService implements IUserService
 
     @Override
     public void sendFriendInvite(String displayName, UUID userId) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<String> getOutgoingPendingInvites(UUID userId) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<String> getIncomingPendingInvites(UUID userId) throws IOException, URISyntaxException
     {
         throw new NotImplementedException();
     }

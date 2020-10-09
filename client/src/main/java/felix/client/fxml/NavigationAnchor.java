@@ -15,6 +15,7 @@ public class NavigationAnchor extends AnchorPane
     @FXML private Button buttonLogout;
     @FXML private Button buttonSwitchToProfile;
     @FXML private Button buttonSwitchToHome;
+    @FXML private Button buttonSwitchToFriends;
 
     public NavigationAnchor()
     {
@@ -37,6 +38,7 @@ public class NavigationAnchor extends AnchorPane
         buttonLogout.setOnMouseClicked(event -> onActionPropertyLogout().get().handle(event));
         buttonSwitchToProfile.setOnMouseClicked(event -> onActionPropertySwitchToProfile().get().handle(event));
         buttonSwitchToHome.setOnMouseClicked(event -> onActionPropertySwitchToHome().get().handle(event));
+        buttonSwitchToFriends.setOnMouseClicked(event -> onActionPropertySwitchToFriends().get().handle(event));
     }
 
     private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionLogout = new SimpleObjectProperty<>();
@@ -92,5 +94,26 @@ public class NavigationAnchor extends AnchorPane
     public final EventHandler<MouseEvent> getOnActionSwitchToHome()
     {
         return propertyOnActionSwitchToHome.get();
+    }
+
+
+
+
+
+    private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionSwitchToFriends = new SimpleObjectProperty<>();
+
+    private ObjectProperty<EventHandler<MouseEvent>> onActionPropertySwitchToFriends()
+    {
+        return propertyOnActionSwitchToFriends;
+    }
+
+    public final void setOnActionSwitchToFriends(EventHandler<MouseEvent> handler)
+    {
+        propertyOnActionSwitchToFriends.set(handler);
+    }
+
+    public final EventHandler<MouseEvent> getOnActionSwitchToFriends()
+    {
+        return propertyOnActionSwitchToFriends.get();
     }
 }

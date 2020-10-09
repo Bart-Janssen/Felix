@@ -79,4 +79,9 @@ public class User
     {
         return this.twoFAEnabled;
     }
+
+    public UUID getId()
+    {
+        return this.id;
+    }
 }

@@ -10,4 +10,5 @@ public interface UserRepository extends CrudRepository<User, UUID>
     Optional<User> findByNameAndPassword(final String name, final String password);
     Optional<User> findByName(final String name);
     Optional<User> findUserById(final UUID id);
+    Optional<User> findByDisplayName(final String displayName);
 }
