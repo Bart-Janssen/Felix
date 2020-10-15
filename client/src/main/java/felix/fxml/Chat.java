@@ -2,25 +2,36 @@ package felix.fxml;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class Chat extends Pane
+public class Chat extends VBox
 {
-    public Chat(String displayName)
+    public Chat(String fromDisplayName, String message)
     {
-        super.setPrefWidth(100);
-        super.setPrefHeight(40);
-        super.setStyle("-fx-background-color:green; -fx-border-color:blue; -fx-border-width: 1;");
-        Label from = new Label(displayName);
+        super.setPrefWidth(614);
+        super.setMinHeight(45);
+        Label from = new Label(fromDisplayName);
         from.setStyle("-fx-font-weight: bold;");
         from.setPadding(new Insets(2, 0, 0, 10));
-
-
-        Label name = new Label("test chat, static text btw");
-        name.setFont(new Font(20));
-        name.setPadding(new Insets(15, 0, 0, 10));
-//        name.layoutYProperty().bind(super.heightProperty().subtract(name.heightProperty()).divide(2));
-        super.getChildren().addAll(name, from);
+        Label messageLabel = new Label(message);
+        messageLabel.setFont(new Font(15));
+        messageLabel.setMaxWidth(600);
+        messageLabel.setPrefWidth(600);
+        messageLabel.setWrapText(true);
+        messageLabel.setPadding(new Insets(0, 0, 0, 10));
+        super.setStyle("-fx-background-color:green; -fx-border-color:blue; -fx-border-width: 1;");
+        new Thread(() ->
+        {
+            for (;;)
+            {
+                if (messageLabel.getHeight() > 0.0D)
+                {
+                    super.setHeight(messageLabel.getHeight() + from.getHeight());
+                    break;
+                }
+            }
+        }).start();
+        super.getChildren().addAll(from, messageLabel);
     }
 }

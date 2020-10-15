@@ -11,7 +11,6 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 import felix.api.configuration.PasswordHasher;
 import felix.api.exceptions.NotAuthorizedException;
 import felix.api.repository.CredentialRepository;
-import felix.api.repository.PendingFriendInviteRepository;
 import felix.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +19,7 @@ import felix.api.models.User;
 import javax.persistence.EntityNotFoundException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -30,7 +30,6 @@ public class UserService implements IUserService
     private final UserRepository userRepository;
     private final GoogleAuthenticator googleAuthenticator;
     private final CredentialRepository credentialRepository;
-    private final PendingFriendInviteRepository pendingFriendInviteRepository;
     private static final int TWO_FACTOR_AUTHENTICATION_CODE_LENGTH = 6;
 
     @Override
@@ -39,11 +38,11 @@ public class UserService implements IUserService
         User authenticatedUser = this.userRepository.findByName(user.getName()).orElseThrow(EntityNotFoundException::new);
         if (authenticatedUser.getTotp() == null)
         {
-
             if (new PasswordHasher().verifyHash(user.getPassword(), authenticatedUser.getPassword()))
             {
                 authenticatedUser.setPassword("");
                 authenticatedUser.setTwoFAEnabled(false);
+                this.clearFriendInfo(authenticatedUser);
                 return authenticatedUser;
             }
             throw new NotAuthorizedException();
@@ -56,14 +55,30 @@ public class UserService implements IUserService
         }
         authenticatedUser.setPassword("");
         authenticatedUser.setTwoFAEnabled(true);
+        this.clearFriendInfo(authenticatedUser);
         return authenticatedUser;
+    }
+
+    private void clearFriendInfo(User user)
+    {
+        user.getFriends().forEach(friend ->
+        {
+            friend.setFriends(new ArrayList<>());
+            friend.setPassword("");
+            friend.setTwoFAEnabled(false);
+            friend.setName("");
+            friend.setTotp(null);
+            friend.setId(null);
+        });
     }
 
     @Override
     public User register(User user) throws DataIntegrityViolationException
     {
         user.setPassword(new PasswordHasher().hash(user.getPassword()));
-        return this.userRepository.save(user);
+        User registeredUser = this.userRepository.save(user);
+        this.clearFriendInfo(registeredUser);
+        return registeredUser;
     }
 
     @Override

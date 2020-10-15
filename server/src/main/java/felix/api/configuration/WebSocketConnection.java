@@ -2,10 +2,9 @@ package felix.api.configuration;
 
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
-import felix.api.models.AesEncryptedMessage;
-import felix.api.models.GetterType;
-import felix.api.models.InitWebSocketMessage;
-import felix.api.models.WebSocketMessage;
+import felix.api.models.*;
+import felix.api.service.user.UserService;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.security.GeneralSecurityException;
@@ -43,15 +42,29 @@ public class WebSocketConnection extends WebSocket
             this.closeSession(session, CloseReason.CloseCodes.CANNOT_ACCEPT, " JWT token invalid!");
             return;
         }
-        System.out.println("AES Encrypted msg: " + message);
-        System.out.println("AES Decrypted msg: " + webSocketMessage.getMessage());
-        System.out.println("AES Decrypted jwt: " + webSocketMessage.getJwtToken().getToken());
-        this.sendMessage(session, "Hey from server!");
+//        System.out.println("AES Encrypted msg: " + message);
+//        System.out.println("AES Decrypted msg: " + webSocketMessage.getMessage());
+//        System.out.println("AES Decrypted jwt: " + webSocketMessage.getJwtToken().getToken());
+        UserSession from = WebSocket.getSession(GetterType.TOKEN, webSocketMessage.getJwtToken().getToken());
+        UserSession friendTo = WebSocket.getSession(GetterType.DISPLAY_NAME, webSocketMessage.getTo());
+        if (friendTo == null)
+        {
+            System.out.println("Friend is not online lol");
+            return;
+        }
+        this.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from.getUser().getDisplayName(), friendTo.getUser().getDisplayName());
+
+
+
+
+
+
+//        this.sendMessage(session, "Hey from server!", "");
     }
 
-    private void sendMessage(Session session, String message) throws GeneralSecurityException
+    private void sendMessage(Session session, String message, String from, String to) throws GeneralSecurityException
     {
-        session.getAsyncRemote().sendText(new Gson().toJson(super.aesEncrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(message, null))));
+        session.getAsyncRemote().sendText(new Gson().toJson(super.aesEncrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(message, from, to, null))));
     }
 
     private void closeSession(Session session, CloseReason.CloseCode closeCode, String reason)

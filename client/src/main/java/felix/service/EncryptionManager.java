@@ -37,7 +37,7 @@ public abstract class EncryptionManager
         aesEncryptionManager = null;
     }
 
-    protected String refreshJwtToken(String message) throws GeneralSecurityException
+    protected String refreshJwtTokenAndDecrypt(String message) throws GeneralSecurityException
     {
         AesEncryptedMessage aesEncryptedMessage = new Gson().fromJson(message, AesEncryptedMessage.class);
         FelixSession.getInstance().setToken(new JwtToken(this.aesDecrypt(aesEncryptedMessage.getToken())));

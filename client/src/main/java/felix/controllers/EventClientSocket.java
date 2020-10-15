@@ -5,6 +5,8 @@ import com.neovisionaries.ws.client.*;
 import felix.main.FelixSession;
 import felix.models.InitWebSocketMessage;
 import felix.models.View;
+import felix.models.WebSocketMessage;
+
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -89,8 +91,10 @@ public class EventClientSocket extends MainController implements WebSocketListen
             return;
         }
         System.out.println("AES Encrypted msg: " + message);
-        message = super.refreshJwtToken(message);
+        message = super.refreshJwtTokenAndDecrypt(message);
         System.out.println("AES Decrypted msg: " + message);
+        WebSocketMessage webSocketMessage = new Gson().fromJson(message, WebSocketMessage.class);
+        super.handleMessage(webSocketMessage);
     }
 
     @Override

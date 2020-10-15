@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 public class WebSocketMessage
 {
     private String message;
+    private String from;
+    private String to;
     private JwtToken jwtToken;
 }

@@ -5,6 +5,7 @@ import felix.exceptions.NotAuthorizedException;
 import felix.main.FelixSession;
 import felix.models.User;
 import felix.models.View;
+import felix.models.WebSocketMessage;
 import felix.service.user.IUserService;
 import felix.service.user.UserService;
 import javafx.application.Platform;
@@ -41,7 +42,7 @@ public class AuthenticationController extends MainController
     {
         Platform.runLater(() ->
         {
-            super.setStage(this.mainGrid);
+            super.initController(this.mainGrid);
             this.textFieldUsername.requestFocus();
         });
         this.isLogin = loginButton != null;

@@ -83,7 +83,7 @@ public class FelixSession extends EncryptionManager
         heartBeatThread.stop();
     }
 
-    public void sendMessage(String message)
+    public void sendMessage(String message, String to)
     {
         if (token == null)
         {
@@ -92,7 +92,7 @@ public class FelixSession extends EncryptionManager
         }
         try
         {
-            websocket.sendText(new Gson().toJson(super.aesEncrypt(new WebSocketMessage(message, token))));
+            websocket.sendText(new Gson().toJson(super.aesEncrypt(new WebSocketMessage(message, to, token))));
         }
         catch (GeneralSecurityException e)
         {
@@ -125,11 +125,11 @@ public class FelixSession extends EncryptionManager
         this.closeSession("Client logged off");
     }
 
-    private void closeSession(String reason) //todo: reason
+    private void closeSession(String reason)
     {
         try
         {
-            websocket.sendClose();
+            websocket.sendClose(1001, reason);
             this.clearSession();
         }
         catch (Exception e)

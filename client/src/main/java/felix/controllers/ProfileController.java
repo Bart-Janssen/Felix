@@ -31,14 +31,14 @@ public class ProfileController extends MainController
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        Platform.runLater(() -> super.setStage(this.main));
+        Platform.runLater(() -> super.initController(this.main));
         Platform.runLater(this::setUser);
         this.initializeEvents();
     }
 
     private void setUser()
     {
-        this.user = new JwtDecoder().decode(FelixSession.getInstance().getToken());
+        this.user = super.getUser();
         this.labelName.setText("Name: " + this.user.getName());
         this.labelDisplayName.setText("Displayname: " + this.user.getDisplayName());
         this.buttonTwoFa.setText(this.user.hasTwoFAEnabled() ? "Disable 2FA" : "Enable 2FA");

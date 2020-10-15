@@ -3,8 +3,11 @@ package felix.controllers;
 import felix.fxml.NavigationAnchor;
 import felix.main.Felix;
 import felix.main.FelixSession;
+import felix.models.User;
 import felix.models.View;
+import felix.models.WebSocketMessage;
 import felix.service.EncryptionManager;
+import felix.service.system.JwtDecoder;
 import felix.service.user.IUserService;
 import felix.service.user.UserService;
 import javafx.application.Platform;
@@ -19,10 +22,11 @@ abstract class MainController extends EncryptionManager implements Initializable
 {
     @FXML protected NavigationAnchor navigationAnchor;
     @FXML private static Stage stage;
+    private static IController controller;
 
     private IUserService userService = new UserService();
 
-    void setStage(Node currentView)
+    void initController(Node currentView)
     {
         stage = (Stage)currentView.getScene().getWindow();
         stage.setOnCloseRequest(event ->
@@ -32,6 +36,24 @@ abstract class MainController extends EncryptionManager implements Initializable
             System.exit(0);
         });
     }
+
+    void initController(Node currentView, IController controller)
+    {
+        MainController.controller = controller;
+        stage = (Stage)currentView.getScene().getWindow();
+        stage.setOnCloseRequest(event ->
+        {
+            FelixSession.getInstance().disconnect();
+            System.out.println("System closed.");
+            System.exit(0);
+        });
+    }
+
+    void handleMessage(WebSocketMessage webSocketMessage)
+    {
+        if (MainController.controller != null) MainController.controller.onMessage(webSocketMessage);
+    }
+
 
     void openNewView(final View view)
     {
@@ -86,5 +108,10 @@ abstract class MainController extends EncryptionManager implements Initializable
     public void switchToFriends()
     {
         this.openNewView(View.FRIENDS);
+    }
+
+    protected User getUser()
+    {
+        return new JwtDecoder().decode(FelixSession.getInstance().getToken());
     }
 }

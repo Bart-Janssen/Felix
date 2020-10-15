@@ -38,7 +38,7 @@ public class FriendController extends MainController
     {
         Platform.runLater(() ->
         {
-            super.setStage(this.main);
+            super.initController(this.main);
             this.friends.getChildren().addAll(this.setFriendsToFriendPanel());
             this.pendingOutgoingInvites.getChildren().addAll(this.getPendingOutgoingInvites());
             this.friendInvites.getChildren().addAll(this.getFriendInvites());

@@ -14,7 +14,7 @@ public class ChatController extends MainController
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        Platform.runLater(() -> super.setStage(this.button));
+        Platform.runLater(() -> super.initController(this.button));
     }
 
     public void click()
