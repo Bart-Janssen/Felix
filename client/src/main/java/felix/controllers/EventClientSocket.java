@@ -6,7 +6,6 @@ import felix.main.FelixSession;
 import felix.models.InitWebSocketMessage;
 import felix.models.View;
 import felix.models.WebSocketMessage;
-
 import java.net.URL;
 import java.util.Date;
 import java.util.List;

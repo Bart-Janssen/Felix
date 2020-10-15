@@ -7,9 +7,9 @@ import java.util.UUID;
 public interface IFriendService
 {
     User sendFriendInvite(String displayName, UUID userId);
-    List<String> getFriends(UUID userId);
+    List<User> getFriends(UUID userId);
     List<String> getOutgoingPendingInvites(UUID userId);
-    List<String> getIncomingPendingInvites(UUID userId);
+    List<User> getIncomingPendingInvites(UUID userId);
     String acceptInvite(String friendDisplayName, UUID userId);
     void declineInvite(String friendDisplayName, UUID userId);
     void removeFriend(String friendDisplayName, UUID userId);

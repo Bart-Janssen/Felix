@@ -39,7 +39,6 @@ public class SessionMap
         UserSession session = this.get(GetterType.TOKEN, jwtToken);
         this.putPendingSession(session.getSession(), session.getRsaPublicKey(), session.getAesKey());
         this.killSession(session.getSession().getId());
-
     }
 
     public void killSession(String sessionId)

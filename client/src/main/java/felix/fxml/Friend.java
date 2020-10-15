@@ -14,13 +14,14 @@ public class Friend extends Pane
 {
     private String friendName;
 
-    public Friend(String friendName, boolean showRemoveButton, EventHandler<MouseEvent> acceptHandler)
+    public Friend(String friendName, boolean online, boolean showRemoveButton, EventHandler<MouseEvent> acceptHandler)
     {
+        System.out.println(friendName + " is " + online);
         this.friendName = friendName;
         final int WIDTH = 170;
         super.setPrefWidth(WIDTH);
         super.setPrefHeight(40);
-        super.setStyle("-fx-background-color:green; -fx-border-color:blue; -fx-border-width: 1;");
+        super.setStyle(online ? "-fx-background-color:blue;" : "-fx-background-color:green;" + " -fx-border-color:blue; -fx-border-width: 1;");
         GridPane gridPane = new GridPane();
         Button removeButton = new Button("Remove");
         if (!showRemoveButton) this.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
@@ -31,7 +32,7 @@ public class Friend extends Pane
         name.setFont(new Font(20));
         name.setPadding(new Insets(5, 0, 0, 10));
         ColumnConstraints nameColumn = new ColumnConstraints();
-        nameColumn.setPrefWidth(105);
+        nameColumn.setPrefWidth(showRemoveButton ? 105 : 165);
         ColumnConstraints buttonColumn = new ColumnConstraints();
         buttonColumn.setPrefWidth(65);
         gridPane.getColumnConstraints().addAll(nameColumn, buttonColumn);
@@ -43,5 +44,10 @@ public class Friend extends Pane
     public String getFriendName()
     {
         return this.friendName;
+    }
+
+    public void setOnline(boolean online)
+    {
+        super.setStyle(online ? "-fx-background-color:blue;" : "-fx-background-color:green;");
     }
 }

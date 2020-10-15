@@ -40,10 +40,7 @@ public class UserService implements IUserService
         {
             if (new PasswordHasher().verifyHash(user.getPassword(), authenticatedUser.getPassword()))
             {
-                authenticatedUser.setPassword("");
-                authenticatedUser.setTwoFAEnabled(false);
-                this.clearFriendInfo(authenticatedUser);
-                return authenticatedUser;
+                return this.finalizeLogin(false, authenticatedUser);
             }
             throw new NotAuthorizedException();
         }
@@ -53,10 +50,17 @@ public class UserService implements IUserService
         {
             throw new NotAuthorizedException();
         }
-        authenticatedUser.setPassword("");
-        authenticatedUser.setTwoFAEnabled(true);
-        this.clearFriendInfo(authenticatedUser);
-        return authenticatedUser;
+        return this.finalizeLogin(true, authenticatedUser);
+    }
+
+    private User finalizeLogin(boolean twoFa, User user)
+    {
+        user.setOnline(true);
+        userRepository.save(user);
+        user.setPassword("");
+        user.setTwoFAEnabled(twoFa);
+        this.clearFriendInfo(user);
+        return user;
     }
 
     private void clearFriendInfo(User user)
@@ -76,9 +80,7 @@ public class UserService implements IUserService
     public User register(User user) throws DataIntegrityViolationException
     {
         user.setPassword(new PasswordHasher().hash(user.getPassword()));
-        User registeredUser = this.userRepository.save(user);
-        this.clearFriendInfo(registeredUser);
-        return registeredUser;
+        return this.userRepository.save(user);
     }
 
     @Override
@@ -99,51 +101,11 @@ public class UserService implements IUserService
         this.credentialRepository.disable2FA(userId);
     }
 
-    /*@Override
-    public void logout(User user) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
     @Override
-    public List<User> getFriendsByUserId(UUID id) throws IOException, URISyntaxException
+    public void logout(User user)
     {
-        throw new NotImplementedException();
+        User dbUser = this.userRepository.findById(user.getId()).orElseThrow(EntityNotFoundException::new);
+        dbUser.setOnline(false);
+        userRepository.save(dbUser);
     }
-
-    @Override
-    public void sendFriendInvite(String displayName, UUID userId) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void cancelInvite(String invite, UUID userId) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void acceptInvite(String invite, UUID userId) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void declineInvite(String invite, UUID userId) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void removeFriend(String friendDisplayName, UUID userId) throws IOException, URISyntaxException
-    {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void deleteAccount(UUID userId)
-    {
-        throw new NotImplementedException();
-    }*/
 }

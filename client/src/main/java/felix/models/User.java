@@ -84,4 +84,14 @@ public class User
     {
         return this.id;
     }
+
+    public boolean isOnline()
+    {
+        return online;
+    }
+
+    public void setOnline(boolean online)
+    {
+        this.online = online;
+    }
 }

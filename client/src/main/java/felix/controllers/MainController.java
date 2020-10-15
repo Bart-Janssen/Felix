@@ -22,7 +22,7 @@ abstract class MainController extends EncryptionManager implements Initializable
 {
     @FXML protected NavigationAnchor navigationAnchor;
     @FXML private static Stage stage;
-    private static IController controller;
+    private static IListener controller;
 
     private IUserService userService = new UserService();
 
@@ -37,7 +37,7 @@ abstract class MainController extends EncryptionManager implements Initializable
         });
     }
 
-    void initController(Node currentView, IController controller)
+    void initController(Node currentView, IListener controller)
     {
         MainController.controller = controller;
         stage = (Stage)currentView.getScene().getWindow();
@@ -51,7 +51,20 @@ abstract class MainController extends EncryptionManager implements Initializable
 
     void handleMessage(WebSocketMessage webSocketMessage)
     {
-        if (MainController.controller != null) MainController.controller.onMessage(webSocketMessage);
+        switch (webSocketMessage.getType())
+        {
+            case MESSAGE:
+                if (MainController.controller instanceof IMessageListener) ((IMessageListener)MainController.controller).onMessage(webSocketMessage);
+                break;
+            case LOGIN:
+                if (MainController.controller instanceof ILoginListener) ((ILoginListener)MainController.controller).onLogin(webSocketMessage);
+                break;
+            case LOGOUT:
+                if (MainController.controller instanceof ILoginListener) ((ILoginListener)MainController.controller).onLogout(webSocketMessage);
+                break;
+            default:
+                break;
+        }
     }
 
 

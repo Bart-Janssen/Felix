@@ -2,40 +2,36 @@ package felix.controllers;
 
 import felix.fxml.Chat;
 import felix.fxml.Friend;
-import felix.main.Felix;
 import felix.main.FelixSession;
+import felix.models.User;
 import felix.models.WebSocketMessage;
 import felix.service.friend.FriendService;
 import felix.service.friend.IFriendService;
 import felix.service.user.IUserService;
 import felix.service.user.UserService;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.geometry.Orientation;
-import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class HomeController extends MainController implements IController
+public class HomeController extends MainController implements IMessageListener, ILoginListener
 {
     @FXML private ScrollPane scrollPaneChats;
     @FXML private TextField textFieldMessage;
     @FXML private Button buttonSend;
     @FXML private VBox friends;
     @FXML private Button restButton;
-    @FXML private Button button;
     private VBox vBoxChats = new VBox(5);
     private IUserService userService = new UserService();
     private IFriendService friendService = new FriendService();
@@ -45,7 +41,9 @@ public class HomeController extends MainController implements IController
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        Platform.runLater(() -> super.initController(this.button, this));
+        this.buttonSend.setDisable(true);
+        this.textFieldMessage.setDisable(true);
+        Platform.runLater(() -> super.initController(this.buttonSend, this));
         this.setEvents();
         Platform.runLater(() -> this.friends.getChildren().addAll(this.setFriendsToFriendPanel()));
     }
@@ -53,21 +51,23 @@ public class HomeController extends MainController implements IController
     private List<Friend> setFriendsToFriendPanel()
     {
         List<Friend> friends = new ArrayList<>();
-        this.getFriends().forEach(friendDisplayName -> friends.add(new Friend(friendDisplayName, false, (event -> this.openChat(friendDisplayName)))));
+        this.getFriends().forEach(friend -> friends.add(new Friend(friend.getDisplayName(), friend.isOnline(),false, (event -> this.openChat(friend.getDisplayName())))));
         return friends;
     }
 
     private void openChat(String friendDisplayName)
     {
+        this.buttonSend.setDisable(false);
+        this.textFieldMessage.setDisable(false);
         this.vBoxChats.getChildren().clear();
         this.currentSelectedFriend = friendDisplayName;
-        this.scrollPaneChats.setContent(vBoxChats);
-        /*{ //todo: get chats
+        this.scrollPaneChats.setContent(this.vBoxChats);
+        /*{ //todo: get chats from db
             this.vBoxChats.getChildren().add(new Chat(friendDisplayName));
         }*/
     }
 
-    private List<String> getFriends()
+    private List<User> getFriends()
     {
         try
         {
@@ -82,7 +82,12 @@ public class HomeController extends MainController implements IController
 
     private void setEvents()
     {
+        this.friends.setSpacing(5);
         this.buttonSend.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> this.sendChat());
+        this.textFieldMessage.addEventHandler(KeyEvent.KEY_PRESSED, event ->
+        {
+            if (event.getCode().equals(KeyCode.ENTER)) this.sendChat();
+        });
         this.vBoxChats.heightProperty().addListener((observable, oldValue, newValue) -> this.scrollPaneChats.setVvalue((Double)newValue));
 
         //todo: temp v
@@ -90,19 +95,12 @@ public class HomeController extends MainController implements IController
         {
             this.userService.rest();
         });
-        this.button.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
-        {
-            //FelixSession.getInstance().sendMessage("Hey!", "");
-        });
     }
 
     private void sendChat()
     {
         this.textFieldMessage.setStyle(null);
-        if (this.currentSelectedFriend == null)
-        {
-            return;
-        }
+        if (this.currentSelectedFriend == null) return;
         if (this.textFieldMessage.getText().isEmpty())
         {
             this.textFieldMessage.setStyle(RED_BORDER);
@@ -117,5 +115,17 @@ public class HomeController extends MainController implements IController
     public void onMessage(WebSocketMessage webSocketMessage)
     {
         Platform.runLater(() -> this.vBoxChats.getChildren().add(new Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage())));
+    }
+
+    @Override
+    public void onLogin(WebSocketMessage webSocketMessage)
+    {
+        this.friends.getChildren().stream().filter(friend -> ((Friend)friend).getFriendName().equals(webSocketMessage.getFrom())).findFirst().ifPresent(friend -> ((Friend) friend).setOnline(true));
+    }
+
+    @Override
+    public void onLogout(WebSocketMessage webSocketMessage)
+    {
+        this.friends.getChildren().stream().filter(friend -> ((Friend)friend).getFriendName().equals(webSocketMessage.getFrom())).findFirst().ifPresent(friend -> ((Friend) friend).setOnline(false));
     }
 }

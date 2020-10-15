@@ -2,6 +2,7 @@ package felix.models;
 
 public class WebSocketMessage
 {
+    private WebSocketMessageType type;
     private String message;
     private String from;
     private String to;
@@ -54,5 +55,15 @@ public class WebSocketMessage
     public void setFrom(String from)
     {
         this.from = from;
+    }
+
+    public WebSocketMessageType getType()
+    {
+        return type;
+    }
+
+    public void setType(WebSocketMessageType type)
+    {
+        this.type = type;
     }
 }

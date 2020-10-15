@@ -23,7 +23,7 @@ public class FriendController extends EncryptionManager
     public ResponseEntity<AesEncryptedMessage> getFriendsByUserId(@RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, this.friendService.getFriends(user.getId())));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, this.friendService.getFriends(user.getId())));
     }
 
     @DeleteMapping("/{friendDisplayName}")
@@ -32,7 +32,7 @@ public class FriendController extends EncryptionManager
         friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace("--DASH--", "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.friendService.removeFriend(friendDisplayName, user.getId());
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, null));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
     }
 
     @PostMapping("/invites")
@@ -40,7 +40,7 @@ public class FriendController extends EncryptionManager
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         String displayName = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), String.class);
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, this.friendService.sendFriendInvite(displayName, user.getId())));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, this.friendService.sendFriendInvite(displayName, user.getId())));
     }
 
     @GetMapping("/invites/outgoing")
@@ -48,15 +48,15 @@ public class FriendController extends EncryptionManager
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         List<String> friendDisplayNames = this.friendService.getOutgoingPendingInvites(user.getId());
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, friendDisplayNames));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, friendDisplayNames));
     }
 
     @GetMapping("/invites/incoming")
     public ResponseEntity<AesEncryptedMessage> getIncomingPendingInvites(@RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
-        List<String> friendInviteDisplayNames = this.friendService.getIncomingPendingInvites(user.getId());
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, friendInviteDisplayNames));
+        List<User> friendInvitess = this.friendService.getIncomingPendingInvites(user.getId());
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, friendInvitess));
     }
 
     @PutMapping("/invites/incoming/accept")
@@ -65,7 +65,7 @@ public class FriendController extends EncryptionManager
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         String friendInviteDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), String.class);
         String friendDisplayName = this.friendService.acceptInvite(friendInviteDisplayName, user.getId());
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, friendDisplayName));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, friendDisplayName));
     }
 
     @DeleteMapping("/invites/incoming/decline/{friendDisplayName}")
@@ -74,7 +74,7 @@ public class FriendController extends EncryptionManager
         friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace("--DASH--", "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.friendService.declineInvite(friendDisplayName, user.getId());
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, null));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
     }
 
     @DeleteMapping("/invites/outgoing/cancel/{friendDisplayName}")
@@ -83,6 +83,6 @@ public class FriendController extends EncryptionManager
         friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace("--DASH--", "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.friendService.cancelInvite(friendDisplayName, user.getId());
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, null));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
     }
 }

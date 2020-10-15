@@ -30,7 +30,7 @@ public class AuthenticationController extends EncryptionManager
             try
             {
                 i++;
-                p = super.aesEncrypt(GetterType.SESSION_ID, s.getSession().getId(), WebSocketMessage.builder().message("Hello, msg from server: " + s.getUser().getDisplayName()).build());
+                p = aesEncrypt(GetterType.SESSION_ID, s.getSession().getId(), WebSocketMessage.builder().message("Hello, msg from server: " + s.getUser().getDisplayName()).build());
                 s.getSession().getAsyncRemote().sendText(new Gson().toJson(p));
             }
             catch (Exception e)
@@ -45,7 +45,7 @@ public class AuthenticationController extends EncryptionManager
     public ResponseEntity<AesEncryptedMessage> test(@RequestHeader("Authorization") String jwt, @RequestBody AesEncryptedMessage aesEncryptedMessage) throws Exception
     {
         User user = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), User.class);
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, user));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, user));
     }
 
     @PostMapping("/login/")
@@ -61,7 +61,13 @@ public class AuthenticationController extends EncryptionManager
             authenticatedUser.setSessionId(user.getSessionId());
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), null));
+            UserSession userSession = WebSocket.getSession(GetterType.DISPLAY_NAME, authenticatedUser.getDisplayName());
+            for (User friend : userSession.getUser().getFriends())
+            {
+                UserSession friendSession = WebSocket.getSession(GetterType.DISPLAY_NAME, friend.getDisplayName());
+                if (friendSession != null) friendSession.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, friendSession.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGIN, "", authenticatedUser.getDisplayName(), friend.getDisplayName(), null))));
+            }
+            return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, token.getToken(), null));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -81,7 +87,7 @@ public class AuthenticationController extends EncryptionManager
             registeredUser.setSessionId(user.getSessionId());
             JwtToken token = new JwtTokenGenerator().createJWT(registeredUser);
             if (!WebSocket.addSession(registeredUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, token.getToken(), null));
+            return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, token.getToken(), null));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -91,8 +97,14 @@ public class AuthenticationController extends EncryptionManager
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        WebSocket.logout(jwt);
-//        userService.logout(user); //todo set online status
+        UserSession userSession = WebSocket.getSession(GetterType.DISPLAY_NAME, user.getDisplayName());
+        for (User friend : userSession.getUser().getFriends())
+        {
+            UserSession friendSession = WebSocket.getSession(GetterType.DISPLAY_NAME, friend.getDisplayName());
+            if (friendSession != null) friendSession.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, friendSession.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGOUT, "", user.getDisplayName(), friend.getDisplayName(), null))));
+        }
+        WebSocket.logout(userSession.getToken().getToken());
+        userService.logout(userSession.getUser());
         return ResponseEntity.ok().build();
     }
 
@@ -104,7 +116,7 @@ public class AuthenticationController extends EncryptionManager
             User user = new JwtTokenGenerator().decodeJWT(jwt);
             String qrCode = userService.enable2FA(user.getId(), user.getName());
             WebSocket.set2Fa(GetterType.DISPLAY_NAME, user.getDisplayName(), true);
-            return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, qrCode));
+            return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, qrCode));
         }
         catch (Exception e)
         {
@@ -120,6 +132,6 @@ public class AuthenticationController extends EncryptionManager
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         userService.disable2FA(user.getId());
         WebSocket.set2Fa(GetterType.DISPLAY_NAME, user.getDisplayName(), false);
-        return ResponseEntity.ok(super.aesEncrypt(GetterType.TOKEN, jwt, null));
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
     }
 }

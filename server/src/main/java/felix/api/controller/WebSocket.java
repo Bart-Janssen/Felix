@@ -1,5 +1,6 @@
 package felix.api.controller;
 
+import com.google.gson.Gson;
 import felix.api.configuration.JwtTokenGenerator;
 import felix.api.models.*;
 import felix.api.service.EncryptionManager;
@@ -57,6 +58,11 @@ public abstract class WebSocket extends EncryptionManager
     protected void killSession(String sessionId)
     {
         sessions.killSession(sessionId);
+    }
+
+    protected void sendMessage(Session session, String message, String from, String to) throws GeneralSecurityException
+    {
+        session.getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from, to, null))));
     }
 
     private Boolean userHasToken(String token)

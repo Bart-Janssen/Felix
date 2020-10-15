@@ -5,6 +5,7 @@ import felix.fxml.Friend;
 import felix.fxml.FriendInvite;
 import felix.fxml.PendingInvite;
 import felix.models.User;
+import felix.models.WebSocketMessage;
 import felix.service.friend.FriendService;
 import felix.service.friend.IFriendService;
 import javafx.application.Platform;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class FriendController extends MainController
+public class FriendController extends MainController implements ILoginListener
 {
     @FXML private Button buttonSendOutgoingInvite;
     @FXML private TextField textFieldDisplayNameOutgoingInvite;
@@ -38,7 +39,7 @@ public class FriendController extends MainController
     {
         Platform.runLater(() ->
         {
-            super.initController(this.main);
+            super.initController(this.main, this);
             this.friends.getChildren().addAll(this.setFriendsToFriendPanel());
             this.pendingOutgoingInvites.getChildren().addAll(this.getPendingOutgoingInvites());
             this.friendInvites.getChildren().addAll(this.getFriendInvites());
@@ -51,7 +52,7 @@ public class FriendController extends MainController
         try
         {
             List<FriendInvite> friendInvites = new ArrayList<>();
-            this.friendService.getFriendInvites().forEach(friendDisplayName -> friendInvites.add(new FriendInvite(friendDisplayName, (event -> this.acceptInvite(friendDisplayName)), (event -> this.declineInvite(friendDisplayName)))));
+            this.friendService.getFriendInvites().forEach(friendInvite -> friendInvites.add(new FriendInvite(friendInvite.getDisplayName(), (event -> this.acceptInvite(friendInvite)), (event -> this.declineInvite(friendInvite)))));
             return friendInvites;
         }
         catch (Exception e)
@@ -61,12 +62,12 @@ public class FriendController extends MainController
         }
     }
 
-    private void acceptInvite(String friendDisplayName)
+    private void acceptInvite(User friendInvite)
     {
         try
         {
-            this.friends.getChildren().add(new Friend(this.friendService.acceptInvite(friendDisplayName), true, (event -> this.removeFriend(friendDisplayName))));
-            this.friendInvites.getChildren().removeIf(friend -> ((FriendInvite)friend).getFriendName().equals(friendDisplayName));
+            this.friends.getChildren().add(new Friend(this.friendService.acceptInvite(friendInvite.getDisplayName()), friendInvite.isOnline(), true, (event -> this.removeFriend(friendInvite))));
+            this.friendInvites.getChildren().removeIf(friend -> ((FriendInvite)friend).getFriendName().equals(friendInvite.getDisplayName()));
         }
         catch (Exception e)
         {
@@ -74,12 +75,12 @@ public class FriendController extends MainController
         }
     }
 
-    private void declineInvite(String friendDisplayName)
+    private void declineInvite(User friendInvite)
     {
         try
         {
-            this.friendService.declineInvite(friendDisplayName);
-            this.friendInvites.getChildren().removeIf(friend -> ((FriendInvite)friend).getFriendName().equals(friendDisplayName));
+            this.friendService.declineInvite(friendInvite.getDisplayName());
+            this.friendInvites.getChildren().removeIf(friend -> ((FriendInvite)friend).getFriendName().equals(friendInvite.getDisplayName()));
         }
         catch (Exception e)
         {
@@ -117,6 +118,9 @@ public class FriendController extends MainController
 
     private void initializeEvents()
     {
+        this.friends.setSpacing(5);
+        this.friendInvites.setSpacing(5);
+        this.pendingOutgoingInvites.setSpacing(5);
         this.textFieldDisplayNameOutgoingInvite.addEventHandler(KeyEvent.KEY_PRESSED, event ->
         {
             if (event.getCode().equals(KeyCode.ENTER)) this.checkPendingOutgoingInvite();
@@ -167,16 +171,16 @@ public class FriendController extends MainController
     private List<Friend> setFriendsToFriendPanel()
     {
         List<Friend> friends = new ArrayList<>();
-        this.getFriends().forEach(friendDisplayName -> friends.add(new Friend(friendDisplayName, true, (event -> this.removeFriend(friendDisplayName)))));
+        this.getFriends().forEach(friend -> friends.add(new Friend(friend.getDisplayName(), friend.isOnline(), true, (event -> this.removeFriend(friend)))));
         return friends;
     }
 
-    private void removeFriend(String friendDisplayName)
+    private void removeFriend(User friend)
     {
         try
         {
-            this.friendService.remove(friendDisplayName);
-            this.friends.getChildren().removeIf(friend -> ((Friend)friend).getFriendName().equals(friendDisplayName));
+            this.friendService.remove(friend.getDisplayName());
+            this.friends.getChildren().removeIf(currentFriend -> ((Friend)currentFriend).getFriendName().equals(friend.getDisplayName()));
         }
         catch (Exception e)
         {
@@ -184,7 +188,7 @@ public class FriendController extends MainController
         }
     }
 
-    private List<String> getFriends()
+    private List<User> getFriends()
     {
         try
         {
@@ -195,5 +199,17 @@ public class FriendController extends MainController
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public void onLogin(WebSocketMessage webSocketMessage)
+    {
+        this.friends.getChildren().stream().filter(friend -> ((Friend)friend).getFriendName().equals(webSocketMessage.getFrom())).findFirst().ifPresent(friend -> ((Friend) friend).setOnline(true));
+    }
+
+    @Override
+    public void onLogout(WebSocketMessage webSocketMessage)
+    {
+        this.friends.getChildren().stream().filter(friend -> ((Friend)friend).getFriendName().equals(webSocketMessage.getFrom())).findFirst().ifPresent(friend -> ((Friend) friend).setOnline(false));
     }
 }

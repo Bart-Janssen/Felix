@@ -13,8 +13,10 @@ public class AppConfig implements WebMvcConfigurer
         registry
                 .addInterceptor(new AuthenticationInterceptor())
                 .addPathPatterns(
-                        "/authentication/logout",
-                        "/authentication/test/"
+                        "/authentication/logout/",
+                        "/authentication/test/",
+                        "/authentication/2fa/enable/",
+                        "/authentication/2fa/disable/"
                         );
     }
 }

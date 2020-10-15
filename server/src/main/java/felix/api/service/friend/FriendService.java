@@ -35,32 +35,15 @@ public class FriendService implements IFriendService
     }
 
     @Override
-    public List<String> getFriends(UUID userId)
+    public List<User> getFriends(UUID userId)
     {
         User user = this.userRepository.findUserById(userId).orElseThrow(EntityNotFoundException::new);
-        List<String> friends = new ArrayList<>();
-        for (User friend :  user.getFriends())
+        List<User> friends = new ArrayList<>();
+        for (User friend : user.getFriends())
         {
-            friends.add(friend.getDisplayName());
-            //friend.setOnline(chatService.getOnlineStatus(friend.getId())); //todo: online status
+            friends.add(User.builder().displayName(friend.getDisplayName()).online(friend.isOnline()).build());
         }
         return friends;
-
-
-        /*List<UserDTO> friendDTOs = new ArrayList<>();
-        friends.forEach(friend -> friendDTOs.add(UserDTO.builder()
-                .displayName(friend.getDisplayName())
-                .online(friend.isOnline())
-                .level(friend.getLevel())
-
-                .coins(-1)
-                .twoFAEnabled(false)
-                .id(null)
-                .friends(new ArrayList<>())
-                .password("")
-                .name("")
-                .build()));
-        return friendDTOs;*/
     }
 
     @Override
@@ -77,14 +60,15 @@ public class FriendService implements IFriendService
     }
 
     @Override
-    public List<String> getIncomingPendingInvites(UUID userId)
+    public List<User> getIncomingPendingInvites(UUID userId)
     {
         List<PendingFriendInvite> pendingInvites = this.pendingFriendInviteRepository.findAllByFriendId(userId).orElse(null);
         if (pendingInvites == null) return new ArrayList<>();
-        List<String> pendingIncomingInvites = new ArrayList<>();
+        List<User> pendingIncomingInvites = new ArrayList<>();
         for (PendingFriendInvite request : pendingInvites)
         {
-            pendingIncomingInvites.add(this.userRepository.findUserById(request.getUserId()).orElseThrow(EntityNotFoundException::new).getDisplayName());
+            User pendingIncomingInvite = this.userRepository.findUserById(request.getUserId()).orElseThrow(EntityNotFoundException::new);
+            pendingIncomingInvites.add(User.builder().displayName(pendingIncomingInvite.getDisplayName()).online(pendingIncomingInvite.isOnline()).build());
         }
         return pendingIncomingInvites;
     }

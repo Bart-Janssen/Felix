@@ -139,6 +139,18 @@ public class AuthenticationController extends MainController
         this.loginFailedLabel.setVisible(true);
     }
 
+    private void registerFailed(String reason)
+    {
+        FelixSession.getInstance().setToken(null);
+        this.textFieldUsername.clear();
+        this.textFieldDisplayName.clear();
+        this.textFieldPassword.clear();
+        this.textFieldRetypePassword.clear();
+        this.textFieldUsername.requestFocus();
+        this.loginFailedLabel.setText(reason);
+        this.loginFailedLabel.setVisible(true);
+    }
+
     public void registerLink_Click()
     {
         super.openNewView(View.REGISTER);
@@ -178,11 +190,12 @@ public class AuthenticationController extends MainController
         }
         catch (AlreadyLoggedInException e)
         {
-            this.loginFailed("This name is not available now.");
+            this.registerFailed("This name is not available now.");
             return;
         }
         catch (Exception e)
         {
+            this.registerFailed("Register failed.");
             e.printStackTrace();
             return;
         }

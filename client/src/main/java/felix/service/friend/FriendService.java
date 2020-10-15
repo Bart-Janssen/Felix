@@ -30,11 +30,11 @@ public class FriendService extends MainService implements IFriendService
     }
 
     @Override
-    public List<String> getFriendInvites() throws GeneralSecurityException, IOException, URISyntaxException
+    public List<User> getFriendInvites() throws GeneralSecurityException, IOException, URISyntaxException
     {
         AesEncryptedMessage aesEncryptedMessage = super.get("friends/invites/incoming/", AesEncryptedMessage.class);
         super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
-        return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), new TypeReference<List<String>>(){}.getType());
+        return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), new TypeReference<List<User>>(){}.getType());
     }
 
     @Override
@@ -64,11 +64,11 @@ public class FriendService extends MainService implements IFriendService
     }
 
     @Override
-    public List<String> getFriends() throws GeneralSecurityException, IOException, URISyntaxException
+    public List<User> getFriends() throws GeneralSecurityException, IOException, URISyntaxException
     {
         AesEncryptedMessage aesEncryptedMessage = super.get("friends/", AesEncryptedMessage.class);
         super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
-        return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), new TypeReference<List<String>>(){}.getType());
+        return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), new TypeReference<List<User>>(){}.getType());
     }
 
     @Override

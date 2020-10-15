@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WebSocketMessage
 {
+    private WebSocketMessageType type;
     private String message;
     private String from;
     private String to;

@@ -43,10 +43,6 @@
                     </rowConstraints>
                      <children>
                             <Button fx:id="restButton" mnemonicParsing="false" text="Rest" />
-                            <Button fx:id="button" mnemonicParsing="false" text="Chat" GridPane.halignment="RIGHT">
-                           <GridPane.margin>
-                              <Insets right="5.0" />
-                           </GridPane.margin></Button>
                         <GridPane GridPane.rowIndex="2">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="575.0" minWidth="10.0" prefWidth="565.0" />

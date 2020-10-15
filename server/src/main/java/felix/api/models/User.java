@@ -10,6 +10,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ public class User
     private String password;
     private String sessionId;
     private boolean twoFAEnabled;
+    private boolean online;
 
     @OneToOne(cascade = CascadeType.ALL)
     private TOTP totp;
@@ -39,8 +41,5 @@ public class User
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<User> friends;
-
-    @Transient
-    private boolean online;
+    private List<User> friends = new ArrayList<>();
 }

@@ -3,8 +3,6 @@ package felix.api.configuration;
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
 import felix.api.models.*;
-import felix.api.service.user.UserService;
-
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.security.GeneralSecurityException;
@@ -52,19 +50,7 @@ public class WebSocketConnection extends WebSocket
             System.out.println("Friend is not online lol");
             return;
         }
-        this.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from.getUser().getDisplayName(), friendTo.getUser().getDisplayName());
-
-
-
-
-
-
-//        this.sendMessage(session, "Hey from server!", "");
-    }
-
-    private void sendMessage(Session session, String message, String from, String to) throws GeneralSecurityException
-    {
-        session.getAsyncRemote().sendText(new Gson().toJson(super.aesEncrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(message, from, to, null))));
+        super.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from.getUser().getDisplayName(), friendTo.getUser().getDisplayName());
     }
 
     private void closeSession(Session session, CloseReason.CloseCode closeCode, String reason)
@@ -84,7 +70,6 @@ public class WebSocketConnection extends WebSocket
     public void onClose(CloseReason reason, Session session)
     {
         System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
-
         if (!super.checkRemovePendingSession(session.getId())) super.killSession(session.getId());
     }
 
