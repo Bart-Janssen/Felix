@@ -23,8 +23,7 @@ public class PasswordHasher
     {
         try
         {
-            MessageDigest messageDigest = MessageDigest.getInstance(HASH);
-            return new String(messageDigest.digest(password.getBytes(StandardCharsets.UTF_8)));
+            return new String(MessageDigest.getInstance(HASH).digest(password.getBytes(StandardCharsets.UTF_8)));
         }
         catch (NoSuchAlgorithmException ignored)
         {
