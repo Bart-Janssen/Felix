@@ -1,16 +1,55 @@
 package felix.api.service.chat;
 
-import org.springframework.stereotype.Component;
+import felix.api.exceptions.BadRequestException;
+import felix.api.models.User;
+import felix.api.repository.ChatRepository;
 import felix.api.models.Chat;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import felix.api.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import javax.persistence.EntityNotFoundException;
+import java.util.*;
 
-@Component
+@Service
 public class ChatService implements IChatService
 {
-    @Override
-    public void addNew(Chat chat) throws URISyntaxException, IOException
-    {
+    @Autowired
+    private ChatRepository chatRepository;
+    @Autowired
+    private UserRepository userRepository;
 
+    @Override
+    public void addNew(Chat chat)
+    {
+        this.chatRepository.save(chat);
+    }
+
+    @Override
+    public List<String> getAll(UUID id, String friendDisplayName)
+    {
+        Map<String, User> friends = this.checkIfFriends(id, friendDisplayName);
+        List<String> chatMessages = new ArrayList<>();
+        this.chatRepository.findAllByFromIdAndToId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(chat.getMessage()));
+        this.chatRepository.findAllByToIdAndFromId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(chat.getMessage()));
+        return chatMessages;
+    }
+
+    @Override
+    public void addNewOffline(UUID userId, String toFriendDisplayName, String message)
+    {
+        Map<String, User> friends = this.checkIfFriends(userId, toFriendDisplayName);
+        this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message));
+    }
+
+    private Map<String, User> checkIfFriends(UUID userId, String friendDisplayName) throws BadRequestException
+    {
+        User user = this.userRepository.findUserById(userId).orElseThrow(EntityNotFoundException::new);
+        User friend = this.userRepository.findByDisplayName(friendDisplayName).orElseThrow(EntityNotFoundException::new);
+        if (user.getFriends().stream().noneMatch(f -> f.getDisplayName().equals(friendDisplayName))) throw new BadRequestException();
+        if (friend.getFriends().stream().noneMatch(f -> f.getDisplayName().equals(user.getDisplayName()))) throw new BadRequestException();
+        Map<String, User> friends = new HashMap<>();
+        friends.put("user", user);
+        friends.put("friend", friend);
+        return friends;
     }
 }

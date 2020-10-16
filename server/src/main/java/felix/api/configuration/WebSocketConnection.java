@@ -2,13 +2,15 @@ package felix.api.configuration;
 
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
+import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.security.GeneralSecurityException;
 
 @Slf4j
+@Service
 @ServerEndpoint(value = "/server/{" + WebSocket.KEY + "}")
 public class WebSocketConnection extends WebSocket
 {
@@ -31,7 +33,7 @@ public class WebSocketConnection extends WebSocket
     }
 
     @Override
-    public void onText(String message, Session session) throws GeneralSecurityException
+    public void onText(String message, Session session)
     {
         try
         {
@@ -41,10 +43,15 @@ public class WebSocketConnection extends WebSocket
                 this.closeSession(session, CloseReason.CloseCodes.CANNOT_ACCEPT, " JWT token invalid!");
                 return;
             }
+            if (webSocketMessage.getMessage().length() > 255) return;
             UserSession from = WebSocket.getSession(GetterType.TOKEN, webSocketMessage.getJwtToken().getToken());
             UserSession friendTo = WebSocket.getSession(GetterType.DISPLAY_NAME, webSocketMessage.getTo());
-            if (friendTo == null) return;
-            super.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from.getUser().getDisplayName(), friendTo.getUser().getDisplayName());
+            if (friendTo == null)
+            {
+                WebSocket.saveOfflineChat(from, webSocketMessage.getTo(), webSocketMessage.getMessage());
+                return;
+            }
+            super.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from, friendTo);
         }
         catch (Exception e)
         {

@@ -4,12 +4,27 @@ import com.google.gson.Gson;
 import felix.api.configuration.JwtTokenGenerator;
 import felix.api.models.*;
 import felix.api.service.EncryptionManager;
+import felix.api.service.chat.IChatService;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.websocket.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public abstract class WebSocket extends EncryptionManager
 {
+    private static IChatService chatService;
+
+    protected static void saveOfflineChat(UserSession from, String to, String message)
+    {
+        chatService.addNewOffline(from.getUser().getId(), to, message);
+    }
+
+    @Autowired
+    private void setApplicationContext(IChatService applicationContext)
+    {
+        chatService = applicationContext;
+    }
+
     public static final String KEY = "publickey";
 
     static SessionMap getSessions()
@@ -60,9 +75,11 @@ public abstract class WebSocket extends EncryptionManager
         sessions.killSession(sessionId);
     }
 
-    protected void sendMessage(Session session, String message, String from, String to) throws GeneralSecurityException
+    protected void sendMessage(Session session, String message, UserSession from, UserSession to) throws GeneralSecurityException
     {
-        session.getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getId(), new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from, to, null))));
+        WebSocketMessage webSocketMessage = new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from.getUser().getDisplayName(), to.getUser().getDisplayName(), null);
+        chatService.addNew(new Chat(from.getUser().getId(), to.getUser().getId(), message));
+        session.getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getId(), webSocketMessage)));
     }
 
     private Boolean userHasToken(String token)

@@ -1,15 +1,15 @@
 package felix.controllers;
 
-import felix.fxml.Chat;
+import felix.fxml.FXML_Chat;
 import felix.fxml.Friend;
 import felix.fxml.messageBox.CustomOkMessage;
 import felix.main.FelixSession;
 import felix.models.User;
 import felix.models.WebSocketMessage;
+import felix.service.chat.ChatService;
+import felix.service.chat.IChatService;
 import felix.service.friend.FriendService;
 import felix.service.friend.IFriendService;
-import felix.service.user.IUserService;
-import felix.service.user.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,7 +19,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,6 +38,8 @@ public class HomeController extends MainController implements IMessageListener, 
     private IFriendService friendService = new FriendService();
     private String currentSelectedFriend = null;
     private static final String RED_BORDER = "-fx-border-color: red;";
+
+    private IChatService chatService = new ChatService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -60,9 +66,16 @@ public class HomeController extends MainController implements IMessageListener, 
         this.vBoxChats.getChildren().clear();
         this.currentSelectedFriend = friendDisplayName;
         this.scrollPaneChats.setContent(this.vBoxChats);
-        /*{ //todo: get chats from db
-            this.vBoxChats.getChildren().add(new Chat(friendDisplayName));
-        }*/
+        try
+        {
+            List<FXML_Chat> chats = new ArrayList<>();
+            this.chatService.getAll(friendDisplayName).forEach(friend -> chats.add(new FXML_Chat(friendDisplayName, friend)));
+            this.vBoxChats.getChildren().addAll(chats);
+        }
+        catch (Exception e)
+        {
+            new CustomOkMessage(stage, "Error while getting chats.").show();
+        }
     }
 
     private List<User> getFriends()
@@ -101,8 +114,13 @@ public class HomeController extends MainController implements IMessageListener, 
                 this.textFieldMessage.setStyle(RED_BORDER);
                 return;
             }
+            if (this.textFieldMessage.getText().length() > 255)
+            {
+                new CustomOkMessage(stage, "Messages may not be bigger than 255 characters.").show();
+                return;
+            }
             FelixSession.getInstance().sendMessage(this.textFieldMessage.getText(), this.currentSelectedFriend);
-            this.vBoxChats.getChildren().add(new Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText()));
+            this.vBoxChats.getChildren().add(new FXML_Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText()));
             this.textFieldMessage.setText("");
         }
         catch (Exception e)
@@ -114,7 +132,7 @@ public class HomeController extends MainController implements IMessageListener, 
     @Override
     public void onMessage(WebSocketMessage webSocketMessage)
     {
-        Platform.runLater(() -> this.vBoxChats.getChildren().add(new Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage())));
+        Platform.runLater(() -> this.vBoxChats.getChildren().add(new FXML_Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage())));
     }
 
     @Override

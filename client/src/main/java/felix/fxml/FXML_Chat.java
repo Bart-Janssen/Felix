@@ -5,9 +5,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class Chat extends VBox
+public class FXML_Chat extends VBox
 {
-    public Chat(String fromDisplayName, String message)
+    public FXML_Chat(String fromDisplayName, String message)
     {
         super.setPrefWidth(614);
         super.setMinHeight(45);
@@ -21,17 +21,18 @@ public class Chat extends VBox
         messageLabel.setWrapText(true);
         messageLabel.setPadding(new Insets(0, 0, 0, 10));
         super.setStyle("-fx-background-color:green; -fx-border-color:blue; -fx-border-width: 1;");
-        new Thread(() ->
+        /*new Thread(() ->
         {
             for (;;)
             {
                 if (messageLabel.getHeight() > 0.0D)
                 {
+                    System.out.println(super.getHeight());
                     super.setHeight(messageLabel.getHeight() + from.getHeight());
                     break;
                 }
             }
-        }).start();
+        }).start();*/
         super.getChildren().addAll(from, messageLabel);
     }
 }

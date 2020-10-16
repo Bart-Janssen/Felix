@@ -2,18 +2,15 @@ package felix.controllers;
 
 import felix.exceptions.AlreadyLoggedInException;
 import felix.exceptions.NotAuthorizedException;
-import felix.fxml.messageBox.CustomErrorMessage;
 import felix.fxml.messageBox.CustomOkMessage;
 import felix.main.FelixSession;
 import felix.models.User;
 import felix.models.View;
-import felix.models.WebSocketMessage;
 import felix.service.user.IUserService;
 import felix.service.user.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
