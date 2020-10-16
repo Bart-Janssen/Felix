@@ -20,11 +20,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -69,7 +67,7 @@ public class HomeController extends MainController implements IMessageListener, 
         try
         {
             List<FXML_Chat> chats = new ArrayList<>();
-            this.chatService.getAll(friendDisplayName).forEach(friend -> chats.add(new FXML_Chat(friendDisplayName, friend)));
+            this.chatService.getAll(friendDisplayName).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), chat.getDate())));
             this.vBoxChats.getChildren().addAll(chats);
         }
         catch (Exception e)
@@ -120,7 +118,7 @@ public class HomeController extends MainController implements IMessageListener, 
                 return;
             }
             FelixSession.getInstance().sendMessage(this.textFieldMessage.getText(), this.currentSelectedFriend);
-            this.vBoxChats.getChildren().add(new FXML_Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText()));
+            this.vBoxChats.getChildren().add(new FXML_Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText(), new Date()));
             this.textFieldMessage.setText("");
         }
         catch (Exception e)
@@ -132,7 +130,7 @@ public class HomeController extends MainController implements IMessageListener, 
     @Override
     public void onMessage(WebSocketMessage webSocketMessage)
     {
-        Platform.runLater(() -> this.vBoxChats.getChildren().add(new FXML_Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage())));
+        Platform.runLater(() -> this.vBoxChats.getChildren().add(new FXML_Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage(), new Date())));
     }
 
     @Override

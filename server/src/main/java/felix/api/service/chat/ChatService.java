@@ -25,12 +25,23 @@ public class ChatService implements IChatService
     }
 
     @Override
-    public List<String> getAll(UUID id, String friendDisplayName)
+    public List<Chat> getAll(UUID id, String friendDisplayName)
     {
         Map<String, User> friends = this.checkIfFriends(id, friendDisplayName);
-        List<String> chatMessages = new ArrayList<>();
-        this.chatRepository.findAllByFromIdAndToId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(chat.getMessage()));
-        this.chatRepository.findAllByToIdAndFromId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(chat.getMessage()));
+        List<Chat> chatMessages = new ArrayList<>();
+        this.chatRepository.findAllByFromIdAndToId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(Chat.builder()
+                .message(chat.getMessage())
+                .displayNameFrom(friends.get("user").getDisplayName())
+                .displayNameTo(friends.get("friend").getDisplayName())
+                .date(chat.getDate())
+                .build()));
+        this.chatRepository.findAllByToIdAndFromId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(Chat.builder()
+                .message(chat.getMessage())
+                .displayNameTo(friends.get("user").getDisplayName())
+                .displayNameFrom(friends.get("friend").getDisplayName())
+                .date(chat.getDate())
+                .build()));
+        chatMessages.sort(Comparator.comparing(Chat::getDate));
         return chatMessages;
     }
 
@@ -38,7 +49,7 @@ public class ChatService implements IChatService
     public void addNewOffline(UUID userId, String toFriendDisplayName, String message)
     {
         Map<String, User> friends = this.checkIfFriends(userId, toFriendDisplayName);
-        this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message));
+        this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message, new Date()));
     }
 
     private Map<String, User> checkIfFriends(UUID userId, String friendDisplayName) throws BadRequestException

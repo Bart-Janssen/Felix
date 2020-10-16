@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.websocket.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Date;
 
 public abstract class WebSocket extends EncryptionManager
 {
@@ -78,7 +79,7 @@ public abstract class WebSocket extends EncryptionManager
     protected void sendMessage(Session session, String message, UserSession from, UserSession to) throws GeneralSecurityException
     {
         WebSocketMessage webSocketMessage = new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from.getUser().getDisplayName(), to.getUser().getDisplayName(), null);
-        chatService.addNew(new Chat(from.getUser().getId(), to.getUser().getId(), message));
+        chatService.addNew(new Chat(from.getUser().getId(), to.getUser().getId(), message, new Date()));
         session.getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getId(), webSocketMessage)));
     }
 
