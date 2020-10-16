@@ -20,34 +20,6 @@ public class AuthenticationController extends EncryptionManager
 {
     private final IUserService userService;
 
-    @GetMapping("/hai")
-    public ResponseEntity logins()
-    {
-        int i = 0;
-        for (UserSession s : WebSocket.getSessions().values())
-        {
-            AesEncryptedMessage p;
-            try
-            {
-                i++;
-                p = aesEncrypt(GetterType.SESSION_ID, s.getSession().getId(), WebSocketMessage.builder().message("Hello, msg from server: " + s.getUser().getDisplayName()).build());
-                s.getSession().getAsyncRemote().sendText(new Gson().toJson(p));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return ResponseEntity.ok("yo " + i);
-    }
-
-    @PutMapping("/test/")
-    public ResponseEntity<AesEncryptedMessage> test(@RequestHeader("Authorization") String jwt, @RequestBody AesEncryptedMessage aesEncryptedMessage) throws Exception
-    {
-        User user = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), User.class);
-        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, user));
-    }
-
     @PostMapping("/login/")
     public ResponseEntity<AesEncryptedMessage> login(@RequestBody User user) throws Exception
     {
@@ -58,6 +30,7 @@ public class AuthenticationController extends EncryptionManager
         User authenticatedUser = userService.login(user);
         if (authenticatedUser != null)
         {
+            if (WebSocket.getSession(GetterType.DISPLAY_NAME, authenticatedUser.getDisplayName()) != null) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
             authenticatedUser.setSessionId(user.getSessionId());
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
@@ -111,19 +84,10 @@ public class AuthenticationController extends EncryptionManager
     @PostMapping("/2fa/enable")
     public ResponseEntity<AesEncryptedMessage> enable2FA(@RequestHeader("Authorization") String jwt) throws Exception
     {
-        try
-        {
-            User user = new JwtTokenGenerator().decodeJWT(jwt);
-            String qrCode = userService.enable2FA(user.getId(), user.getName());
-            WebSocket.set2Fa(GetterType.DISPLAY_NAME, user.getDisplayName(), true);
-            return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, qrCode));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-
+        User user = new JwtTokenGenerator().decodeJWT(jwt);
+        String qrCode = userService.enable2FA(user.getId(), user.getName());
+        WebSocket.set2Fa(GetterType.DISPLAY_NAME, user.getDisplayName(), true);
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, qrCode));
     }
 
     @DeleteMapping("/2fa/disable")

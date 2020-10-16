@@ -16,7 +16,6 @@ public class Friend extends Pane
 
     public Friend(String friendName, boolean online, boolean showRemoveButton, EventHandler<MouseEvent> acceptHandler)
     {
-        System.out.println(friendName + " is " + online);
         this.friendName = friendName;
         final int WIDTH = 170;
         super.setPrefWidth(WIDTH);

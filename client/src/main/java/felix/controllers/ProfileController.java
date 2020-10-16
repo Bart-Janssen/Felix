@@ -1,5 +1,6 @@
 package felix.controllers;
 
+import felix.fxml.messageBox.CustomOkMessage;
 import felix.main.FelixSession;
 import felix.models.User;
 import felix.service.system.JwtDecoder;
@@ -62,7 +63,7 @@ public class ProfileController extends MainController
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                new CustomOkMessage(stage, "Error while setting QR code, disable 2FA and try again.").show();
             }
         });
     }
@@ -75,13 +76,20 @@ public class ProfileController extends MainController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while enabling 2FA.").show();
             return "";
         }
     }
 
     private void disable2Fa()
     {
-        this.userService.disable2Fa();
+        try
+        {
+            this.userService.disable2Fa();
+        }
+        catch (Exception e)
+        {
+            new CustomOkMessage(stage, "Error while disabling 2FA.").show();
+        }
     }
 }

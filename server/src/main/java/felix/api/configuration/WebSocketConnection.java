@@ -3,10 +3,12 @@ package felix.api.configuration;
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
 import felix.api.models.*;
+import lombok.extern.slf4j.Slf4j;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.security.GeneralSecurityException;
 
+@Slf4j
 @ServerEndpoint(value = "/server/{" + WebSocket.KEY + "}")
 public class WebSocketConnection extends WebSocket
 {
@@ -22,35 +24,32 @@ public class WebSocketConnection extends WebSocket
             String encryptedAesKey = RsaEncryptionManager.encrypt(clientPublicKey, aesKey);
             session.getAsyncRemote().sendText(new Gson().toJson(new InitWebSocketMessage(RsaEncryptionManager.getPubKey(), encryptedAesKey, encryptedSessionId)));
         }
-        catch (GeneralSecurityException e)
+        catch (Exception e)
         {
-            e.printStackTrace();
             this.closeSession(session, CloseReason.CloseCodes.TLS_HANDSHAKE_FAILURE, " False handshake.");
-            return;
         }
-        System.out.println("[Connected] SessionID: " + session.getId());
     }
 
     @Override
     public void onText(String message, Session session) throws GeneralSecurityException
     {
-        WebSocketMessage webSocketMessage = super.aesDecrypt(GetterType.SESSION_ID, session.getId(), new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
-        if (!super.validateToken(webSocketMessage.getJwtToken().getToken()))
+        try
         {
-            this.closeSession(session, CloseReason.CloseCodes.CANNOT_ACCEPT, " JWT token invalid!");
-            return;
+            WebSocketMessage webSocketMessage = super.aesDecrypt(GetterType.SESSION_ID, session.getId(), new Gson().fromJson(message, AesEncryptedMessage.class).getMessage(), WebSocketMessage.class);
+            if (!super.validateToken(webSocketMessage.getJwtToken().getToken()))
+            {
+                this.closeSession(session, CloseReason.CloseCodes.CANNOT_ACCEPT, " JWT token invalid!");
+                return;
+            }
+            UserSession from = WebSocket.getSession(GetterType.TOKEN, webSocketMessage.getJwtToken().getToken());
+            UserSession friendTo = WebSocket.getSession(GetterType.DISPLAY_NAME, webSocketMessage.getTo());
+            if (friendTo == null) return;
+            super.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from.getUser().getDisplayName(), friendTo.getUser().getDisplayName());
         }
-//        System.out.println("AES Encrypted msg: " + message);
-//        System.out.println("AES Decrypted msg: " + webSocketMessage.getMessage());
-//        System.out.println("AES Decrypted jwt: " + webSocketMessage.getJwtToken().getToken());
-        UserSession from = WebSocket.getSession(GetterType.TOKEN, webSocketMessage.getJwtToken().getToken());
-        UserSession friendTo = WebSocket.getSession(GetterType.DISPLAY_NAME, webSocketMessage.getTo());
-        if (friendTo == null)
+        catch (Exception e)
         {
-            System.out.println("Friend is not online lol");
-            return;
+            this.closeSession(session, CloseReason.CloseCodes.CLOSED_ABNORMALLY, " Internal error.");
         }
-        super.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from.getUser().getDisplayName(), friendTo.getUser().getDisplayName());
     }
 
     private void closeSession(Session session, CloseReason.CloseCode closeCode, String reason)
@@ -60,27 +59,23 @@ public class WebSocketConnection extends WebSocket
             super.killSession(session.getId());
             session.close(new CloseReason(closeCode, reason));
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        catch (Exception ignored) {}
     }
 
     @Override
     public void onClose(CloseReason reason, Session session)
     {
-        System.out.println("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
+        log.info("[Session ID] : " + session.getId() + " [Socket Closed]: " + reason);
         if (!super.checkRemovePendingSession(session.getId())) super.killSession(session.getId());
     }
 
     @Override
     public void onError(Throwable cause, Session session)
     {
-        System.out.println("[Session ID] : " + session.getId() + "[ERROR]: ");
+        log.error("[ERROR] : [Session ID] : " + session.getId());
         this.closeSession(session, CloseReason.CloseCodes.TRY_AGAIN_LATER, " An unexpected error has occurred.");
-        cause.printStackTrace(System.err);
     }
 
     @Override
-    public void onPong(PongMessage pong) {System.out.println("Heartbeat!");}
+    public void onPong(PongMessage pong) {}
 }

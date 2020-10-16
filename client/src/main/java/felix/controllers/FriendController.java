@@ -4,6 +4,7 @@ import felix.exceptions.AlreadyLoggedInException;
 import felix.fxml.Friend;
 import felix.fxml.FriendInvite;
 import felix.fxml.PendingInvite;
+import felix.fxml.messageBox.CustomOkMessage;
 import felix.models.User;
 import felix.models.WebSocketMessage;
 import felix.service.friend.FriendService;
@@ -57,7 +58,7 @@ public class FriendController extends MainController implements ILoginListener
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while getting friend invites.").show();
             return new ArrayList<>();
         }
     }
@@ -71,7 +72,7 @@ public class FriendController extends MainController implements ILoginListener
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while accepting friend invite.").show();
         }
     }
 
@@ -84,7 +85,7 @@ public class FriendController extends MainController implements ILoginListener
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while declining friend invite.").show();
         }
     }
 
@@ -98,7 +99,7 @@ public class FriendController extends MainController implements ILoginListener
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while getting friend invites.").show();
             return new ArrayList<>();
         }
     }
@@ -112,7 +113,7 @@ public class FriendController extends MainController implements ILoginListener
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while canceling friend invite.").show();
         }
     }
 
@@ -143,9 +144,9 @@ public class FriendController extends MainController implements ILoginListener
     {
         if (this.friends.getChildren().stream().anyMatch(friend -> ((Friend)friend).getFriendName().equals(this.textFieldDisplayNameOutgoingInvite.getText())) || this.pendingOutgoingInvites.getChildren().stream().anyMatch(friend -> ((PendingInvite)friend).getFriendName().equals(this.textFieldDisplayNameOutgoingInvite.getText())))
         {
-            System.out.println("friend alrdy exists");
+            new CustomOkMessage(stage, "This friend is already on your friend list.").show();
             this.textFieldDisplayNameOutgoingInvite.setText("");
-            return; //todo msg friend alrdy exists
+            return;
         }
         try
         {
@@ -158,13 +159,10 @@ public class FriendController extends MainController implements ILoginListener
             this.textFieldDisplayNameOutgoingInvite.setText("");
             if (e instanceof AlreadyLoggedInException)
             {
-                System.out.println("friend alrdy exists");
-                //todo msg friend alrdy exists
+                new CustomOkMessage(stage, "This friend is already on your friend list.").show();
                 return;
             }
-            System.out.println("This user might not exist.");
-            //todo msgbox
-            e.printStackTrace();
+            new CustomOkMessage(stage, "This user might not exist.").show();
         }
     }
 
@@ -184,7 +182,7 @@ public class FriendController extends MainController implements ILoginListener
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while removing friend.").show();
         }
     }
 
@@ -196,7 +194,7 @@ public class FriendController extends MainController implements ILoginListener
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while getting friends.").show();
             return new ArrayList<>();
         }
     }

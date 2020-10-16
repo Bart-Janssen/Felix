@@ -16,7 +16,20 @@ public class AppConfig implements WebMvcConfigurer
                         "/authentication/logout/",
                         "/authentication/test/",
                         "/authentication/2fa/enable/",
-                        "/authentication/2fa/disable/"
+                        "/authentication/2fa/disable/",
+                        "/friends/",
+                        "/friends/*",
+                        "/friends/invites/",
+                        "/friends/invites/outgoing/",
+                        "/friends/invites/outgoing/*",
+                        "/friends/invites/incoming/",
+                        "/friends/invites/incoming/*",
+                        "/friends/invites/incoming/accept/",
+                        "/friends/invites/incoming/accept/*",
+                        "/friends/invites/incoming/decline/",
+                        "/friends/invites/incoming/decline/*",
+                        "/friends/invites/outgoing/cancel/",
+                        "/friends/invites/outgoing/cancel/*"
                         );
     }
 }

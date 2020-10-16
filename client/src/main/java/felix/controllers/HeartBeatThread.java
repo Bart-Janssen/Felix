@@ -7,14 +7,13 @@ public class HeartBeatThread implements Runnable
     private Boolean exit = false;
     private WebSocket webSocket;
 
-   public HeartBeatThread(WebSocket websocket)
+    public void setWebSocket(WebSocket websocket)
     {
         this.webSocket = websocket;
     }
 
     public void start()
     {
-        System.out.println("Started...");
         new Thread(this).start();
     }
 
@@ -26,7 +25,6 @@ public class HeartBeatThread implements Runnable
             try
             {
                 Thread.sleep(0x4_45_C0);
-                System.out.println("Heartbeat send!");
                 this.webSocket.sendPing("Ping");
             }
             catch (Exception ignored)
@@ -38,7 +36,6 @@ public class HeartBeatThread implements Runnable
 
     public void stop()
     {
-        System.out.println("Stopped...");
         this.exit = true;
     }
 }

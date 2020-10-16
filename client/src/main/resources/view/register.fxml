@@ -45,7 +45,6 @@
             <PasswordField fx:id="textFieldPassword" GridPane.rowIndex="5" />
             <Label text="Retype password" GridPane.rowIndex="6" />
             <PasswordField fx:id="textFieldRetypePassword" GridPane.rowIndex="7" />
-            <Label fx:id="loginFailedLabel" text="Login failed" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
             <Label text="Displayname" GridPane.rowIndex="2" />
          </children>
       </GridPane>

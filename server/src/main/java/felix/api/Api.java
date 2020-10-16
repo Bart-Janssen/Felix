@@ -1,6 +1,7 @@
 package felix.api;
 
 import felix.api.configuration.WebSocketConnection;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.eclipse.jetty.server.Server;
@@ -8,6 +9,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
+@Slf4j
 @SpringBootApplication
 public class Api
 {
@@ -36,7 +38,7 @@ public class Api
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.error("Server cannot be started.");
 		}
 	}
 }

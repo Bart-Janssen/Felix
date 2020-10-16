@@ -9,38 +9,22 @@ import felix.models.User;
 import felix.service.MainService;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 
 public class UserService extends MainService implements IUserService
 {
     @Override
-    public void login(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException
+    public void login(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException, IOException, URISyntaxException, GeneralSecurityException
     {
-        try
-        {
-            AesEncryptedMessage aesEncryptedMessage = super.post("authentication/login/", encryptedUser, AesEncryptedMessage.class);
-            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            if (e instanceof AlreadyLoggedInException) throw new AlreadyLoggedInException();
-            throw new NotAuthorizedException();
-        }
+        AesEncryptedMessage aesEncryptedMessage = super.post("authentication/login/", encryptedUser, AesEncryptedMessage.class);
+        super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
     }
 
     @Override
-    public void register(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException
+    public void register(User encryptedUser) throws NotAuthorizedException, AlreadyLoggedInException, IOException, URISyntaxException, GeneralSecurityException
     {
-        try
-        {
-            AesEncryptedMessage aesEncryptedMessage = super.post("authentication/register/", encryptedUser, AesEncryptedMessage.class);
-            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
-        }
-        catch (Exception e)
-        {
-            if (e instanceof AlreadyLoggedInException) throw new AlreadyLoggedInException();
-            throw new NotAuthorizedException();
-        }
+        AesEncryptedMessage aesEncryptedMessage = super.post("authentication/register/", encryptedUser, AesEncryptedMessage.class);
+        super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
     }
 
     @Override
@@ -50,47 +34,17 @@ public class UserService extends MainService implements IUserService
     }
 
     @Override
-    public String enable2Fa()
+    public String enable2Fa() throws IOException, URISyntaxException, GeneralSecurityException
     {
-        try
-        {
-            AesEncryptedMessage aesEncryptedMessage = super.post("authentication/2fa/enable/", null, AesEncryptedMessage.class);
-            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
-            return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), String.class);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        AesEncryptedMessage aesEncryptedMessage = super.post("authentication/2fa/enable/", null, AesEncryptedMessage.class);
+        super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
+        return new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), String.class);
     }
 
     @Override
-    public void disable2Fa()
+    public void disable2Fa() throws IOException, URISyntaxException, GeneralSecurityException
     {
-        try
-        {
-            AesEncryptedMessage aesEncryptedMessage = super.delete("authentication/2fa/disable/", AesEncryptedMessage.class);
-            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void rest()
-    {
-        try
-        {
-            AesEncryptedMessage aesEncryptedMessage = super.put("authentication/test/", super.aesEncrypt(new User("hai", "pass")), AesEncryptedMessage.class);
-            super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
-            System.out.println(new Gson().fromJson(super.aesDecrypt(aesEncryptedMessage.getMessage()), User.class).getName());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        AesEncryptedMessage aesEncryptedMessage = super.delete("authentication/2fa/disable/", AesEncryptedMessage.class);
+        super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
     }
 }

@@ -37,7 +37,6 @@
             <Label text="Username" GridPane.valignment="BOTTOM" />
             <Label text="Password" GridPane.rowIndex="2" />
             <TextField fx:id="textFieldUsername" prefHeight="25.0" prefWidth="113.0" GridPane.rowIndex="1" />
-            <Label fx:id="loginFailedLabel" text="Login failed" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <PasswordField fx:id="textFieldPassword" GridPane.rowIndex="3" />
             <Hyperlink fx:id="registerLink" onAction="#registerLink_Click" text="Register" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
          </children>

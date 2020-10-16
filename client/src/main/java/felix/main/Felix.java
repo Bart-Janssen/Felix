@@ -17,13 +17,8 @@ public class Felix extends Application
         Scene scene = new Scene(parent, 800, 550);
         scene.getStylesheets().add(getClass().getResource("/custom/navstyle.css").toExternalForm());
         primaryStage.setScene(scene);
-        t();
+        FelixSession.connectToServer(primaryStage);
         primaryStage.show();
-    }
-
-    private void t()
-    {
-        FelixSession.connectToServer();
     }
 
     public static void main(String[] args)

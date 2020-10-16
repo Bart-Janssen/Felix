@@ -72,8 +72,6 @@ public abstract class MainService extends EncryptionManager
 
     private void handleStatusCode(int statusCode)
     {
-     //   log.info(Integer.toString(statusCode));
-        System.out.println(Integer.toString(statusCode));
         switch (statusCode)
         {
             case 404: throw new PageNotFoundException();

@@ -38,18 +38,12 @@ public class UserService implements IUserService
         User authenticatedUser = this.userRepository.findByName(user.getName()).orElseThrow(EntityNotFoundException::new);
         if (authenticatedUser.getTotp() == null)
         {
-            if (new PasswordHasher().verifyHash(user.getPassword(), authenticatedUser.getPassword()))
-            {
-                return this.finalizeLogin(false, authenticatedUser);
-            }
+            if (new PasswordHasher().verifyHash(user.getPassword(), authenticatedUser.getPassword())) return this.finalizeLogin(false, authenticatedUser);
             throw new NotAuthorizedException();
         }
         int code = Integer.parseInt(user.getPassword().substring(user.getPassword().length() - TWO_FACTOR_AUTHENTICATION_CODE_LENGTH));
-        if (!new PasswordHasher().verifyHash(user.getPassword().substring(0, user.getPassword().length() - TWO_FACTOR_AUTHENTICATION_CODE_LENGTH), authenticatedUser.getPassword()))
-        if (!this.googleAuthenticator.authorizeUser(authenticatedUser.getId().toString(), code))
-        {
-            throw new NotAuthorizedException();
-        }
+        if (!new PasswordHasher().verifyHash(user.getPassword().substring(0, user.getPassword().length() - TWO_FACTOR_AUTHENTICATION_CODE_LENGTH), authenticatedUser.getPassword())) throw new NotAuthorizedException();
+        if (!this.googleAuthenticator.authorizeUser(authenticatedUser.getId().toString(), code)) throw new NotAuthorizedException();
         return this.finalizeLogin(true, authenticatedUser);
     }
 

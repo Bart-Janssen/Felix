@@ -43,7 +43,7 @@ public abstract class WebSocket extends EncryptionManager
     static Boolean addSession(User user, JwtToken token)
     {
         String sessionId = user.getSessionId();
-        PendingSession pendingSession = sessions.getPending(user.getSessionId());
+        PendingSession pendingSession = sessions.getPending(sessionId);
         if (pendingSession == null) return false;
         sessions.addSession(user.getDisplayName(), new UserSession(token, user, pendingSession.getSession(), pendingSession.getClientPublicKey(), pendingSession.getAesKey()));
         sessions.removePendingSession(sessionId);

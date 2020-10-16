@@ -21,12 +21,11 @@ public class RsaEncryptionManager
         catch (GeneralSecurityException e)
         {
             serverKeyPair = null;
-            e.printStackTrace();
         }
     }
 
-    private static PublicKey serverPublicKey = serverKeyPair.getPublic();
-    private static PrivateKey serverPrivateKey = serverKeyPair.getPrivate();
+    private static PublicKey serverPublicKey = serverKeyPair != null ? serverKeyPair.getPublic() : null;
+    private static PrivateKey serverPrivateKey = serverKeyPair != null ? serverKeyPair.getPrivate() : null;
 
     static String encrypt(String key, String message) throws GeneralSecurityException
     {

@@ -21,18 +21,10 @@ public abstract class EncryptionManager
         return new AesEncryptedMessage(AesEncryptionManager.encrypt(session.getAesKey(), WebSocket.updateJwtToken(type, key).getToken().getToken()), AesEncryptionManager.encrypt(session.getAesKey(), new Gson().toJson(object)));
     }
 
-    protected <T> T aesDecrypt(GetterType getterType, String key, String encryptedMessage, Type type)
+    protected <T> T aesDecrypt(GetterType getterType, String key, String encryptedMessage, Type type) throws Exception
     {
-        try
-        {
-            String decryptedMessage = AesEncryptionManager.decrypt(WebSocket.getSession(getterType, key).getAesKey(), encryptedMessage);
-            return new ObjectMapper().readValue(decryptedMessage, this.getType(type));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        String decryptedMessage = AesEncryptionManager.decrypt(WebSocket.getSession(getterType, key).getAesKey(), encryptedMessage);
+        return new ObjectMapper().readValue(decryptedMessage, this.getType(type));
     }
 
     protected Map<String, String> decryptRsaUser(User user) throws Exception

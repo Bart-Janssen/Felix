@@ -1,6 +1,7 @@
 package felix.controllers;
 
 import felix.fxml.NavigationAnchor;
+import felix.fxml.messageBox.CustomOkMessage;
 import felix.main.Felix;
 import felix.main.FelixSession;
 import felix.models.User;
@@ -21,7 +22,7 @@ import javafx.stage.Stage;
 abstract class MainController extends EncryptionManager implements Initializable
 {
     @FXML protected NavigationAnchor navigationAnchor;
-    @FXML private static Stage stage;
+    @FXML static Stage stage;
     private static IListener controller;
 
     private IUserService userService = new UserService();
@@ -32,7 +33,6 @@ abstract class MainController extends EncryptionManager implements Initializable
         stage.setOnCloseRequest(event ->
         {
             FelixSession.getInstance().disconnect();
-            System.out.println("System closed.");
             System.exit(0);
         });
     }
@@ -44,7 +44,6 @@ abstract class MainController extends EncryptionManager implements Initializable
         stage.setOnCloseRequest(event ->
         {
             FelixSession.getInstance().disconnect();
-            System.out.println("System closed.");
             System.exit(0);
         });
     }
@@ -83,7 +82,6 @@ abstract class MainController extends EncryptionManager implements Initializable
             }
             catch (Exception e)
             {
-                e.printStackTrace();
                 if (view.equals(View.PAGE_NOT_FOUND)) return;
                 openNewView(View.PAGE_NOT_FOUND);
             }
@@ -100,7 +98,7 @@ abstract class MainController extends EncryptionManager implements Initializable
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "An error occurred.").show();
         }
         this.openNewView(View.LOGIN);
     }

@@ -1,5 +1,6 @@
 package felix.fxml;
 
+import felix.fxml.messageBox.CustomOkMessage;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
@@ -28,7 +29,7 @@ public class NavigationAnchor extends AnchorPane
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(null, "Navigation bar cannot be loaded.").show();
         }
     }
 

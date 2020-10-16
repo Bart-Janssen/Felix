@@ -2,6 +2,7 @@ package felix.controllers;
 
 import felix.fxml.Chat;
 import felix.fxml.Friend;
+import felix.fxml.messageBox.CustomOkMessage;
 import felix.main.FelixSession;
 import felix.models.User;
 import felix.models.WebSocketMessage;
@@ -11,7 +12,6 @@ import felix.service.user.IUserService;
 import felix.service.user.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -19,7 +19,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +30,7 @@ public class HomeController extends MainController implements IMessageListener, 
     @FXML private TextField textFieldMessage;
     @FXML private Button buttonSend;
     @FXML private VBox friends;
-    @FXML private Button restButton;
     private VBox vBoxChats = new VBox(5);
-    private IUserService userService = new UserService();
     private IFriendService friendService = new FriendService();
     private String currentSelectedFriend = null;
     private static final String RED_BORDER = "-fx-border-color: red;";
@@ -57,6 +54,7 @@ public class HomeController extends MainController implements IMessageListener, 
 
     private void openChat(String friendDisplayName)
     {
+        this.textFieldMessage.setPromptText("Type your message to " + friendDisplayName);
         this.buttonSend.setDisable(false);
         this.textFieldMessage.setDisable(false);
         this.vBoxChats.getChildren().clear();
@@ -75,13 +73,14 @@ public class HomeController extends MainController implements IMessageListener, 
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            new CustomOkMessage(stage, "Error while getting friends.").show();
             return new ArrayList<>();
         }
     }
 
     private void setEvents()
     {
+        if (this.currentSelectedFriend == null) this.textFieldMessage.setPromptText("Select a chat to begin chatting");
         this.friends.setSpacing(5);
         this.buttonSend.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> this.sendChat());
         this.textFieldMessage.addEventHandler(KeyEvent.KEY_PRESSED, event ->
@@ -89,26 +88,27 @@ public class HomeController extends MainController implements IMessageListener, 
             if (event.getCode().equals(KeyCode.ENTER)) this.sendChat();
         });
         this.vBoxChats.heightProperty().addListener((observable, oldValue, newValue) -> this.scrollPaneChats.setVvalue((Double)newValue));
-
-        //todo: temp v
-        this.restButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
-        {
-            this.userService.rest();
-        });
     }
 
     private void sendChat()
     {
-        this.textFieldMessage.setStyle(null);
-        if (this.currentSelectedFriend == null) return;
-        if (this.textFieldMessage.getText().isEmpty())
+        try
         {
-            this.textFieldMessage.setStyle(RED_BORDER);
-            return;
+            this.textFieldMessage.setStyle(null);
+            if (this.currentSelectedFriend == null) return;
+            if (this.textFieldMessage.getText().isEmpty())
+            {
+                this.textFieldMessage.setStyle(RED_BORDER);
+                return;
+            }
+            FelixSession.getInstance().sendMessage(this.textFieldMessage.getText(), this.currentSelectedFriend);
+            this.vBoxChats.getChildren().add(new Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText()));
+            this.textFieldMessage.setText("");
         }
-        FelixSession.getInstance().sendMessage(this.textFieldMessage.getText(), this.currentSelectedFriend);
-        this.vBoxChats.getChildren().add(new Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText()));
-        this.textFieldMessage.setText("");
+        catch (Exception e)
+        {
+            new CustomOkMessage(stage, "Encryption error, disconnecting...").show();
+        }
     }
 
     @Override

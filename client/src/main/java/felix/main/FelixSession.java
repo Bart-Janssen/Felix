@@ -5,6 +5,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import felix.controllers.EventClientSocket;
 import felix.controllers.HeartBeatThread;
+import felix.fxml.messageBox.CustomOkMessage;
 import felix.models.WebSocketMessage;
 import felix.service.EncryptionManager;
 import felix.service.system.RsaEncryptionManager;
@@ -13,6 +14,8 @@ import felix.models.JwtToken;
 import felix.models.User;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
+
 import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
@@ -40,10 +43,10 @@ public class FelixSession extends EncryptionManager
             super.init(decryptedAesKey);
             sessionId = super.aesDecrypt(initWebSocketMessage.getEncryptedSessionId());
         }
-        catch (GeneralSecurityException e)
+        catch (GeneralSecurityException | NullPointerException e)
         {
-            e.printStackTrace();
             this.disconnect();
+            new CustomOkMessage(null, "Encryption failure, disconnecting...").show();
         }
     }
 
@@ -57,24 +60,24 @@ public class FelixSession extends EncryptionManager
         FelixSession.token = token;
     }
 
-    static void connectToServer()
+    static void connectToServer(Stage stage)
     {
         try
         {
+            heartBeatThread = new HeartBeatThread();
             websocket = new WebSocketFactory()
                     .createSocket(URI.create("ws://127.0.0.1:6666/server/" + RsaEncryptionManager.getPubKey().replace("/", "--dash--")))
                     .addListener(new EventClientSocket())
                     .connect();
             if (websocket.isOpen())
             {
-                heartBeatThread = new HeartBeatThread(websocket);
+                heartBeatThread.setWebSocket(websocket);
                 heartBeatThread.start();
             }
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            FelixSession.getInstance().disconnect();
+            new CustomOkMessage(stage, "Error while connecting.").show();
         }
     }
 
@@ -83,7 +86,7 @@ public class FelixSession extends EncryptionManager
         heartBeatThread.stop();
     }
 
-    public void sendMessage(String message, String to)
+    public void sendMessage(String message, String to) throws GeneralSecurityException
     {
         if (token == null)
         {
@@ -96,27 +99,19 @@ public class FelixSession extends EncryptionManager
         }
         catch (GeneralSecurityException e)
         {
-            e.printStackTrace();
             this.disconnect();
+            throw e;
         }
     }
 
-    public Map<String, String> getEncryptedUserInfo(User user)
+    public Map<String, String> getEncryptedUserInfo(User user) throws GeneralSecurityException, NullPointerException
     {
-        try
-        {
-            Map<String, String> encryptedUserInfo = new HashMap<>();
-            encryptedUserInfo.put("name", RsaEncryptionManager.encrypt(user.getName()));
-            if (user.getDisplayName() != null) encryptedUserInfo.put("disp", RsaEncryptionManager.encrypt(user.getDisplayName()));
-            encryptedUserInfo.put("password", RsaEncryptionManager.encrypt(user.getPassword()));
-            encryptedUserInfo.put("sessionId", RsaEncryptionManager.encrypt(sessionId));
-            return encryptedUserInfo;
-        }
-        catch (GeneralSecurityException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        Map<String, String> encryptedUserInfo = new HashMap<>();
+        encryptedUserInfo.put("name", RsaEncryptionManager.encrypt(user.getName()));
+        if (user.getDisplayName() != null) encryptedUserInfo.put("disp", RsaEncryptionManager.encrypt(user.getDisplayName()));
+        encryptedUserInfo.put("password", RsaEncryptionManager.encrypt(user.getPassword()));
+        encryptedUserInfo.put("sessionId", RsaEncryptionManager.encrypt(sessionId));
+        return encryptedUserInfo;
     }
 
     public void disconnect()
@@ -129,13 +124,12 @@ public class FelixSession extends EncryptionManager
     {
         try
         {
-            websocket.sendClose(1001, reason);
+            if (websocket.isOpen()) websocket.sendClose(1001, reason);
             this.clearSession();
         }
         catch (Exception e)
         {
             this.clearSession();
-            e.printStackTrace();
         }
     }
 

@@ -2,6 +2,8 @@ package felix.controllers;
 
 import felix.exceptions.AlreadyLoggedInException;
 import felix.exceptions.NotAuthorizedException;
+import felix.fxml.messageBox.CustomErrorMessage;
+import felix.fxml.messageBox.CustomOkMessage;
 import felix.main.FelixSession;
 import felix.models.User;
 import felix.models.View;
@@ -32,7 +34,6 @@ public class AuthenticationController extends MainController
     @FXML private GridPane mainGrid;
     @FXML private Button loginButton;
     @FXML private Button registerButton;
-    @FXML private Label loginFailedLabel;
     private boolean isLogin = false;
 
     private IUserService userService = new UserService();
@@ -83,7 +84,6 @@ public class AuthenticationController extends MainController
         {
             if (key.getCode().equals(KeyCode.ENTER)) this.register();
         });
-        this.textFieldUsername.textProperty().addListener((observable, oldValue, newValue) -> this.loginFailedLabel.setVisible(false));
     }
 
     public void loginButton_Click()
@@ -95,7 +95,6 @@ public class AuthenticationController extends MainController
     {
         this.textFieldUsername.setStyle(null);
         this.textFieldPassword.setStyle(null);
-        this.loginFailedLabel.setVisible(false);
         if (this.textFieldUsername.getText().isEmpty() || this.textFieldPassword.getText().isEmpty())
         {
             this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER : null);
@@ -123,7 +122,7 @@ public class AuthenticationController extends MainController
         }
         catch (Exception e)
         {
-            this.loginFailed("Encryption failure.");
+            this.loginFailed("General login failure.");
             return;
         }
         super.openNewView(View.HOME);
@@ -135,8 +134,7 @@ public class AuthenticationController extends MainController
         this.textFieldUsername.clear();
         this.textFieldPassword.clear();
         this.textFieldUsername.requestFocus();
-        this.loginFailedLabel.setText(reason);
-        this.loginFailedLabel.setVisible(true);
+        new CustomOkMessage(stage, reason).show();
     }
 
     private void registerFailed(String reason)
@@ -147,8 +145,7 @@ public class AuthenticationController extends MainController
         this.textFieldPassword.clear();
         this.textFieldRetypePassword.clear();
         this.textFieldUsername.requestFocus();
-        this.loginFailedLabel.setText(reason);
-        this.loginFailedLabel.setVisible(true);
+        new CustomOkMessage(stage, reason).show();
     }
 
     public void registerLink_Click()
@@ -161,7 +158,6 @@ public class AuthenticationController extends MainController
         this.textFieldUsername.setStyle(null);
         this.textFieldPassword.setStyle(null);
         this.textFieldRetypePassword.setStyle(null);
-        this.loginFailedLabel.setVisible(false);
         if (this.textFieldUsername.getText().isEmpty() || this.textFieldPassword.getText().isEmpty() || this.textFieldRetypePassword.getText().isEmpty())
         {
             this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER : null);
@@ -174,8 +170,7 @@ public class AuthenticationController extends MainController
         {
             this.textFieldPassword.setStyle(RED_BORDER);
             this.textFieldRetypePassword.setStyle(RED_BORDER);
-            this.loginFailedLabel.setText("Passwords doesn't match");
-            this.loginFailedLabel.setVisible(true);
+            new CustomOkMessage(stage, "Passwords doesn't match.").show();
             return;
         }
         try
@@ -196,7 +191,6 @@ public class AuthenticationController extends MainController
         catch (Exception e)
         {
             this.registerFailed("Register failed.");
-            e.printStackTrace();
             return;
         }
         super.openNewView(View.HOME);

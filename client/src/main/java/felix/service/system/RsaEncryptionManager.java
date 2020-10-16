@@ -22,12 +22,11 @@ public class RsaEncryptionManager
         catch (NoSuchAlgorithmException e)
         {
             clientKeyPair = null;
-            e.printStackTrace();
         }
     }
 
-    private static PublicKey clientPublicKey = clientKeyPair.getPublic();
-    private static PrivateKey clientPrivateKey = clientKeyPair.getPrivate();
+    private static PublicKey clientPublicKey = clientKeyPair != null ? clientKeyPair.getPublic() : null;
+    private static PrivateKey clientPrivateKey = clientKeyPair != null ? clientKeyPair.getPrivate() : null;
 
     private static PublicKey serverPublicKey;
 
@@ -66,7 +65,6 @@ public class RsaEncryptionManager
         catch (GeneralSecurityException e)
         {
             serverPublicKey = null;
-            e.printStackTrace();
         }
     }
 }
