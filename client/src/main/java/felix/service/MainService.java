@@ -87,7 +87,7 @@ public abstract class MainService extends EncryptionManager
     private URIBuilder parseBuilder(String path)
     {
         URIBuilder builder = new URIBuilder();
-        builder.setScheme(HTTP).setHost("127.0.0.1").setPath(path).setPort(29805);
+        builder.setScheme(HTTP).setHost("10.10.2.125").setPath(path).setPort(29805);
         return builder;
     }
 }

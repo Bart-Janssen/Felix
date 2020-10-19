@@ -23,7 +23,7 @@
     <children>
         <AnchorPane minHeight="0.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <children>
-            <GridPane hgap="5.0" prefHeight="510.0" prefWidth="800.0">
+            <GridPane hgap="5.0" prefHeight="510.0" prefWidth="800.0" style="-fx-background-color: #606060;">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="310.0" prefWidth="310.0" />
@@ -45,7 +45,7 @@
                      <GridPane.margin>
                         <Insets top="60.0" />
                      </GridPane.margin></VBox>
-                  <Label text="Friends" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                  <Label style="-fx-text-fill: #CCCCCC;" text="Friends" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets top="5.0" />
                      </GridPane.margin>
@@ -53,7 +53,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label text="Friend invites" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                  <Label style="-fx-text-fill: #CCCCCC;" text="Friend invites" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -61,7 +61,7 @@
                         <Insets top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label text="Pending outgoing invites" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                  <Label style="-fx-text-fill: #CCCCCC;" text="Pending outgoing invites" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -69,14 +69,17 @@
                         <Insets top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="buttonSendOutgoingInvite" mnemonicParsing="false" text="Send invite" GridPane.columnIndex="2" GridPane.valignment="TOP">
+                  <Button fx:id="buttonSendOutgoingInvite" mnemonicParsing="false" opacity="0.5" prefHeight="25.0" prefWidth="83.0" text="Send invite" GridPane.columnIndex="2" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets left="5.0" top="32.0" />
                      </GridPane.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
                   </Button>
-                  <TextField fx:id="textFieldDisplayNameOutgoingInvite" promptText="Displayname" GridPane.columnIndex="2" GridPane.valignment="TOP">
+                  <TextField fx:id="textFieldDisplayNameOutgoingInvite" prefHeight="25.0" prefWidth="202.0" promptText="Displayname" style="-fx-background-color: #707070; -fx-text-inner-color: #CCCCCC;" GridPane.columnIndex="2" GridPane.valignment="TOP">
                      <GridPane.margin>
-                        <Insets left="85.0" right="5.0" top="32.0" />
+                        <Insets left="94.0" right="5.0" top="32.0" />
                      </GridPane.margin>
                   </TextField>
                </children>

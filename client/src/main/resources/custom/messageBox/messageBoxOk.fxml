@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="mainGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="257.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="felix.fxml.messageBox.FXML_MessageBoxOk">
+<GridPane fx:id="mainGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="257.0" style="-fx-background-color: #707070;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="felix.fxml.messageBox.FXML_MessageBoxOk">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -15,7 +15,7 @@
     <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button fx:id="buttonOk" alignment="CENTER" mnemonicParsing="false" text="Ok" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+      <Button fx:id="buttonOk" alignment="CENTER" mnemonicParsing="false" opacity="0.5" text="Ok" GridPane.halignment="CENTER" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets />
          </GridPane.margin></Button>

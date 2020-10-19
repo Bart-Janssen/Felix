@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
 
 public class AuthenticationController extends MainController
 {
-    private static final String RED_BORDER = "-fx-border-color: red;";
-
     @FXML private TextField textFieldUsername;
     @FXML private PasswordField textFieldPassword;
     @FXML private TextField textFieldDisplayName;
@@ -90,12 +88,12 @@ public class AuthenticationController extends MainController
 
     private void login()
     {
-        this.textFieldUsername.setStyle(null);
-        this.textFieldPassword.setStyle(null);
+        this.textFieldUsername.setStyle(DEFAULT);
+        this.textFieldPassword.setStyle(DEFAULT);
         if (this.textFieldUsername.getText().isEmpty() || this.textFieldPassword.getText().isEmpty())
         {
-            this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER : null);
-            this.textFieldPassword.setStyle(this.textFieldPassword.getText().isEmpty() ? RED_BORDER : null);
+            this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER : DEFAULT);
+            this.textFieldPassword.setStyle(this.textFieldPassword.getText().isEmpty() ? RED_BORDER : DEFAULT);
             return;
         }
         try
@@ -152,21 +150,21 @@ public class AuthenticationController extends MainController
 
     private void register()
     {
-        this.textFieldUsername.setStyle(null);
-        this.textFieldPassword.setStyle(null);
-        this.textFieldRetypePassword.setStyle(null);
+        this.textFieldUsername.setStyle(DEFAULT);
+        this.textFieldPassword.setStyle(DEFAULT);
+        this.textFieldRetypePassword.setStyle(DEFAULT);
         if (this.textFieldUsername.getText().isEmpty() || this.textFieldPassword.getText().isEmpty() || this.textFieldRetypePassword.getText().isEmpty())
         {
-            this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER : null);
-            this.textFieldDisplayName.setStyle(this.textFieldDisplayName.getText().isEmpty() ? RED_BORDER : null);
-            this.textFieldPassword.setStyle(this.textFieldPassword.getText().isEmpty() ? RED_BORDER : null);
-            this.textFieldRetypePassword.setStyle(this.textFieldRetypePassword.getText().isEmpty() ? RED_BORDER : null);
+            this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
+            this.textFieldDisplayName.setStyle(this.textFieldDisplayName.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
+            this.textFieldPassword.setStyle(this.textFieldPassword.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
+            this.textFieldRetypePassword.setStyle(this.textFieldRetypePassword.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
             return;
         }
         if (!this.textFieldPassword.getText().equals(this.textFieldRetypePassword.getText()))
         {
-            this.textFieldPassword.setStyle(RED_BORDER);
-            this.textFieldRetypePassword.setStyle(RED_BORDER);
+            this.textFieldPassword.setStyle(RED_BORDER + DEFAULT);
+            this.textFieldRetypePassword.setStyle(RED_BORDER + DEFAULT);
             new CustomOkMessage(stage, "Passwords doesn't match.").show();
             return;
         }

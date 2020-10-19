@@ -11,6 +11,7 @@ import felix.service.friend.FriendService;
 import felix.service.friend.IFriendService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -32,8 +33,6 @@ public class FriendController extends MainController implements ILoginListener
     @FXML private GridPane main;
 
     private IFriendService friendService = new FriendService();
-
-    private static final String RED_BORDER = "-fx-border-color: red;";
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -131,10 +130,10 @@ public class FriendController extends MainController implements ILoginListener
 
     private void checkPendingOutgoingInvite()
     {
-        this.textFieldDisplayNameOutgoingInvite.setStyle(null);
+        this.textFieldDisplayNameOutgoingInvite.setStyle(DEFAULT);
         if (this.textFieldDisplayNameOutgoingInvite.getText().isEmpty())
         {
-            this.textFieldDisplayNameOutgoingInvite.setStyle(RED_BORDER);
+            this.textFieldDisplayNameOutgoingInvite.setStyle(RED_BORDER + DEFAULT);
             return;
         }
         this.sendPendingOutgoingInvite();
@@ -151,7 +150,7 @@ public class FriendController extends MainController implements ILoginListener
         try
         {
             User pendingFriend = this.friendService.sendPendingOutgoingInvite(this.textFieldDisplayNameOutgoingInvite.getText());
-            this.pendingOutgoingInvites.getChildren().add(new PendingInvite(pendingFriend.getDisplayName(), (event -> this.cancelInvite(this.textFieldDisplayNameOutgoingInvite.getText()))));
+            this.pendingOutgoingInvites.getChildren().add(new PendingInvite(pendingFriend.getDisplayName(), (event -> this.cancelInvite(pendingFriend.getDisplayName()))));
             this.textFieldDisplayNameOutgoingInvite.setText("");
         }
         catch (Exception e)

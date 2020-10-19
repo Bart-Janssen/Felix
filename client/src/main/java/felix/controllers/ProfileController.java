@@ -10,12 +10,13 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import sun.misc.BASE64Decoder;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.nio.IntBuffer;
 import java.util.ResourceBundle;
 
 public class ProfileController extends MainController
@@ -58,7 +59,19 @@ public class ProfileController extends MainController
             }
             try
             {
-                qrCode.setImage(new Image(new ByteArrayInputStream(new BASE64Decoder().decodeBuffer(enable2Fa()))));
+                Image originalQr = new Image(new ByteArrayInputStream(new BASE64Decoder().decodeBuffer(enable2Fa())));
+                WritableImage coloredQr = new WritableImage(200, 200);
+                PixelWriter coloredQrWriter = coloredQr.getPixelWriter();
+                for (int x = 0; x < 200; x++)
+                {
+                    for (int y = 0; y < 200; y++)
+                    {
+                        if (((originalQr.getPixelReader().getArgb(x, y) & 0xFF) == 0x00)
+                             && ((originalQr.getPixelReader().getArgb(x, y) >> 8 & 0xFF) == 0x00)
+                             && ((originalQr.getPixelReader().getArgb(x, y) >> 16 & 0xFF) == 0x00)) coloredQrWriter.setArgb(x, y, 0xFF909090);
+                    }
+                }
+                qrCode.setImage(new ImageView(coloredQr).getImage());
                 this.setUser();
             }
             catch (Exception e)

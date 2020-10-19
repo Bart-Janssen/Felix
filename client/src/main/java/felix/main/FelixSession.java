@@ -66,7 +66,7 @@ public class FelixSession extends EncryptionManager
         {
             heartBeatThread = new HeartBeatThread();
             websocket = new WebSocketFactory()
-                    .createSocket(URI.create("ws://127.0.0.1:6666/server/" + RsaEncryptionManager.getPubKey().replace("/", "--dash--")))
+                    .createSocket(URI.create("ws://10.10.2.125:6666/server/" + RsaEncryptionManager.getPubKey().replace("/", "--dash--")))
                     .addListener(new EventClientSocket())
                     .connect();
             if (websocket.isOpen())

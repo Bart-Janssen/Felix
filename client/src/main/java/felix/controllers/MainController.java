@@ -25,6 +25,9 @@ abstract class MainController extends EncryptionManager implements Initializable
     @FXML static Stage stage;
     private static IListener controller;
 
+    static final String RED_BORDER = "-fx-border-color: #FF0000;";
+    static final String DEFAULT = "-fx-text-inner-color: #CCCCCC; -fx-background-color: #707070;";
+
     private IUserService userService = new UserService();
 
     void initController(Node currentView)

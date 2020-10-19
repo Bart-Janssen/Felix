@@ -7,6 +7,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
@@ -17,6 +19,9 @@ public class NavigationAnchor extends AnchorPane
     @FXML private Button buttonSwitchToProfile;
     @FXML private Button buttonSwitchToHome;
     @FXML private Button buttonSwitchToFriends;
+
+    private static final String ON_EXIT = "-fx-background-color: #909090;";
+    private static final String ON_ENTER = "-fx-background-color: #B0B0B0;";
 
     public NavigationAnchor()
     {
@@ -40,6 +45,18 @@ public class NavigationAnchor extends AnchorPane
         buttonSwitchToProfile.setOnMouseClicked(event -> onActionPropertySwitchToProfile().get().handle(event));
         buttonSwitchToHome.setOnMouseClicked(event -> onActionPropertySwitchToHome().get().handle(event));
         buttonSwitchToFriends.setOnMouseClicked(event -> onActionPropertySwitchToFriends().get().handle(event));
+        buttonLogout.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/logout.png"))));
+        buttonSwitchToProfile.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/profile.png"))));
+        buttonSwitchToHome.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/home.png"))));
+        buttonSwitchToFriends.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/friends.png"))));
+        buttonLogout.setOnMouseExited(event -> buttonLogout.setStyle(ON_EXIT));
+        buttonLogout.setOnMouseEntered(event -> buttonLogout.setStyle(ON_ENTER));
+        buttonSwitchToProfile.setOnMouseExited(event -> buttonSwitchToProfile.setStyle(ON_EXIT));
+        buttonSwitchToProfile.setOnMouseEntered(event -> buttonSwitchToProfile.setStyle(ON_ENTER));
+        buttonSwitchToHome.setOnMouseExited(event -> buttonSwitchToHome.setStyle(ON_EXIT));
+        buttonSwitchToHome.setOnMouseEntered(event -> buttonSwitchToHome.setStyle(ON_ENTER));
+        buttonSwitchToFriends.setOnMouseExited(event -> buttonSwitchToFriends.setStyle(ON_EXIT));
+        buttonSwitchToFriends.setOnMouseEntered(event -> buttonSwitchToFriends.setStyle(ON_ENTER));
     }
 
     private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionLogout = new SimpleObjectProperty<>();

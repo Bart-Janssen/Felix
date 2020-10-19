@@ -33,19 +33,7 @@ public class FXML_Chat extends VBox
         messageLabel.setPrefWidth(600);
         messageLabel.setWrapText(true);
         messageLabel.setPadding(new Insets(0, 0, 0, 10));
-        super.setStyle("-fx-background-color:green; -fx-border-color:blue; -fx-border-width: 1;");
-        /*new Thread(() ->
-        {
-            for (;;)
-            {
-                if (messageLabel.getHeight() > 0.0D)
-                {
-                    System.out.println(super.getHeight());
-                    super.setHeight(messageLabel.getHeight() + from.getHeight());
-                    break;
-                }
-            }
-        }).start();*/
+        super.setStyle("-fx-background-color: #909090; -fx-background-radius: 5 5 5 5; -fx-border-radius: 5 5 5 5;");
         super.getChildren().addAll(gridPane, messageLabel);
     }
 }

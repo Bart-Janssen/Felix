@@ -15,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -35,7 +37,6 @@ public class HomeController extends MainController implements IMessageListener, 
     private VBox vBoxChats = new VBox(5);
     private IFriendService friendService = new FriendService();
     private String currentSelectedFriend = null;
-    private static final String RED_BORDER = "-fx-border-color: red;";
 
     private IChatService chatService = new ChatService();
 
@@ -44,6 +45,8 @@ public class HomeController extends MainController implements IMessageListener, 
     {
         this.buttonSend.setDisable(true);
         this.textFieldMessage.setDisable(true);
+        buttonSend.setStyle("-fx-background-color: #606060; -fx-border-width: 1; -fx-background-radius: 0; -fx-border-color: transparent;");
+        buttonSend.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/send.png"))));
         Platform.runLater(() -> super.initController(this.buttonSend, this));
         this.setEvents();
         Platform.runLater(() -> this.friends.getChildren().addAll(this.setFriendsToFriendPanel()));
@@ -67,7 +70,7 @@ public class HomeController extends MainController implements IMessageListener, 
         try
         {
             List<FXML_Chat> chats = new ArrayList<>();
-            this.chatService.getAll(friendDisplayName).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), chat.getDate())));
+            this.chatService.getAll(friendDisplayName).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), new Date(chat.getDate()))));
             this.vBoxChats.getChildren().addAll(chats);
         }
         catch (Exception e)
@@ -105,11 +108,11 @@ public class HomeController extends MainController implements IMessageListener, 
     {
         try
         {
-            this.textFieldMessage.setStyle(null);
+            this.textFieldMessage.setStyle(DEFAULT);
             if (this.currentSelectedFriend == null) return;
             if (this.textFieldMessage.getText().isEmpty())
             {
-                this.textFieldMessage.setStyle(RED_BORDER);
+                this.textFieldMessage.setStyle(RED_BORDER + DEFAULT);
                 return;
             }
             if (this.textFieldMessage.getText().length() > 255)

@@ -79,7 +79,7 @@ public abstract class WebSocket extends EncryptionManager
     protected void sendMessage(Session session, String message, UserSession from, UserSession to) throws GeneralSecurityException
     {
         WebSocketMessage webSocketMessage = new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from.getUser().getDisplayName(), to.getUser().getDisplayName(), null);
-        chatService.addNew(new Chat(from.getUser().getId(), to.getUser().getId(), message, new Date()));
+        chatService.addNew(new Chat(from.getUser().getId(), to.getUser().getId(), message, new Date().getTime()));
         session.getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getId(), webSocketMessage)));
     }
 

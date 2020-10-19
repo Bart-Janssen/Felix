@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <GridPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="felix.controllers.ProfileController">
     <columnConstraints>
@@ -21,7 +22,7 @@
     <children>
         <AnchorPane minHeight="0.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
             <children>
-                <GridPane prefHeight="510.0" prefWidth="800.0" GridPane.rowIndex="1">
+                <GridPane prefHeight="510.0" prefWidth="800.0" style="-fx-background-color: #606060;" GridPane.rowIndex="1">
                    <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -47,8 +48,14 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="labelName" text="Name" GridPane.columnIndex="1" />
-                        <Label fx:id="labelDisplayName" text="Displayname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="labelName" style="-fx-text-fill: #CCCCCC;" text="Name" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <Label fx:id="labelDisplayName" style="-fx-text-fill: #CCCCCC;" text="Displayname" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
                      </children>
                   </GridPane>
                   <GridPane>
@@ -61,10 +68,13 @@
                       <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="21.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="buttonTwoFa" mnemonicParsing="false" text="2FA" GridPane.rowIndex="1">
+                        <Button fx:id="buttonTwoFa" mnemonicParsing="false" opacity="0.5" text="2FA" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="10.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
                         </Button>
                         <ImageView fx:id="qrCode" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
@@ -75,7 +85,7 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" prefHeight="200.0" prefWidth="200.0">
             <children>
-                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToHome="#switchToHome" onActionSwitchToFriends="#switchToFriends" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToFriends="#switchToFriends" onActionSwitchToHome="#switchToHome" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
     </children>

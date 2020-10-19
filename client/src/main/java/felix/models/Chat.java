@@ -5,7 +5,7 @@ import java.util.Date;
 public class Chat
 {
     private String displayNameFrom;
-    private Date date;
+    private Long date;
     private String displayNameTo;
     private String message;
 
@@ -21,12 +21,12 @@ public class Chat
         this.displayNameFrom = displayNameFrom;
     }
 
-    public Date getDate()
+    public Long getDate()
     {
         return date;
     }
 
-    public void setDate(Date date)
+    public void setDate(Long date)
     {
         this.date = date;
     }

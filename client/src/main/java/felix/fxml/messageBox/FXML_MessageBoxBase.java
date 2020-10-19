@@ -8,7 +8,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.util.List;
 
 abstract class FXML_MessageBoxBase implements Initializable
@@ -42,6 +41,8 @@ abstract class FXML_MessageBoxBase implements Initializable
 
     void initialize()
     {
+        vBox.setStyle("-fx-background-color:#707070;");
+        scrollPane.setStyle("-fx-background:#707070;");
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(vBox);
         mainGrid.add(scrollPane,0,0);

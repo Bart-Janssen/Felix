@@ -49,7 +49,7 @@ public class ChatService implements IChatService
     public void addNewOffline(UUID userId, String toFriendDisplayName, String message)
     {
         Map<String, User> friends = this.checkIfFriends(userId, toFriendDisplayName);
-        this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message, new Date()));
+        this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message, new Date().getTime()));
     }
 
     private Map<String, User> checkIfFriends(UUID userId, String friendDisplayName) throws BadRequestException

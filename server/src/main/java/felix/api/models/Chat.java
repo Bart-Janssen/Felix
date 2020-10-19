@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -26,14 +25,14 @@ public class Chat
     private UUID fromId;
     private UUID toId;
     private String message;
-    private Date date;
+    private Long date;
 
     @Transient
     private String displayNameFrom;
     @Transient
     private String displayNameTo;
 
-    public Chat(UUID fromId, UUID toId, String message, Date date)
+    public Chat(UUID fromId, UUID toId, String message, Long date)
     {
         this.fromId = fromId;
         this.toId = toId;

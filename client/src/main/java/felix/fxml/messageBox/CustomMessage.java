@@ -33,7 +33,7 @@ public abstract class CustomMessage
             stage.setResizable(false);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(owner);
-            stage.setTitle(this instanceof CustomErrorMessage ? "Felix - Error" : "Felix - Melding");
+            stage.setTitle("Felix - Message");
             ((FXML_MessageBoxBase)loader.getController()).initData(messages);
             if (owner == null) stage.show();
             else stage.showAndWait();

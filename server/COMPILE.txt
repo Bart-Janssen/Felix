@@ -1,1 +1,3 @@
 mvn clean clean package -Dmaven.test.skip=true
+
+db connectie op localhost, geen 127.0.0.1
