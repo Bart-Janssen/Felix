@@ -9,6 +9,7 @@ import felix.models.View;
 import felix.service.user.IUserService;
 import felix.service.user.UserService;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 public class AuthenticationController extends MainController
 {
     @FXML private TextField textFieldUsername;
+    @FXML private Button backToLoginButton;
     @FXML private PasswordField textFieldPassword;
     @FXML private TextField textFieldDisplayName;
     @FXML private PasswordField textFieldRetypePassword;
@@ -155,16 +157,16 @@ public class AuthenticationController extends MainController
         this.textFieldRetypePassword.setStyle(DEFAULT);
         if (this.textFieldUsername.getText().isEmpty() || this.textFieldPassword.getText().isEmpty() || this.textFieldRetypePassword.getText().isEmpty())
         {
-            this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
-            this.textFieldDisplayName.setStyle(this.textFieldDisplayName.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
-            this.textFieldPassword.setStyle(this.textFieldPassword.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
-            this.textFieldRetypePassword.setStyle(this.textFieldRetypePassword.getText().isEmpty() ? RED_BORDER + DEFAULT : DEFAULT);
+            this.textFieldUsername.setStyle(this.textFieldUsername.getText().isEmpty() ? RED_BORDER : DEFAULT);
+            this.textFieldDisplayName.setStyle(this.textFieldDisplayName.getText().isEmpty() ? RED_BORDER : DEFAULT);
+            this.textFieldPassword.setStyle(this.textFieldPassword.getText().isEmpty() ? RED_BORDER : DEFAULT);
+            this.textFieldRetypePassword.setStyle(this.textFieldRetypePassword.getText().isEmpty() ? RED_BORDER : DEFAULT);
             return;
         }
         if (!this.textFieldPassword.getText().equals(this.textFieldRetypePassword.getText()))
         {
-            this.textFieldPassword.setStyle(RED_BORDER + DEFAULT);
-            this.textFieldRetypePassword.setStyle(RED_BORDER + DEFAULT);
+            this.textFieldPassword.setStyle(RED_BORDER);
+            this.textFieldRetypePassword.setStyle(RED_BORDER);
             new CustomOkMessage(stage, "Passwords doesn't match.").show();
             return;
         }
@@ -194,5 +196,10 @@ public class AuthenticationController extends MainController
     public void registerButton_Click()
     {
        this.register();
+    }
+
+    public void backToLoginButton_click()
+    {
+        super.openNewView(View.LOGIN);
     }
 }

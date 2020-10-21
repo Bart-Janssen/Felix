@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "telix_user")
+@Table(name = "felix_user")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User
 {
@@ -26,9 +26,7 @@ public class User
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
-    private String name;
     private String password;
-    private String sessionId;
     private boolean twoFAEnabled;
     private boolean online;
 
@@ -36,7 +34,13 @@ public class User
     private TOTP totp;
 
     @Column(unique = true)
+    private String name;
+
+    @Column(unique = true)
     private String displayName;
+
+    @Transient
+    private String sessionId;
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)

@@ -26,8 +26,8 @@ abstract class MainController extends EncryptionManager implements Initializable
     @FXML static Stage stage;
     private static IListener controller;
 
-    static final String RED_BORDER = "-fx-border-color: #FF0000;";
     static final String DEFAULT = "-fx-text-inner-color: #CCCCCC; -fx-background-color: #707070;";
+    static final String RED_BORDER = "-fx-border-color: #FF0000;" + DEFAULT;
 
     private IUserService userService = new UserService();
 
@@ -88,7 +88,6 @@ abstract class MainController extends EncryptionManager implements Initializable
             }
             catch (Exception e)
             {
-                e.printStackTrace();
                 if (view.equals(View.PAGE_NOT_FOUND)) return;
                 openNewView(View.PAGE_NOT_FOUND);
             }

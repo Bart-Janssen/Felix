@@ -112,7 +112,7 @@ public class HomeController extends MainController implements IMessageListener, 
             if (this.currentSelectedFriend == null) return;
             if (this.textFieldMessage.getText().isEmpty())
             {
-                this.textFieldMessage.setStyle(RED_BORDER + DEFAULT);
+                this.textFieldMessage.setStyle(RED_BORDER);
                 return;
             }
             if (this.textFieldMessage.getText().length() > 255)

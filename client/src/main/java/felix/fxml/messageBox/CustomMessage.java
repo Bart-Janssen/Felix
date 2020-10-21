@@ -3,10 +3,10 @@ package felix.fxml.messageBox;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.util.List;
 
 public abstract class CustomMessage
@@ -29,6 +29,7 @@ public abstract class CustomMessage
         {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/custom/messageBox/" + messageBoxType + ".fxml"));
             Stage stage = new Stage(StageStyle.DECORATED);
+            stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/logo.png")));
             stage.setScene(new Scene(loader.load()));
             stage.setResizable(false);
             stage.initModality(Modality.WINDOW_MODAL);

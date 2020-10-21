@@ -133,7 +133,7 @@ public class FriendController extends MainController implements ILoginListener
         this.textFieldDisplayNameOutgoingInvite.setStyle(DEFAULT);
         if (this.textFieldDisplayNameOutgoingInvite.getText().isEmpty())
         {
-            this.textFieldDisplayNameOutgoingInvite.setStyle(RED_BORDER + DEFAULT);
+            this.textFieldDisplayNameOutgoingInvite.setStyle(RED_BORDER);
             return;
         }
         this.sendPendingOutgoingInvite();
