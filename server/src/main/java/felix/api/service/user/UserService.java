@@ -8,6 +8,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
+import felix.api.configuration.AesEncryptionManager;
 import felix.api.configuration.PasswordHasher;
 import felix.api.exceptions.NotAuthorizedException;
 import felix.api.repository.CredentialRepository;
@@ -19,6 +20,7 @@ import felix.api.models.User;
 import javax.persistence.EntityNotFoundException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
@@ -33,7 +35,7 @@ public class UserService implements IUserService
     private static final int TWO_FACTOR_AUTHENTICATION_CODE_LENGTH = 6;
 
     @Override
-    public User login(User user) throws EntityNotFoundException
+    public User login(User user) throws EntityNotFoundException, GeneralSecurityException
     {
         User authenticatedUser = this.userRepository.findByName(user.getName()).orElseThrow(EntityNotFoundException::new);
         if (authenticatedUser.getTotp() == null)
@@ -71,7 +73,7 @@ public class UserService implements IUserService
     }
 
     @Override
-    public User register(User user) throws DataIntegrityViolationException
+    public User register(User user) throws DataIntegrityViolationException, GeneralSecurityException
     {
         user.setPassword(new PasswordHasher().hash(user.getPassword()));
         return this.userRepository.save(user);

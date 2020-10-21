@@ -2,7 +2,6 @@ package felix.api.configuration;
 
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
-import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

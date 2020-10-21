@@ -1,13 +1,18 @@
 package felix.api.service.chat;
 
+import felix.api.configuration.AesEncryptionManager;
 import felix.api.exceptions.BadRequestException;
 import felix.api.models.User;
 import felix.api.repository.ChatRepository;
 import felix.api.models.Chat;
 import felix.api.repository.UserRepository;
+import felix.api.service.EncryptionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.KeyGenerator;
 import javax.persistence.EntityNotFoundException;
+import java.security.GeneralSecurityException;
 import java.util.*;
 
 @Service
@@ -18,14 +23,17 @@ public class ChatService implements IChatService
     @Autowired
     private UserRepository userRepository;
 
+    private final static String base64 = "JwS/4Ozf/OMwXEo8eajsXmOgMYFkhoP3JAcH06kSlVk=";
+
     @Override
-    public void addNew(Chat chat)
+    public void addNew(Chat chat) throws GeneralSecurityException
     {
+        chat.setMessage(AesEncryptionManager.encrypt(base64, chat.getMessage()));
         this.chatRepository.save(chat);
     }
 
     @Override
-    public List<Chat> getAll(UUID id, String friendDisplayName)
+    public List<Chat> getAll(UUID id, String friendDisplayName) throws GeneralSecurityException
     {
         Map<String, User> friends = this.checkIfFriends(id, friendDisplayName);
         List<Chat> chatMessages = new ArrayList<>();
@@ -42,11 +50,15 @@ public class ChatService implements IChatService
                 .date(chat.getDate())
                 .build()));
         chatMessages.sort(Comparator.comparing(Chat::getDate));
+        for (Chat chat : chatMessages)
+        {
+            chat.setMessage(AesEncryptionManager.decrypt(base64, chat.getMessage()));
+        }
         return chatMessages;
     }
 
     @Override
-    public void addNewOffline(UUID userId, String toFriendDisplayName, String message)
+    public void addNewOffline(UUID userId, String toFriendDisplayName, String message) throws GeneralSecurityException
     {
         Map<String, User> friends = this.checkIfFriends(userId, toFriendDisplayName);
         this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message, new Date().getTime()));

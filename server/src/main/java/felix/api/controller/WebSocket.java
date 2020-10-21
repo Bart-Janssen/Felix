@@ -15,7 +15,7 @@ public abstract class WebSocket extends EncryptionManager
 {
     private static IChatService chatService;
 
-    protected static void saveOfflineChat(UserSession from, String to, String message)
+    protected static void saveOfflineChat(UserSession from, String to, String message) throws GeneralSecurityException
     {
         chatService.addNewOffline(from.getUser().getId(), to, message);
     }

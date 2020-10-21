@@ -17,7 +17,7 @@ public class ChatController extends EncryptionManager
     private final IChatService chatService;
 
     @GetMapping("/{friendDisplayName}")
-    public ResponseEntity<AesEncryptedMessage> login(@RequestHeader("Authorization") String jwt, @PathVariable("friendDisplayName") String friendDisplayName) throws Exception
+    public ResponseEntity<AesEncryptedMessage> getAll(@RequestHeader("Authorization") String jwt, @PathVariable("friendDisplayName") String friendDisplayName) throws Exception
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace("--DASH--", "/"), String.class);
