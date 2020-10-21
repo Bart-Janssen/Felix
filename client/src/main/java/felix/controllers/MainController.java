@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 abstract class MainController extends EncryptionManager implements Initializable
@@ -35,7 +36,7 @@ abstract class MainController extends EncryptionManager implements Initializable
         stage = (Stage)currentView.getScene().getWindow();
         stage.setOnCloseRequest(event ->
         {
-            this.logout();
+            if (!(this instanceof AuthenticationController)) this.logout();
             FelixSession.getInstance().disconnect();
             System.exit(0);
         });
@@ -47,7 +48,7 @@ abstract class MainController extends EncryptionManager implements Initializable
         stage = (Stage)currentView.getScene().getWindow();
         stage.setOnCloseRequest(event ->
         {
-            this.logout();
+            if (!(this instanceof AuthenticationController)) this.logout();
             FelixSession.getInstance().disconnect();
             System.exit(0);
         });
@@ -71,7 +72,6 @@ abstract class MainController extends EncryptionManager implements Initializable
         }
     }
 
-
     void openNewView(final View view)
     {
         Platform.runLater(() ->
@@ -80,6 +80,7 @@ abstract class MainController extends EncryptionManager implements Initializable
             {
                 FXMLLoader loader = new FXMLLoader(Felix.class.getResource("/view/" + view.getPage() + ".fxml"));
                 Scene scene = new Scene(loader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());
+                stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/logo.png")));
                 stage.setScene(scene);
                 scene.getStylesheets().add(getClass().getResource("/custom/navstyle.css").toExternalForm());
                 stage.setTitle("Felix - " + view.getPage().substring(view.getPage().indexOf("/") + 1).substring(0, 1).toUpperCase() + view.getPage().substring(view.getPage().indexOf("/") + 2));
@@ -87,6 +88,7 @@ abstract class MainController extends EncryptionManager implements Initializable
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 if (view.equals(View.PAGE_NOT_FOUND)) return;
                 openNewView(View.PAGE_NOT_FOUND);
             }
