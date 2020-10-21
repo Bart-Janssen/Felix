@@ -35,6 +35,7 @@ abstract class MainController extends EncryptionManager implements Initializable
         stage = (Stage)currentView.getScene().getWindow();
         stage.setOnCloseRequest(event ->
         {
+            this.logout();
             FelixSession.getInstance().disconnect();
             System.exit(0);
         });
@@ -46,6 +47,7 @@ abstract class MainController extends EncryptionManager implements Initializable
         stage = (Stage)currentView.getScene().getWindow();
         stage.setOnCloseRequest(event ->
         {
+            this.logout();
             FelixSession.getInstance().disconnect();
             System.exit(0);
         });
