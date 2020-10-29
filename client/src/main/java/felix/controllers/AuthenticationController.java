@@ -170,6 +170,13 @@ public class AuthenticationController extends MainController
             new CustomOkMessage(stage, "Passwords doesn't match.").show();
             return;
         }
+        if (this.textFieldPassword.getText().length() < 8)
+        {
+            this.textFieldPassword.setStyle(RED_BORDER);
+            this.textFieldRetypePassword.setStyle(RED_BORDER);
+            new CustomOkMessage(stage, "Password need to be at least 8 characters.").show();
+            return;
+        }
         try
         {
             User user = new User(this.textFieldUsername.getText(), this.textFieldDisplayName.getText(), this.textFieldPassword.getText());

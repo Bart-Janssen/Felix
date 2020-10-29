@@ -26,7 +26,8 @@
     <li class="text">Authenticatie;</li>
     <li class="text">Hashes;</li>
     <li class="text">Licenties;</li>
-    <li class="text">Database.</li>
+    <li class="text">Database;</li>
+    <li class="text">Excepties.</li>
   </ul>
   <p class="no-bottom-margin"><b>2.1 Encryptie</b></p>
   <p>Ik heb in mijn applicatie een mix van RSA en AES gebruikt om de versleuteling van de client naar de server te regelen. RSA is een vrij traag algoritme en is daarom niet 
@@ -36,7 +37,7 @@
   <p class="no-bottom-margin"><b>RSA</b></p>
   <P class="no-bottom-margin">Voor het gebruik van RSA moeten de server en client beide een private en public key genereren. Dit gebeurd bij het opstarten van de systemen 
     met deze functie:</P>
-  <img src="../../../../assets//code/build-rsa-keypair-code.png">
+  <img src="../../../../assets/felix/code/build-rsa-keypair-code.png">
   <p class="image">Afbeelding 1 Genereren RSA keypair</p>
   <p>Ik gebruik een key size van 2048 bit. Het heeft twee redenen waarom ik geen 4096 bit key gebruik. Volgens de NIST (National Institute of Standards and Technology) 
     is een 2048 bit key meer dan voldoende, plus dat als ik een 4096 bit key gebruik, dan duurt het genereren en encrypten van een bericht ook langer. Ook zijn er 
@@ -45,11 +46,11 @@
     daadwerkelijk online op een server komt te draaien, dan kan dit probleem met een geldig certificaat verholpen worden.</p>
   <p class="no-bottom-margin">Als een client opstart, maakt deze een websocket verbinding naar de server. Met het verbinden stuurt de client zijn RSA public key mee, de 
     public key hoeft niet versleuteld te worden.</p>
-  <img src="../../../../assets/code/websocket-connect-code.png">
+  <img src="../../../../assets/felix/code/websocket-connect-code.png">
   <p class="image">Afbeelding 2 Websocket connect</p>
   <p class="no-bottom-margin">In de bovenstaande code wordt de public key van de client uit de websocket sessie parameters gehaald, vervolgens wordt er een AES key gegenereerd. 
     Het genereren van een AES key ziet eruit als volgt:</p>
-  <img src="../../../../assets/code/build-aes-keypair-code.png">
+  <img src="../../../../assets/felix/code/build-aes-keypair-code.png">
   <p class="image">Afbeelding 3 Generate AES keypair</p>
   <p>Na het genereren van een AES key, wordt er een 'pendingUUID' gegenereerd en bijgehouden als een tijdelijke sessie. Omdat ik met websockets de verbinding tot stand laat 
     komen en het inloggen van een gebruiker via REST gaat, weet ik niet vanuit welke websocket sessie de login komt. Bij de login geef ik diezelfde pendingUUID weer mee zodat 
@@ -57,32 +58,34 @@
     stuur bevat dan de public key van de server, de met AES versleutelde pendingUUID en de RSA versleutelde AES key.</p>
   <p class="no-bottom-margin">Het versleutelen en decoderen van RSA ziet er uit als in de onderstaande afbeelding. Voor het versleutelen gebruik ik de megegeven public key 
     van de client. De client kan het bericht dan decoderen met zijn private key. Voor het decoderen gebruik ik de private key van de server.</p>
-  <img src="../../../../assets//code/rsa-encrypt-decrypt-code.png">
+  <img src="../../../../assets/felix/code/rsa-encrypt-decrypt-code.png">
   <p class="image">Afbeelding 4 Versleutelen/decoderen RSA</p>
   <p class="no-bottom-margin"><b>AES</b></p>
   <p>Voor het versleutelen van AES gebruik ik in de server de AES key van die huidige sessie, deze worden per websocket sessie bijgehouden. Als elke sessie een eigen AES key 
     heeft en bij ieder request naar de server deze key wordt ververst, dan zijn de keys maar een korte tijd in omloop. Als er dan een key onderschept wordt, is deze dan maar 
     een korte tijd geldig. De NIST heeft drie aanbevolen keuzes voor de AES key size; 128 bit, 192 bit en 256 bit. 256 bit biedt de hoogste beveiliging. Om dit te brute forcen 
     zijn er 2<sup>256</sup> pogingen mogelijk. Dit duurt zelfs met de huidige computerkracht meerdere miljarden jaren om dit te kraken. 128 bit is dan natuurlijk ook sterk 
-    genoeg, maar het versleutelen van 128 of 256 bit scheelt maar 4 extra rondes en heeft dit geen hele grote impact op de snelheid van de applicatie.</p>
+    genoeg, maar het versleutelen van 128 of 256 bit scheelt maar 4 extra rondes en heeft dit geen hele grote impact op de snelheid van de applicatie. Het opslaan van deze 
+    sleutels doe ik momenteel in memory, dit is niet 100% de goede manier. Normaal gesproken wil je dit soort sleutels opslaan in een HSM (Hardware Security Module). HSM's zijn 
+    nogal prijzig en vanuit school hebben we deze niet ter beschikking en daarom doe ik het op deze manier.</p>
   <p class="no-bottom-margin"><b>AES-CBC</b></p>
   <p class="no-bottom-margin">In de onderstaande afbeelding wordt er gebruik gemaakt van 256 bit AES-CBC, dit heeft een IV (initialization vector) nodig om de chain mee te 
     starten. Deze IV wordt random gegenereerd en deze wordt samen met de versleutelde tekst meegestuurd. De IV mag publiekelijk zichtbaar zijn, maar als deze aan de 
     versleutelde tekst wordt vastgemaakt, dan is het niet mogelijk om te zien of er een IV gebruikt wordt en hoe groot deze is.</p>
-  <img src="../../../../assets/code/aes-cbc-encrypt-decrypt-code.png">
+  <img src="../../../../assets/felix/code/aes-cbc-encrypt-decrypt-code.png">
   <p class="image">Afbeelding 5 Versleutelen/decoderen AES-CBC</p>
   <p class="no-bottom-margin"><b>AES-GCM</b></p>
   <p class="no-bottom-margin">In de onderstaande afbeelding wordt er gebruik gemaakt van 256 bit AES-GCM. AES-GCM is iets veiliger dan AES-CBC omdat deze ook standaard gebruik 
     maakt van een handshake authenticatie. Ook is AES-GCM sneller dan AES-CBC. In mijn applicatie heb ik ze nu beide geïmplementeerd gehad om er grotendeels ook van te leren. 
     Ik ga de AES-GCM in de applicatie gebruiken als definitieve methode.</p>
-  <img src="../../../../assets/code/aes-gcm-encrypt-decrypt-code.png">
+  <img src="../../../../assets/felix/code/aes-gcm-encrypt-decrypt-code.png">
   <p class="image">Afbeelding 6 Versleutelen/decoderen AES-GCM</p>
   <br>
   <p class="no-bottom-margin"><b>2.2 Autorisatie</b></p>
   <p class="no-bottom-margin">Voor de authorisatie krijgt de gebruiker na het succesvol inloggen een JWT-token. Hierin kan informatie opgeslagen worden zoals de username, 
     displayname, id en of deze 2FA geactiveerd heeft, waarmee de client zich kan identificeren. Deze tokens worden uitgedeeld aan de client's door de server, maar worden ook 
     in server zelf bijghouden met de bijhordende key en websocket sessie.</p>
-  <img src="../../../../assets/code/usersession-code.png">
+  <img src="../../../../assets/felix/code/usersession-code.png">
   <p class="image">Afbeelding 7 Usersessie informatie</p>
   <p>Elke sessie heeft een eigen JWT-tokensleutel die bij iedere request van de client ververst wordt, waardoor de JWT-tokensleutel 
   maar een korte tijd in omloop blijft. Als er gerommeld is met deze token dan zal de server deze niet meer kunnen verifiëren en wordt de token ongeldig verklaard met als 
@@ -91,24 +94,49 @@
   key van de websocket sessie, en wordt deze ook verwijderd. De JWT-token zelf wordt ook als encrypted AES verkeer verstuurd, dit maakt het onderscheppen van een dergelijke 
   token niet mogelijk.</p>
   <p class="no-bottom-margin">Het genereren en verifiëren van een JWT-token ziet er uit als volgt:</p>
-  <img src="../../../../assets/code/JWT-token-code.png">
+  <img src="../../../../assets/felix/code/JWT-token-code.png">
   <p class="image">Afbeelding 8 JWT-token code</p>
-
-
-
-
-
-
-
-
-
+  <p>Ik heb een interceptor ingebouwd die op iedere gekozen call werkt. Deze interceptor checkt of de token geldig is. Is deze niet geldig wordt er meteen voordat de call 
+    op de server binnenkomt, een http code 403 (unauthorized) terug gestuurd.</p>
+  <img src="../../../../assets/felix/code/jwt-interceptor-code.png">
+  <p class="image">Afbeelding 9 JWT interceptor</p>
 
   <p class="no-bottom-margin"><b>2.3 Authenticatie</b></p>
-  <p>Not implemented yet</p>
+  <p class="no-bottom-margin">Voor authenticatie gebruik ik een gebruikersnaam en wachtwoord. Als een gebruiker een nieuw account maakt, dan zijn er drie gevraagde velden. Een gebruikersnaam, Een 
+    displayname en een wachtwoord. De gebruikersnaam wordt gebruikt om mee in te loggen en de displayname wordt gebruikt als puur een naam die de andere gebruikers zien, er kan 
+    ook niet worden ingelogd met de displayname. Door dit op deze manier zo te doen, kunnen andere gebruikers niet de gebruikersnaam achterhalen, waardoor zowel de gebruikersnaam
+    als wachtwoord niet publiek zichtbaar zijn. Qua wachtwoord beleid heb ik een minimale lengte ingesteld, minimaal 8 karakters. Ik kan wel een vereiste maken dat het wachtwoord 
+    minimaal zoveel karakters is en zoveel speciale tekens en moeilijke dingen toevoegen, maar de lengte van een wachtwoord is vaak belangrijker dan het aantal verschillende 
+    karakters. Het is ook zo dat korte wachtwoorden met veel verschillende soorten karakters moeilijker te onthouden is dan een lang wachtwoord. Zie de onderstaande afbeelding 
+    voor een geweldig voorbeeld.</p>
+  <img src="../../../../assets/felix/password_strength.png">
+  <p class="image">Afbeelding 10 Password strength</p>
+
+  <p class="no-bottom-margin">Voor extra security hebben gebruikers de mogelijkheid om Google two factor authenticatie (2FA) in te schakelen. Als deze geactiveerd wordt krijgt 
+    de gebruiker een QR-code die gescant kan worden met de Google authenticator app op de telefoon.</p>
+  <img src="../../../../assets/felix/qr-code.png">
+  <p class="image">Afbeelding 11 2FA QR-code</p>
+
+  <p>Als deze is ingeschakeld en de gebruiker inlogt, dan moet de gebruiker de code van de Google authenticator app achter het huidige wachtwoord aan plakken. De reden hiervoor 
+    is dat het dan niet mogelijk is om te zien wanneer de gebruikersnaam en wachtwoord goed zijn. Als voorbeeld; iemand probeert het gebruikersnaam en wachtwoord te raden, mocht 
+    dit lukken en er wordt daarna om een code gevraagd, dan weet diegene dat de huidig geraden inloggegevens kloppen. Als de code achter het wachtwoord geplakt zit, is het niet 
+    mogelijk om hier achter te komen en vrijwel onmogelijk is om dit te brute forcen omdat het hele wachtwoord iedere 60 seconden verranderd.</p>
+
   <p class="no-bottom-margin"><b>2.4 Hashes</b></p>
-  <p>Not implemented yet</p>
+  <p>De wachtwoorden van gebruikers moeten uiteraard goed en veilig opgeslagen worden. Nooit in plaintext! Hiervoor doe ik dit in drie stappen: eerst genereer ik een sha512 hash
+    over het wachtwoord, vervolgens gooi ik die door bcrypt en als laatste extra encrypt ik het met AES. Hierdoor wordt het bijna onmogelijk om dit wachtwoord te kraken als deze 
+    uitgelekt zou zijn. Bcrypt is een van de meest gebruikte en beste password hashing functies en is aanwezig voor enorm veel programmeertalen.</p>
+  <img src="../../../../assets/felix/code/hashing-code.png">
+  <p class="image">Afbeelding 12 Hashing</p>
+  
+
+
+
+
+
+
   <p class="no-bottom-margin"><b>2.5 Licenties</b></p>
-  <p>Not implemented yet</p>
+  <p>Het licentie gedeelte wil ik pas implementeren voor de tweede Red vs Blue team event.</p>
 
 
 
@@ -116,14 +144,22 @@
 
 
   <p class="no-bottom-margin"><b>2.6 Database</b></p>
-  <p>Voor de database gebruik ik een postgress database die vanuit een Docker image op te starten is. Dit is handig omdat als ik mijn applicatie wil uitleveren voor het 
-    red team vs blue team event, zij dit makkelijk zelf kunnen opzetten. Er zal qua communicatie richting de database geen specefieke security nodig zijn omdat dit in een live 
-    omgeving achter een Kubernetes cluster draait. Ik heb geen mogelijkheid om een Kubernetes cluster ergens op te zetten omdat dat enorm veel server capaciteit nodig heeft 
-    en dit kost naar onderzoek vorig semester erg veel geld. Dit zal in de scope van dit project bij de server draaien <span style="font-size: 11px;">[1]</span>. Mocht 
-    hier een andere oplossing voor zijn dan kan dit nog veranderen.</p>
+  <p class="no-bottom-margin">Voor de database gebruik ik een postgress database die vanuit een Docker image op te starten is. Dit is handig omdat als ik mijn applicatie wil 
+    uitleveren voor het Red vs Blue team event, dit makkelijk zelf op te zetten is. Voor het Red vs Blue team event hebben wij een server gekregen waarop ik deze kan hosten. 
+    Ik host de database op dezelfde server als mijn chat server. Ik kan de docker opstarten zodat deze geforceerd alleen vanuit localhost toegang heeft, hierdoor kan ik de 
+    firewall zo instellen dat er van buitenaf geen toegang is naar de database. In de database worden de gebruikers, chats en overige benodigdheden bijgehouden. Waar mogelijk 
+    is de data versleuteld met AES. De sleutel van AES om de chats te versleutelen staat in de code. Er zijn hiervoor twee redenen. De 'hackers' hebben geen toegang tot mijn 
+    Git en code, en mocht een hacker dat wel kunnen achterhalen dan ben ik benieuwd of dit er uitkomt met de Red vs Blue team event. Dat is ook een reden waarom ik de key in 
+    de code heb staan.</p>
+  <img src="../../../../assets/felix/db.png">
+  <p class="image">Afbeelding 13 Docker database</p>
 
-
-  <p><span style="font-size: 11px;">[1] Ik nog onderzoek doen of hier iets in te regelen valt binnen Seclab.</span></p>
+  <p class="no-bottom-margin"><b>2.7 Excepties</b></p>
+  <p class="no-bottom-margin">Ik heb in mijn server een controller advise, dit is een handler die het hele project opvangt mocht er een exceptie opkomen. Per exceptie heb ik een 
+    speciale handeling die een http response code terug stuurt waar ik op de client weer een speciale melding kan geven of iets dergelijk. Mocht mijn exceptie er niet tussen 
+    staan dan is er nog een 'fall back' handler die alle eventueel ander mogelijke excepties opvangt. Zo kunnen er nooit ongewenste exepties optreden.</p>
+  <img src="../../../../assets/felix/code/exeption-handler-code.png">
+  <p class="image">Afbeelding 14 Exceptie handling</p>
   <br>
   <br>
   <br>

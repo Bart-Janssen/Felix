@@ -21,6 +21,7 @@ import { ChatappprojectComponent } from './components/projects/felix/chatappproj
 import { ThreatanalysisComponent } from './components/projects/felix/threatanalysis/threatanalysis.component';
 import { RiskanalysisComponent } from './components/projects/felix/riskanalysis/riskanalysis.component';
 import { FelixComponent } from './components/projects/felix/felix.component';
+import { RedblueeventComponent } from './components/projects/felix/redblueevent/redblueevent.component';
 
 export function jwtOptionsFactory() 
 {
@@ -50,6 +51,7 @@ export function jwtOptionsFactory()
     ThreatanalysisComponent,
     RiskanalysisComponent,
     FelixComponent,
+    RedblueeventComponent,
   ],
   imports: [
     BrowserModule,

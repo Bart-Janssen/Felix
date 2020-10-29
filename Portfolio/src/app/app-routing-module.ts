@@ -16,6 +16,7 @@ import { FelixComponent } from './components/projects/felix/felix.component';
 import { ChatappprojectComponent } from './components/projects/felix/chatappproject/chatappproject.component';
 import { ThreatanalysisComponent } from './components/projects/felix/threatanalysis/threatanalysis.component';
 import { RiskanalysisComponent } from './components/projects/felix/riskanalysis/riskanalysis.component';
+import { RedblueeventComponent } from './components/projects/felix/redblueevent/redblueevent.component';
 
 const routes: Routes = [
   {
@@ -82,6 +83,10 @@ const routes: Routes = [
   {
     path: "risk_analysis",
     component: RiskanalysisComponent
+  },
+  {
+    path: "red_team_vs_blue_team_event",
+    component: RedblueeventComponent
   },
   {
     path: "not-implemented-yet",
