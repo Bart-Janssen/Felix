@@ -77,4 +77,15 @@ public class GroupService implements IGroupService
         if (group.getGroupMembers().size() == 0) this.groupRepository.delete(group);
         else this.groupRepository.save(group);
     }
+
+    @Override
+    public User invite(UUID groupId, String inviteDisplayName)
+    {
+        Group group = this.groupRepository.findById(groupId).orElseThrow(EntityNotFoundException::new);
+        User user = this.userRepository.findByDisplayName(inviteDisplayName).orElseThrow(EntityNotFoundException::new);
+        group.addGroupMember(user);
+        user.addGroup(group);
+        this.groupRepository.save(group);
+        return this.userRepository.save(user);
+    }
 }

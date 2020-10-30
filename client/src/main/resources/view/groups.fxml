@@ -37,7 +37,7 @@
                      <GridPane.margin>
                         <Insets top="30.0" />
                      </GridPane.margin></VBox>
-                  <VBox fx:id="friendInvites" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+                  <VBox fx:id="invites" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets top="30.0" />
                      </GridPane.margin></VBox>

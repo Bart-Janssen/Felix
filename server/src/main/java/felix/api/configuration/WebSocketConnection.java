@@ -2,6 +2,7 @@ package felix.api.configuration;
 
 import com.google.gson.Gson;
 import felix.api.controller.WebSocket;
+import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,6 @@ public class WebSocketConnection extends WebSocket
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             this.closeSession(session, CloseReason.CloseCodes.CLOSED_ABNORMALLY, " Internal error.");
         }
     }
@@ -59,13 +59,13 @@ public class WebSocketConnection extends WebSocket
     {
         UserSession from = WebSocket.getSession(GetterType.TOKEN, webSocketMessage.getJwtToken().getToken());
         Group group = WebSocket.getGroup(UUID.fromString(webSocketMessage.getTo()));
-        if (group == null) /*do eomtehiong*/ {return;}
-        for (User d : group.getGroupMembers())
+        if (group == null) throw new BadRequestException();
+        for (User groupMember : group.getGroupMembers())
         {
-            if (d.getDisplayName().equals(from.getUser().getDisplayName())) continue;
-            UserSession toOnline = WebSocket.getSession(GetterType.DISPLAY_NAME, d.getDisplayName());
-            WebSocketMessage s = new WebSocketMessage(WebSocketMessageType.MESSAGE, webSocketMessage.getMessage(), from.getUser().getDisplayName(), toOnline.getUser().getDisplayName(), true, null);
-            toOnline.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, toOnline.getSession().getId(), s)));
+            if (groupMember.getDisplayName().equals(from.getUser().getDisplayName())) continue;
+            UserSession toOnline = WebSocket.getSession(GetterType.DISPLAY_NAME, groupMember.getDisplayName());
+            WebSocketMessage message = new WebSocketMessage(WebSocketMessageType.MESSAGE, webSocketMessage.getMessage(), from.getUser().getDisplayName(), toOnline.getUser().getDisplayName(), true, null);
+            toOnline.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, toOnline.getSession().getId(), message)));
         }
         super.saveGroupMessage(from.getUser().getId(), group.getId(), webSocketMessage.getMessage());
     }

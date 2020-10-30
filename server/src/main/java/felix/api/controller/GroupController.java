@@ -38,11 +38,21 @@ public class GroupController extends EncryptionManager
     }
 
     @DeleteMapping("/{groupId}")
-    public ResponseEntity leaveGroup(@RequestHeader("Authorization") String jwt, @PathVariable String groupId) throws Exception
+    public ResponseEntity<AesEncryptedMessage> leaveGroup(@RequestHeader("Authorization") String jwt, @PathVariable String groupId) throws Exception
     {
         groupId = super.aesDecrypt(GetterType.TOKEN, jwt, groupId.replace("--DASH--", "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.groupService.leaveGroup(UUID.fromString(groupId), user.getId());
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
+    }
+
+    @PostMapping("/invites/{groupId}")
+    public ResponseEntity<AesEncryptedMessage> inviteGroup(@RequestHeader("Authorization") String jwt, @RequestBody AesEncryptedMessage aesEncryptedMessage, @PathVariable String groupId) throws Exception
+    {
+        String inviteDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), String.class);
+        groupId = super.aesDecrypt(GetterType.TOKEN, jwt, groupId.replace("--DASH--", "/"), String.class);
+        User user = this.groupService.invite(UUID.fromString(groupId), inviteDisplayName);
+        WebSocket.addGroupsIfAbsent(user);
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
     }
 }

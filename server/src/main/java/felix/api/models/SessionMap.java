@@ -1,6 +1,9 @@
 package felix.api.models;
 
+import com.google.gson.Gson;
 import felix.api.configuration.JwtTokenGenerator;
+import felix.api.service.EncryptionManager;
+
 import javax.websocket.Session;
 import java.util.*;
 
@@ -86,8 +89,9 @@ public class SessionMap
         return true;
     }
 
-    public void addGroupsIfAbsent(User user)
+    public List<UserSession> addGroupsIfAbsent(User user)
     {
+        List<UserSession> memberSessions = new ArrayList<>();
         for (Group group : user.getMemberGroups())
         {
             if (this.groups.get(group.getId()) == null)
@@ -99,20 +103,36 @@ public class SessionMap
             else
             {
                 Group alreadyOnlineGroup = this.groups.get(group.getId());
+                for (User member : alreadyOnlineGroup.getGroupMembers())
+                {
+                    UserSession memberSession = this.get(GetterType.DISPLAY_NAME, member.getDisplayName());
+                    memberSessions.add(memberSession);
+                }
                 alreadyOnlineGroup.addGroupMember(User.builder().online(user.isOnline()).displayName(user.getDisplayName()).build());
                 this.groups.put(alreadyOnlineGroup.getId(), alreadyOnlineGroup);
             }
         }
+        return memberSessions;
     }
 
-    public void logoutGroupAndRemoveGroupFromSessionsIfEmpty(String jwtToken)
+    public List<UserSession> logoutGroupAndRemoveGroupFromSessionsIfEmpty(String jwtToken)
     {
+        List<UserSession> memberSessions = new ArrayList<>();
         User user = this.get(GetterType.TOKEN, jwtToken).getUser();
         for (Group memberGroup : user.getMemberGroups())
         {
             Group group = groups.get(memberGroup.getId());
             group.removeMember(user);
-            if (group.getGroupMembers().size() == 0) groups.remove(group.getId());
+            for (User member : group.getGroupMembers())
+            {
+                UserSession memberSession = this.get(GetterType.DISPLAY_NAME, member.getDisplayName());
+                memberSessions.add(memberSession);
+            }
+            if (group.getGroupMembers().size() == 0)
+            {
+                groups.remove(group.getId());
+            }
         }
+        return memberSessions;
     }
 }

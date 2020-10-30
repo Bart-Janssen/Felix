@@ -5,11 +5,13 @@ import com.google.gson.Gson;
 import felix.models.AesEncryptedMessage;
 import felix.models.Group;
 import felix.models.JwtToken;
+import felix.models.User;
 import felix.service.MainService;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.UUID;
 
 public class GroupService extends MainService implements IGroupService
 {
@@ -35,6 +37,15 @@ public class GroupService extends MainService implements IGroupService
         AesEncryptedMessage encryptedDisplayName = super.aesEncrypt(group.getId().toString());
         encryptedDisplayName.setMessage(encryptedDisplayName.getMessage().replace("/", "--DASH--"));
         AesEncryptedMessage aesEncryptedMessage = super.delete("groups/" + encryptedDisplayName.getMessage(), AesEncryptedMessage.class);
+        super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
+    }
+
+    @Override
+    public void invite(UUID groupId, String inviteDisplayName) throws GeneralSecurityException, IOException, URISyntaxException
+    {
+        AesEncryptedMessage encryptedDisplayName = super.aesEncrypt(groupId.toString());
+        encryptedDisplayName.setMessage(encryptedDisplayName.getMessage().replace("/", "--DASH--"));
+        AesEncryptedMessage aesEncryptedMessage = super.post("groups/invites/" + encryptedDisplayName.getMessage(), super.aesEncrypt(inviteDisplayName), AesEncryptedMessage.class);
         super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
     }
 }

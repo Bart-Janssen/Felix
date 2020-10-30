@@ -1,5 +1,6 @@
 package felix.controllers;
 
+import com.google.gson.Gson;
 import felix.fxml.FXML_Chat;
 import felix.fxml.FXML_Group;
 import felix.fxml.FXML_GroupMember;
@@ -230,7 +231,7 @@ public class HomeController extends MainController implements IMessageListener, 
     @Override
     public void onLogin(WebSocketMessage webSocketMessage)
     {
-        if (this.isGroupChat)
+        if (this.isGroupChat && webSocketMessage.isGroup())
         {
             for (Node item : vBoxFriendsAndGroups.getChildren())
             {
@@ -249,7 +250,7 @@ public class HomeController extends MainController implements IMessageListener, 
     @Override
     public void onLogout(WebSocketMessage webSocketMessage)
     {
-        if (this.isGroupChat)
+        if (this.isGroupChat && webSocketMessage.isGroup())
         {
             for (Node item : vBoxFriendsAndGroups.getChildren())
             {

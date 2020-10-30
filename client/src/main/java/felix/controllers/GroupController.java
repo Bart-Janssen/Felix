@@ -1,12 +1,15 @@
 package felix.controllers;
 
 import felix.fxml.FXML_Group;
+import felix.fxml.FXML_GroupInvite;
+import felix.fxml.FXML_GroupMember;
 import felix.fxml.messageBox.CustomOkMessage;
 import felix.models.Group;
 import felix.service.group.GroupService;
 import felix.service.group.IGroupService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -15,9 +18,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class GroupController extends MainController
 {
+    @FXML private VBox invites;
     @FXML private Button buttonCreateNewGroup;
     @FXML private TextField textFieldNewGroupName;
     @FXML private GridPane main;
@@ -36,10 +41,41 @@ public class GroupController extends MainController
         this.initializeEvents();
     }
 
+    private void invite(UUID groupId)
+    {
+        FXML_GroupInvite invite = null;
+        for (Node node : this.invites.getChildren())
+        {
+            if (((FXML_GroupInvite)node).getGroupId().equals(groupId))
+            {
+                invite = ((FXML_GroupInvite)node);
+                break;
+            }
+        }
+        if (invite == null)
+        {
+            new CustomOkMessage(stage, "You are not a member of this group.").show();
+            return;
+        }
+        try
+        {
+            this.groupService.invite(groupId, invite.getInvitedUserDisplayName());
+            new CustomOkMessage(stage, "Invite send!").show();
+        }
+        catch (Exception e)
+        {
+            new CustomOkMessage(stage, "An error occurred when inviting + " + invite.getInvitedUserDisplayName() + ".").show();
+        }
+    }
+
     private List<FXML_Group> setGroupsToPanel()
     {
         List<FXML_Group> groups = new ArrayList<>();
-        this.getGroups().forEach(group -> groups.add(new FXML_Group(group.getGroupName(), true, (event -> this.leaveGroup(group)))));
+        this.getGroups().forEach(group ->
+        {
+            groups.add(new FXML_Group(group.getGroupName(), true, (event -> this.leaveGroup(group))));
+            this.invites.getChildren().add(new FXML_GroupInvite(group.getId(), (event -> this.invite(group.getId()))));
+        });
         return groups;
     }
 
@@ -71,6 +107,7 @@ public class GroupController extends MainController
 
     private void initializeEvents()
     {
+        this.invites.setSpacing(5);
         this.groups.setSpacing(5);
         this.buttonCreateNewGroup.setOnMouseClicked(event -> this.createNewGroup());
     }

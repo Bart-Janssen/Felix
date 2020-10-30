@@ -62,7 +62,7 @@ public abstract class WebSocket extends EncryptionManager
         return userSession == null ? null : userSession.getToken().getKey();
     }
 
-    static Boolean addSession(User user, JwtToken token)
+    static Boolean addSession(User user, JwtToken token) throws GeneralSecurityException
     {
         String sessionId = user.getSessionId();
         PendingSession pendingSession = sessions.getPending(sessionId);
@@ -73,17 +73,24 @@ public abstract class WebSocket extends EncryptionManager
         return true;
     }
 
-    private static void addGroupsIfAbsent(User user)
+    static void addGroupsIfAbsent(User user) throws GeneralSecurityException
     {
-        sessions.addGroupsIfAbsent(user);
+        for (UserSession session : sessions.addGroupsIfAbsent(user))
+        {
+            session.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGIN, "", user.getDisplayName(), session.getUser().getDisplayName(), true, null))));
+        }
     }
 
-    private static void logoutGroupAndRemoveGroupFromSessionsIfEmpty(String jwtToken)
+    private static void logoutGroupAndRemoveGroupFromSessionsIfEmpty(String jwtToken) throws GeneralSecurityException
     {
-        sessions.logoutGroupAndRemoveGroupFromSessionsIfEmpty(jwtToken);
+        User user = sessions.get(GetterType.TOKEN, jwtToken).getUser();
+        for (UserSession session : sessions.logoutGroupAndRemoveGroupFromSessionsIfEmpty(jwtToken))
+        {
+            session.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGOUT, "", user.getDisplayName(), session.getUser().getDisplayName(), true, null))));
+        }
     }
 
-    static void logout(String jwtToken)
+    static void logout(String jwtToken) throws GeneralSecurityException
     {
         logoutGroupAndRemoveGroupFromSessionsIfEmpty(jwtToken);
         sessions.logout(jwtToken);

@@ -68,4 +68,9 @@ public class WebSocketMessage
     {
         this.type = type;
     }
+
+    public boolean isGroup()
+    {
+        return group;
+    }
 }
