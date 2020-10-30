@@ -3,13 +3,16 @@
 <?import felix.fxml.NavigationAnchor?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <GridPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="felix.controllers.HomeController">
     <columnConstraints>
@@ -32,7 +35,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                    </rowConstraints>
                    <children>
-                  <VBox fx:id="friends" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1" />
+                  <VBox fx:id="vBoxFriendsAndGroups" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets top="40.0" />
+                     </GridPane.margin></VBox>
                   <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -74,13 +80,43 @@
                         </ScrollPane>
                      </children>
                   </GridPane>
+                  <GridPane maxHeight="40.0" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Pane fx:id="paneFriends" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="10.0" layoutY="3.0" text="Friends" textFill="#e7dddd">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="paneGroups" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                           <children>
+                              <Label layoutX="10.0" layoutY="3.0" text="Groups" textFill="#e7dddd">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                     </children>
+                  </GridPane>
                    </children>
                 </GridPane>
             </children>
         </AnchorPane>
         <AnchorPane minHeight="0.0" prefHeight="200.0" prefWidth="200.0">
             <children>
-                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToGroups="#switchToGroups" onActionSwitchToFriends="#switchToFriends" onActionSwitchToHome="#switchToHome" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToFriends="#switchToFriends" onActionSwitchToGroups="#switchToGroups" onActionSwitchToHome="#switchToHome" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
     </children>

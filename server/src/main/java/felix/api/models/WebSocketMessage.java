@@ -15,5 +15,6 @@ public class WebSocketMessage
     private String message;
     private String from;
     private String to;
+    private boolean group;
     private JwtToken jwtToken;
 }

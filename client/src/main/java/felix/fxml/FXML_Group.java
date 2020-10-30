@@ -16,7 +16,7 @@ public class FXML_Group extends Pane
 {
     private String groupName;
 
-    public FXML_Group(String groupName, EventHandler<MouseEvent> acceptHandler)
+    public FXML_Group(String groupName, boolean showLeaveButton, EventHandler<MouseEvent> acceptHandler)
     {
         this.groupName = groupName;
         final int WIDTH = 170;
@@ -27,17 +27,23 @@ public class FXML_Group extends Pane
         Button leaveButton = new Button();
         leaveButton.setStyle("-fx-border-width: 1; -fx-background-radius: 0; -fx-border-color: transparent; -fx-background-color: transparent;");
         leaveButton.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/delete.png"))));
-        leaveButton.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
+        if (!showLeaveButton) this.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
+        else leaveButton.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
+        leaveButton.setVisible(showLeaveButton);
         Label name = new Label(this.groupName);
         name.setFont(new Font(20));
-        name.setPadding(new Insets(0, 0, 0, 10));
+        name.setPadding(new Insets(showLeaveButton ? 0 : 5, 0, 0, 10));
+        if (showLeaveButton)
+        {
+            ColumnConstraints buttonColumn = new ColumnConstraints();
+            buttonColumn.setPrefWidth(30);
+            gridPane.getColumnConstraints().add(buttonColumn);
+            gridPane.addColumn(0, leaveButton);
+        }
         ColumnConstraints nameColumn = new ColumnConstraints();
         nameColumn.setPrefWidth(125);
-        ColumnConstraints buttonColumn = new ColumnConstraints();
-        buttonColumn.setPrefWidth(30);
-        gridPane.getColumnConstraints().addAll(buttonColumn, nameColumn);
-        gridPane.addColumn(0, leaveButton);
-        gridPane.addColumn(1, name);
+        gridPane.getColumnConstraints().add(nameColumn);
+        gridPane.addColumn(showLeaveButton ? 1 : 0, name);
         super.getChildren().addAll(gridPane);
     }
 

@@ -92,7 +92,7 @@ public class FelixSession extends EncryptionManager
         heartBeatThread.stop();
     }
 
-    public void sendMessage(String message, String to) throws GeneralSecurityException
+    public void sendMessage(String message, boolean isGroup, String to) throws GeneralSecurityException
     {
         if (token == null)
         {
@@ -101,7 +101,7 @@ public class FelixSession extends EncryptionManager
         }
         try
         {
-            websocket.sendText(new Gson().toJson(super.aesEncrypt(new WebSocketMessage(message, to, token))));
+            websocket.sendText(new Gson().toJson(super.aesEncrypt(new WebSocketMessage(message, to, isGroup, token))));
         }
         catch (GeneralSecurityException e)
         {

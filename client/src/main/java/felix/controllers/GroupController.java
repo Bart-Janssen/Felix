@@ -3,7 +3,6 @@ package felix.controllers;
 import felix.fxml.FXML_Group;
 import felix.fxml.messageBox.CustomOkMessage;
 import felix.models.Group;
-import felix.models.WebSocketMessage;
 import felix.service.group.GroupService;
 import felix.service.group.IGroupService;
 import javafx.application.Platform;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class GroupController extends MainController implements ILoginListener
+public class GroupController extends MainController
 {
     @FXML private Button buttonCreateNewGroup;
     @FXML private TextField textFieldNewGroupName;
@@ -31,7 +30,7 @@ public class GroupController extends MainController implements ILoginListener
     {
         Platform.runLater(() ->
         {
-            super.initController(this.main, this);
+            super.initController(this.main);
             this.groups.getChildren().addAll(this.setGroupsToPanel());
         });
         this.initializeEvents();
@@ -40,7 +39,7 @@ public class GroupController extends MainController implements ILoginListener
     private List<FXML_Group> setGroupsToPanel()
     {
         List<FXML_Group> groups = new ArrayList<>();
-        this.getGroups().forEach(group -> groups.add(new FXML_Group(group.getGroupName(), (event -> this.leaveGroup(group)))));
+        this.getGroups().forEach(group -> groups.add(new FXML_Group(group.getGroupName(), true, (event -> this.leaveGroup(group)))));
         return groups;
     }
 
@@ -93,24 +92,12 @@ public class GroupController extends MainController implements ILoginListener
         try
         {
             Group newGroup = this.groupService.createGroup(this.textFieldNewGroupName.getText());
-            this.groups.getChildren().add(new FXML_Group(newGroup.getGroupName(), (event -> this.leaveGroup(newGroup))));
+            this.groups.getChildren().add(new FXML_Group(newGroup.getGroupName(),true, (event -> this.leaveGroup(newGroup))));
             this.textFieldNewGroupName.setText("");
         }
         catch (Exception e)
         {
             new CustomOkMessage(stage, "Failed to make group.").show();
         }
-    }
-
-    @Override
-    public void onLogin(WebSocketMessage webSocketMessage)
-    {
-
-    }
-
-    @Override
-    public void onLogout(WebSocketMessage webSocketMessage)
-    {
-
     }
 }

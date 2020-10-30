@@ -33,4 +33,9 @@ public class Group
     {
         this.groupMembers.add(user);
     }
+
+    void removeMember(User user)
+    {
+        this.groupMembers.removeIf(member -> member.getDisplayName().equals(user.getDisplayName()));
+    }
 }

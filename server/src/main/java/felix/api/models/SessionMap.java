@@ -10,6 +10,7 @@ public class SessionMap
     private Map<String, String> tokenMap = new HashMap<>();
     private Map<String, String> sessionIdMap = new HashMap<>();
     private Map<String, PendingSession> pendingSessions = new HashMap<>();
+    private Map<UUID, Group> groups = new HashMap<>();
 
     public UserSession get(GetterType type, String key)
     {
@@ -49,11 +50,6 @@ public class SessionMap
         this.sessionIdMap.remove(session.getSession().getId());
     }
 
-    public Collection<UserSession> values()
-    {
-        return this.userDisplayNameMap.values();
-    }
-
     public void putPendingSession(Session session, String clientPublicKey, String aesKey)
     {
         this.pendingSessions.put(session.getId(), new PendingSession(clientPublicKey, session, aesKey));
@@ -83,5 +79,35 @@ public class SessionMap
         if (this.pendingSessions.get(sessionId) == null) return false;
         this.pendingSessions.remove(sessionId);
         return true;
+    }
+
+    public void addGroupsIfAbsent(User user)
+    {
+        for (Group group : user.getMemberGroups())
+        {
+            if (this.groups.get(group.getId()) == null)
+            {
+                group.setGroupMembers(new ArrayList<>());
+                group.addGroupMember(User.builder().online(user.isOnline()).displayName(user.getDisplayName()).build());
+                this.groups.putIfAbsent(group.getId(), group);
+            }
+            else
+            {
+                Group alreadyOnlineGroup = this.groups.get(group.getId());
+                alreadyOnlineGroup.addGroupMember(User.builder().online(user.isOnline()).displayName(user.getDisplayName()).build());
+                this.groups.put(alreadyOnlineGroup.getId(), alreadyOnlineGroup);
+            }
+        }
+    }
+
+    public void logoutGroupAndRemoveGroupFromSessionsIfEmpty(String jwtToken)
+    {
+        User user = this.get(GetterType.TOKEN, jwtToken).getUser();
+        for (Group memberGroup : user.getMemberGroups())
+        {
+            Group group = groups.get(memberGroup.getId());
+            group.removeMember(user);
+            if (group.getGroupMembers().size() == 0) groups.remove(group.getId());
+        }
     }
 }

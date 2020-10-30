@@ -25,4 +25,9 @@ public class Group
     {
         return id;
     }
+
+    public List<User> getGroupMembers()
+    {
+        return groupMembers;
+    }
 }

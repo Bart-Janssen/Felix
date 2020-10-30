@@ -15,6 +15,8 @@ public abstract class WebSocket extends EncryptionManager
 {
     private static IChatService chatService;
 
+    private static SessionMap sessions = new SessionMap();
+
     protected static void saveOfflineChat(UserSession from, String to, String message) throws GeneralSecurityException
     {
         chatService.addNewOffline(from.getUser().getId(), to, message);
@@ -48,8 +50,6 @@ public abstract class WebSocket extends EncryptionManager
     @OnError
     public abstract void onError(Throwable cause, Session session);
 
-    private static SessionMap sessions = new SessionMap();
-
     public static byte[] getKeyFromSession(String token)
     {
         UserSession userSession = sessions.get(GetterType.TOKEN, token);
@@ -63,11 +63,23 @@ public abstract class WebSocket extends EncryptionManager
         if (pendingSession == null) return false;
         sessions.addSession(user.getDisplayName(), new UserSession(token, user, pendingSession.getSession(), pendingSession.getClientPublicKey(), pendingSession.getAesKey()));
         sessions.removePendingSession(sessionId);
+        addGroupsIfAbsent(user);
         return true;
+    }
+
+    private static void addGroupsIfAbsent(User user)
+    {
+        sessions.addGroupsIfAbsent(user);
+    }
+
+    private static void logoutGroupAndRemoveGroupFromSessionsIfEmpty(String jwtToken)
+    {
+        sessions.logoutGroupAndRemoveGroupFromSessionsIfEmpty(jwtToken);
     }
 
     static void logout(String jwtToken)
     {
+        logoutGroupAndRemoveGroupFromSessionsIfEmpty(jwtToken);
         sessions.logout(jwtToken);
     }
 
@@ -76,9 +88,9 @@ public abstract class WebSocket extends EncryptionManager
         sessions.killSession(sessionId);
     }
 
-    protected void sendMessage(Session session, String message, UserSession from, UserSession to) throws GeneralSecurityException
+    protected void sendMessage(Session session, String message, UserSession from, UserSession to, boolean isGroup) throws GeneralSecurityException
     {
-        WebSocketMessage webSocketMessage = new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from.getUser().getDisplayName(), to.getUser().getDisplayName(), null);
+        WebSocketMessage webSocketMessage = new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from.getUser().getDisplayName(), to.getUser().getDisplayName(), isGroup, null);
         chatService.addNew(new Chat(from.getUser().getId(), to.getUser().getId(), message, new Date().getTime()));
         session.getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getId(), webSocketMessage)));
     }

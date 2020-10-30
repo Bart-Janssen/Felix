@@ -38,7 +38,7 @@ public class AuthenticationController extends EncryptionManager
             for (User friend : userSession.getUser().getFriends())
             {
                 UserSession friendSession = WebSocket.getSession(GetterType.DISPLAY_NAME, friend.getDisplayName());
-                if (friendSession != null) friendSession.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, friendSession.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGIN, "", authenticatedUser.getDisplayName(), friend.getDisplayName(), null))));
+                if (friendSession != null) friendSession.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, friendSession.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGIN, "", authenticatedUser.getDisplayName(), friend.getDisplayName(), false, null))));
             }
             return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, token.getToken(), null));
         }
@@ -74,7 +74,7 @@ public class AuthenticationController extends EncryptionManager
         for (User friend : userSession.getUser().getFriends())
         {
             UserSession friendSession = WebSocket.getSession(GetterType.DISPLAY_NAME, friend.getDisplayName());
-            if (friendSession != null) friendSession.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, friendSession.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGOUT, "", user.getDisplayName(), friend.getDisplayName(), null))));
+            if (friendSession != null) friendSession.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, friendSession.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGOUT, "", user.getDisplayName(), friend.getDisplayName(), false, null))));
         }
         WebSocket.logout(userSession.getToken().getToken());
         userService.logout(userSession.getUser());

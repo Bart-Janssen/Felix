@@ -1,5 +1,6 @@
 package felix.api.service.group;
 
+import com.google.gson.Gson;
 import felix.api.exceptions.NotAuthorizedException;
 import felix.api.models.Group;
 import felix.api.models.User;
@@ -49,7 +50,7 @@ public class GroupService implements IGroupService
         {
             List<User> members = group.getGroupMembers();
             List<User> emptyMembers = new ArrayList<>();
-            members.forEach(member -> emptyMembers.add(User.builder().displayName(member.getDisplayName()).build()));
+            members.forEach(member -> emptyMembers.add(User.builder().displayName(member.getDisplayName()).online(member.isOnline()).build()));
             group.setGroupMembers(emptyMembers);
         }
         return groups;

@@ -6,14 +6,16 @@ public class WebSocketMessage
     private String message;
     private String from;
     private String to;
+    private boolean group;
     private JwtToken jwtToken;
 
     public WebSocketMessage() {}
 
-    public WebSocketMessage(String message, String to, JwtToken jwtToken)
+    public WebSocketMessage(String message, String to, boolean group, JwtToken jwtToken)
     {
         this.message = message;
         this.to = to;
+        this.group = group;
         this.jwtToken = jwtToken;
     }
 

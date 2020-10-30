@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.security.GeneralSecurityException;
 
 @Slf4j
 @Service
@@ -43,19 +44,34 @@ public class WebSocketConnection extends WebSocket
                 return;
             }
             if (webSocketMessage.getMessage().length() > 255) return;
-            UserSession from = WebSocket.getSession(GetterType.TOKEN, webSocketMessage.getJwtToken().getToken());
-            UserSession friendTo = WebSocket.getSession(GetterType.DISPLAY_NAME, webSocketMessage.getTo());
-            if (friendTo == null)
-            {
-                WebSocket.saveOfflineChat(from, webSocketMessage.getTo(), webSocketMessage.getMessage());
-                return;
-            }
-            super.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from, friendTo);
+            if (!webSocketMessage.isGroup()) this.handlePrivateChat(webSocketMessage);
+            else this.handleGroupChat(webSocketMessage);
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             this.closeSession(session, CloseReason.CloseCodes.CLOSED_ABNORMALLY, " Internal error.");
         }
+    }
+
+    private void handleGroupChat(WebSocketMessage webSocketMessage) throws GeneralSecurityException
+    {
+        System.out.println("to: " + webSocketMessage.getTo());
+        System.out.println("msg: " + webSocketMessage.getMessage());
+
+        //todo
+    }
+
+    private void handlePrivateChat(WebSocketMessage webSocketMessage) throws GeneralSecurityException
+    {
+        UserSession from = WebSocket.getSession(GetterType.TOKEN, webSocketMessage.getJwtToken().getToken());
+        UserSession friendTo = WebSocket.getSession(GetterType.DISPLAY_NAME, webSocketMessage.getTo());
+        if (friendTo == null)
+        {
+            WebSocket.saveOfflineChat(from, webSocketMessage.getTo(), webSocketMessage.getMessage());
+            return;
+        }
+        super.sendMessage(friendTo.getSession(), webSocketMessage.getMessage(), from, friendTo, false);
     }
 
     private void closeSession(Session session, CloseReason.CloseCode closeCode, String reason)
