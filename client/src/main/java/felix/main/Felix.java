@@ -16,7 +16,10 @@ public class Felix extends Application
         primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/logo.png")));
         Parent parent = loader.load();
         primaryStage.setTitle("Felix");
-        Scene scene = new Scene(parent, 800, 550);
+        primaryStage.setMaxWidth(806);
+        primaryStage.setMaxHeight(580);
+        primaryStage.setResizable(false);
+        Scene scene = new Scene(parent);
         scene.getStylesheets().add(getClass().getResource("/custom/navstyle.css").toExternalForm());
         primaryStage.setScene(scene);
         FelixSession.connectToServer(primaryStage);

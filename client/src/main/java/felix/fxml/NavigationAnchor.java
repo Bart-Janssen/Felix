@@ -51,7 +51,7 @@ public class NavigationAnchor extends AnchorPane
         buttonSwitchToProfile.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/profile.png"))));
         buttonSwitchToHome.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/home.png"))));
         buttonSwitchToFriends.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/friends.png"))));
-        buttonSwitchToGroups.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/friends.png"))));
+        buttonSwitchToGroups.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/groups.png"))));
         buttonLogout.setOnMouseExited(event -> buttonLogout.setStyle(ON_EXIT));
         buttonLogout.setOnMouseEntered(event -> buttonLogout.setStyle(ON_ENTER));
         buttonSwitchToProfile.setOnMouseExited(event -> buttonSwitchToProfile.setStyle(ON_EXIT));

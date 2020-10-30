@@ -72,7 +72,7 @@ public class HomeController extends MainController implements IMessageListener, 
         this.getGroups().forEach(group ->
         {
             List<FXML_GroupMember> members = new ArrayList<>();
-            group.getGroupMembers().forEach(member -> members.add(new FXML_GroupMember(false, group.getGroupName(), member.getDisplayName(), member.isOnline())));
+            group.getGroupMembers().forEach(member -> members.add(new FXML_GroupMember(member.getDisplayName().equals(group.getOwnerDisplayName()), false, group.getGroupName(), member.getDisplayName(), member.isOnline())));
             this.vBoxFriendsAndGroups.getChildren().addAll(members);
             groups.add(new FXML_Group(group.getGroupName(), false, (event -> this.openGroupChat(group))));
         });
@@ -99,20 +99,16 @@ public class HomeController extends MainController implements IMessageListener, 
         this.vBoxFriendsAndGroups.getChildren().add(new FXML_Group(group.getGroupName(), false, (event -> this.openGroupChat(group))));
         groupMembers.forEach(node -> ((FXML_GroupMember)node).setVisible());
         this.vBoxFriendsAndGroups.getChildren().addAll(groupMembers);
-
-
-//        group.getGroupMembers().forEach(member -> this.vBoxFriendsAndGroups.getChildren().add(new FXML_GroupMember(true, member.getDisplayName(), member.isOnline())));
-
-//        try
-//        {
-//            List<FXML_Chat> chats = new ArrayList<>();
-//            this.chatService.getAll(friendDisplayName).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), new Date(chat.getDate()))));
-//            this.vBoxChats.getChildren().addAll(chats);
-//        }
-//        catch (Exception e)
-//        {
-//            new CustomOkMessage(stage, "Error while getting chats.").show();
-//        }
+        try
+        {
+            List<FXML_Chat> chats = new ArrayList<>();
+            this.chatService.getAllGroup(group.getId()).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), new Date(chat.getDate()))));
+            this.vBoxChats.getChildren().addAll(chats);
+        }
+        catch (Exception e)
+        {
+            new CustomOkMessage(stage, "Error while getting chats.").show();
+        }
     }
 
     private void openFriendChat(String friendDisplayName)

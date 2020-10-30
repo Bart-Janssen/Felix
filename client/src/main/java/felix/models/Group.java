@@ -7,6 +7,7 @@ public class Group
 {
     private UUID id;
     private String groupName;
+    private String ownerDisplayName;
     private List<User> groupMembers;
 
     public Group() {}
@@ -29,5 +30,10 @@ public class Group
     public List<User> getGroupMembers()
     {
         return groupMembers;
+    }
+
+    public String getOwnerDisplayName()
+    {
+        return ownerDisplayName;
     }
 }

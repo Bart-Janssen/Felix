@@ -71,6 +71,7 @@ public class GroupController extends MainController
 
     private void initializeEvents()
     {
+        this.groups.setSpacing(5);
         this.buttonCreateNewGroup.setOnMouseClicked(event -> this.createNewGroup());
     }
 

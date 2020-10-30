@@ -11,4 +11,5 @@ public interface ChatRepository extends CrudRepository<Chat, UUID>
 {
     List<Chat> findAllByFromIdAndToId(final UUID fromId, final UUID toId);
     List<Chat> findAllByToIdAndFromId(final UUID toId, final UUID fromId);
+    List<Chat> findAllByToId(final UUID toId);
 }

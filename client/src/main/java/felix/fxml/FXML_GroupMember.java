@@ -2,6 +2,8 @@ package felix.fxml;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -13,7 +15,7 @@ public class FXML_GroupMember extends Pane
     private String memberName;
     private Pane onlinePane;
 
-    public FXML_GroupMember(boolean visible, String groupParent, String memberName, boolean online)
+    public FXML_GroupMember(boolean isOwner, boolean visible, String groupParent, String memberName, boolean online)
     {
         super.setVisible(visible);
         super.setManaged(visible);
@@ -32,6 +34,13 @@ public class FXML_GroupMember extends Pane
         Pane nothing = new Pane();
         nothing.setPrefWidth(15);
         nothing.setStyle("-fx-background-color: #606060;");
+        if (isOwner)
+        {
+            ImageView imageView = new ImageView(new Image(this.getClass().getResourceAsStream("/owner-crown.png")));
+            imageView.setFitHeight(13);
+            imageView.setFitWidth(13);
+            nothing.getChildren().add(imageView);
+        }
         ColumnConstraints marginColumn = new ColumnConstraints();
         marginColumn.setPrefWidth(15);
         ColumnConstraints onlineColumn = new ColumnConstraints();

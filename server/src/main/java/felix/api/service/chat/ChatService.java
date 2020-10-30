@@ -2,15 +2,15 @@ package felix.api.service.chat;
 
 import felix.api.configuration.AesEncryptionManager;
 import felix.api.exceptions.BadRequestException;
+import felix.api.exceptions.NotAuthorizedException;
+import felix.api.models.Group;
 import felix.api.models.User;
 import felix.api.repository.ChatRepository;
 import felix.api.models.Chat;
+import felix.api.repository.GroupRepository;
 import felix.api.repository.UserRepository;
-import felix.api.service.EncryptionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.KeyGenerator;
 import javax.persistence.EntityNotFoundException;
 import java.security.GeneralSecurityException;
 import java.util.*;
@@ -22,6 +22,8 @@ public class ChatService implements IChatService
     private ChatRepository chatRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
     private final static String base64 = "JwS/4Ozf/OMwXEo8eajsXmOgMYFkhoP3JAcH06kSlVk=";
 
@@ -62,6 +64,33 @@ public class ChatService implements IChatService
     {
         Map<String, User> friends = this.checkIfFriends(userId, toFriendDisplayName);
         this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message, new Date().getTime()));
+    }
+
+    @Override
+    public List<Chat> getAllGroup(UUID userId, UUID groupId) throws GeneralSecurityException
+    {
+        Group group = this.groupRepository.findById(groupId).orElseThrow(EntityNotFoundException::new);
+        boolean userIsPartOfGroup = false;
+        for (User member : group.getGroupMembers())
+        {
+            if (member.getId().equals(userId))
+            {
+                userIsPartOfGroup = true;
+                break;
+            }
+        }
+        if (!userIsPartOfGroup) throw new NotAuthorizedException();
+        List<Chat> chatMessages = new ArrayList<>();
+        this.chatRepository.findAllByToId(groupId).forEach(chat -> chatMessages.add(Chat.builder()
+                        .message(chat.getMessage())
+                        .displayNameFrom(this.userRepository.findUserById(chat.getFromId()).orElseThrow(EntityNotFoundException::new).getDisplayName())
+                        .date(chat.getDate())
+                        .build()));
+        for (Chat chat : chatMessages)
+        {
+            chat.setMessage(AesEncryptionManager.decrypt(base64, chat.getMessage()));
+        }
+        return chatMessages;
     }
 
     private Map<String, User> checkIfFriends(UUID userId, String friendDisplayName) throws BadRequestException

@@ -23,6 +23,9 @@ public class Group
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
     private UUID ownerId;
+
+    @Transient
+    private String ownerDisplayName;
     private String groupName;
 
     @ManyToMany

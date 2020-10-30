@@ -23,6 +23,11 @@ public class SessionMap
         }
     }
 
+    public Group get(UUID groupId)
+    {
+        return groups.get(groupId);
+    }
+
     public PendingSession getPending(String sessionId)
     {
         return this.pendingSessions.get(sessionId);

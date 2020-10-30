@@ -16,7 +16,7 @@ public class FXML_Group extends Pane
 {
     private String groupName;
 
-    public FXML_Group(String groupName, boolean showLeaveButton, EventHandler<MouseEvent> acceptHandler)
+    public FXML_Group(String groupName, boolean showButtons, EventHandler<MouseEvent> acceptHandler)
     {
         this.groupName = groupName;
         final int WIDTH = 170;
@@ -27,13 +27,13 @@ public class FXML_Group extends Pane
         Button leaveButton = new Button();
         leaveButton.setStyle("-fx-border-width: 1; -fx-background-radius: 0; -fx-border-color: transparent; -fx-background-color: transparent;");
         leaveButton.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/delete.png"))));
-        if (!showLeaveButton) this.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
+        if (!showButtons) this.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
         else leaveButton.addEventHandler(MouseEvent.MOUSE_CLICKED, acceptHandler);
-        leaveButton.setVisible(showLeaveButton);
+        leaveButton.setVisible(showButtons);
         Label name = new Label(this.groupName);
         name.setFont(new Font(20));
-        name.setPadding(new Insets(showLeaveButton ? 0 : 5, 0, 0, 10));
-        if (showLeaveButton)
+        name.setPadding(new Insets(showButtons ? 0 : 5, 0, 0, 10));
+        if (showButtons)
         {
             ColumnConstraints buttonColumn = new ColumnConstraints();
             buttonColumn.setPrefWidth(30);
@@ -43,7 +43,7 @@ public class FXML_Group extends Pane
         ColumnConstraints nameColumn = new ColumnConstraints();
         nameColumn.setPrefWidth(125);
         gridPane.getColumnConstraints().add(nameColumn);
-        gridPane.addColumn(showLeaveButton ? 1 : 0, name);
+        gridPane.addColumn(showButtons ? 1 : 0, name);
         super.getChildren().addAll(gridPane);
     }
 

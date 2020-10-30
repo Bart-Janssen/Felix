@@ -9,7 +9,6 @@ import felix.models.View;
 import felix.service.user.IUserService;
 import felix.service.user.UserService;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;

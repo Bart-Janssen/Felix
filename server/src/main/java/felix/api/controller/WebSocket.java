@@ -10,6 +10,7 @@ import javax.websocket.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.UUID;
 
 public abstract class WebSocket extends EncryptionManager
 {
@@ -17,7 +18,12 @@ public abstract class WebSocket extends EncryptionManager
 
     private static SessionMap sessions = new SessionMap();
 
-    protected static void saveOfflineChat(UserSession from, String to, String message) throws GeneralSecurityException
+    protected static Group getGroup(UUID groupId)
+    {
+        return sessions.get(groupId);
+    }
+
+    protected void saveOfflineChat(UserSession from, String to, String message) throws GeneralSecurityException
     {
         chatService.addNewOffline(from.getUser().getId(), to, message);
     }
@@ -88,11 +94,16 @@ public abstract class WebSocket extends EncryptionManager
         sessions.killSession(sessionId);
     }
 
-    protected void sendMessage(Session session, String message, UserSession from, UserSession to, boolean isGroup) throws GeneralSecurityException
+    protected void sendMessage(UserSession to, String message, UserSession from, UUID toId, boolean isGroup) throws GeneralSecurityException
     {
         WebSocketMessage webSocketMessage = new WebSocketMessage(WebSocketMessageType.MESSAGE, message, from.getUser().getDisplayName(), to.getUser().getDisplayName(), isGroup, null);
-        chatService.addNew(new Chat(from.getUser().getId(), to.getUser().getId(), message, new Date().getTime()));
-        session.getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, session.getId(), webSocketMessage)));
+        chatService.addNew(new Chat(from.getUser().getId(), toId, message, new Date().getTime()));
+        to.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, to.getSession().getId(), webSocketMessage)));
+    }
+
+    protected void saveGroupMessage(UUID userFromId, UUID groupId, String message) throws GeneralSecurityException
+    {
+        chatService.addNew(new Chat(userFromId, groupId, message, new Date().getTime()));
     }
 
     private Boolean userHasToken(String token)
