@@ -64,12 +64,14 @@ public class HttpControllerAdvice
     @ExceptionHandler(UnsupportedOperationException.class)
     public ResponseEntity handleUnsupportedOperationException(final UnsupportedOperationException e)
     {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity handleNullPointerException(final NullPointerException e)
     {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

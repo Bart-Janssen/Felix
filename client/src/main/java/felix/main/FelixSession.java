@@ -6,6 +6,7 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import felix.controllers.EventClientSocket;
 import felix.controllers.HeartBeatThread;
 import felix.fxml.messageBox.CustomOkMessage;
+import felix.fxml.messageBox.FXML_MessageBoxStatus;
 import felix.models.WebSocketMessage;
 import felix.service.EncryptionManager;
 import felix.service.system.RsaEncryptionManager;
@@ -50,6 +51,11 @@ public class FelixSession extends EncryptionManager
         }
     }
 
+    public static String getIp()
+    {
+        return "127.0.0.1";
+    }
+
     public Boolean isInitialized()
     {
         return super.isInitialized();
@@ -66,7 +72,7 @@ public class FelixSession extends EncryptionManager
         {
             heartBeatThread = new HeartBeatThread();
             websocket = new WebSocketFactory()
-                    .createSocket(URI.create("ws://10.10.2.125:6666/server/" + RsaEncryptionManager.getPubKey().replace("/", "--dash--")))
+                    .createSocket(URI.create("ws://" + getIp() + ":6666/server/" + RsaEncryptionManager.getPubKey().replace("/", "--dash--")))
                     .addListener(new EventClientSocket())
                     .connect();
             if (websocket.isOpen())

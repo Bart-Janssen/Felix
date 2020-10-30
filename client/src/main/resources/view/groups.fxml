@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="felix.controllers.FriendController">
+<GridPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="felix.controllers.GroupController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="800.0" prefWidth="800.0" />
     </columnConstraints>
@@ -33,7 +33,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <VBox fx:id="friends" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="groups" prefHeight="200.0" prefWidth="100.0">
                      <GridPane.margin>
                         <Insets top="30.0" />
                      </GridPane.margin></VBox>
@@ -41,11 +41,7 @@
                      <GridPane.margin>
                         <Insets top="30.0" />
                      </GridPane.margin></VBox>
-                  <VBox fx:id="pendingOutgoingInvites" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
-                     <GridPane.margin>
-                        <Insets top="60.0" />
-                     </GridPane.margin></VBox>
-                  <Label style="-fx-text-fill: #CCCCCC;" text="Friends" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                  <Label style="-fx-text-fill: #CCCCCC;" text="Groups" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets top="5.0" />
                      </GridPane.margin>
@@ -53,7 +49,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-text-fill: #CCCCCC;" text="Friend invites" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                  <Label style="-fx-text-fill: #CCCCCC;" text="Group invites" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -61,7 +57,7 @@
                         <Insets top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label style="-fx-text-fill: #CCCCCC;" text="Pending outgoing invites" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                  <Label style="-fx-text-fill: #CCCCCC;" text="Create new group" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -69,7 +65,7 @@
                         <Insets top="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button fx:id="buttonSendOutgoingInvite" mnemonicParsing="false" opacity="0.5" prefHeight="25.0" prefWidth="83.0" text="Send invite" GridPane.columnIndex="2" GridPane.valignment="TOP">
+                  <Button fx:id="buttonCreateNewGroup" mnemonicParsing="false" opacity="0.5" prefHeight="25.0" prefWidth="92.0" text="Create group" GridPane.columnIndex="2" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets left="5.0" top="32.0" />
                      </GridPane.margin>
@@ -77,9 +73,9 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="textFieldDisplayNameOutgoingInvite" prefHeight="25.0" prefWidth="202.0" promptText="Displayname" style="-fx-background-color: #707070; -fx-text-inner-color: #CCCCCC;" GridPane.columnIndex="2" GridPane.valignment="TOP">
+                  <TextField fx:id="textFieldNewGroupName" prefHeight="25.0" prefWidth="202.0" promptText="Group name" style="-fx-background-color: #707070; -fx-text-inner-color: #CCCCCC;" GridPane.columnIndex="2" GridPane.valignment="TOP">
                      <GridPane.margin>
-                        <Insets left="94.0" right="5.0" top="32.0" />
+                        <Insets left="105.0" right="5.0" top="32.0" />
                      </GridPane.margin>
                   </TextField>
                </children>
@@ -87,7 +83,7 @@
          </children></AnchorPane>
         <AnchorPane minHeight="0.0" prefHeight="200.0" prefWidth="200.0">
             <children>
-                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToGroups="#switchToGroups" onActionSwitchToFriends="#switchToFriends" onActionSwitchToHome="#switchToHome" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToFriends="#switchToFriends" onActionSwitchToGroups="#switchToGroups" onActionSwitchToHome="#switchToHome" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
     </children>

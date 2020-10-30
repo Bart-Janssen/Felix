@@ -44,5 +44,14 @@ public class User
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Group> memberGroups = new ArrayList<>();
+
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<User> friends = new ArrayList<>();
+
+    public void addGroup(Group group)
+    {
+        this.memberGroups.add(group);
+    }
 }

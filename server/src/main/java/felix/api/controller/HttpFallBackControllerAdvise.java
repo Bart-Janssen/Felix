@@ -17,12 +17,14 @@ public class HttpFallBackControllerAdvise
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(final Exception e)
     {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleRuntimeException(final RuntimeException e)
     {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

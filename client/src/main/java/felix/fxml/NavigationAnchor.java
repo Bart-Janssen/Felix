@@ -19,6 +19,7 @@ public class NavigationAnchor extends AnchorPane
     @FXML private Button buttonSwitchToProfile;
     @FXML private Button buttonSwitchToHome;
     @FXML private Button buttonSwitchToFriends;
+    @FXML private Button buttonSwitchToGroups;
 
     private static final String ON_EXIT = "-fx-background-color: #909090;";
     private static final String ON_ENTER = "-fx-background-color: #B0B0B0;";
@@ -45,10 +46,12 @@ public class NavigationAnchor extends AnchorPane
         buttonSwitchToProfile.setOnMouseClicked(event -> onActionPropertySwitchToProfile().get().handle(event));
         buttonSwitchToHome.setOnMouseClicked(event -> onActionPropertySwitchToHome().get().handle(event));
         buttonSwitchToFriends.setOnMouseClicked(event -> onActionPropertySwitchToFriends().get().handle(event));
+        buttonSwitchToGroups.setOnMouseClicked(event -> onActionPropertySwitchToGroups().get().handle(event));
         buttonLogout.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/logout.png"))));
         buttonSwitchToProfile.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/profile.png"))));
         buttonSwitchToHome.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/home.png"))));
         buttonSwitchToFriends.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/friends.png"))));
+        buttonSwitchToGroups.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/friends.png"))));
         buttonLogout.setOnMouseExited(event -> buttonLogout.setStyle(ON_EXIT));
         buttonLogout.setOnMouseEntered(event -> buttonLogout.setStyle(ON_ENTER));
         buttonSwitchToProfile.setOnMouseExited(event -> buttonSwitchToProfile.setStyle(ON_EXIT));
@@ -57,6 +60,8 @@ public class NavigationAnchor extends AnchorPane
         buttonSwitchToHome.setOnMouseEntered(event -> buttonSwitchToHome.setStyle(ON_ENTER));
         buttonSwitchToFriends.setOnMouseExited(event -> buttonSwitchToFriends.setStyle(ON_EXIT));
         buttonSwitchToFriends.setOnMouseEntered(event -> buttonSwitchToFriends.setStyle(ON_ENTER));
+        buttonSwitchToGroups.setOnMouseExited(event -> buttonSwitchToGroups.setStyle(ON_EXIT));
+        buttonSwitchToGroups.setOnMouseEntered(event -> buttonSwitchToGroups.setStyle(ON_ENTER));
     }
 
     private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionLogout = new SimpleObjectProperty<>();
@@ -133,5 +138,25 @@ public class NavigationAnchor extends AnchorPane
     public final EventHandler<MouseEvent> getOnActionSwitchToFriends()
     {
         return propertyOnActionSwitchToFriends.get();
+    }
+
+
+
+
+    private ObjectProperty<EventHandler<MouseEvent>> propertyOnActionSwitchToGroups = new SimpleObjectProperty<>();
+
+    private ObjectProperty<EventHandler<MouseEvent>> onActionPropertySwitchToGroups()
+    {
+        return propertyOnActionSwitchToGroups;
+    }
+
+    public final void setOnActionSwitchToGroups(EventHandler<MouseEvent> handler)
+    {
+        propertyOnActionSwitchToGroups.set(handler);
+    }
+
+    public final EventHandler<MouseEvent> getOnActionSwitchToGroups()
+    {
+        return propertyOnActionSwitchToGroups.get();
     }
 }

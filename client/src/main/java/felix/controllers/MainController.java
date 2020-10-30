@@ -127,6 +127,12 @@ abstract class MainController extends EncryptionManager implements Initializable
         this.openNewView(View.FRIENDS);
     }
 
+    @FXML
+    public void switchToGroups()
+    {
+        this.openNewView(View.GROUPS);
+    }
+
     protected User getUser()
     {
         return new JwtDecoder().decode(FelixSession.getInstance().getToken());

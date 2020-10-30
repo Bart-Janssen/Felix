@@ -72,6 +72,7 @@ public abstract class MainService extends EncryptionManager
 
     private void handleStatusCode(int statusCode)
     {
+        System.out.println(statusCode);
         switch (statusCode)
         {
             case 404: throw new PageNotFoundException();
@@ -87,7 +88,7 @@ public abstract class MainService extends EncryptionManager
     private URIBuilder parseBuilder(String path)
     {
         URIBuilder builder = new URIBuilder();
-        builder.setScheme(HTTP).setHost("10.10.2.125").setPath(path).setPort(29805);
+        builder.setScheme(HTTP).setHost(FelixSession.getIp()).setPath(path).setPort(29805);
         return builder;
     }
 }

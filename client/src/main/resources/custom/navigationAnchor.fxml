@@ -34,6 +34,11 @@
                      <Insets left="60.0" />
                   </GridPane.margin>
                </Button>
+               <Button fx:id="buttonSwitchToGroups" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #909090;" styleClass="navbutton" GridPane.valignment="TOP">
+                  <GridPane.margin>
+                     <Insets left="120.0" />
+                  </GridPane.margin>
+               </Button>
             </children>
          </GridPane>
       </children>
