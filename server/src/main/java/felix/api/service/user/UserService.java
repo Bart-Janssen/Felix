@@ -35,9 +35,9 @@ public class UserService implements IUserService
     private static final int TWO_FACTOR_AUTHENTICATION_CODE_LENGTH = 6;
 
     @Override
-    public User login(User user) throws EntityNotFoundException, GeneralSecurityException
+    public User login(User user) throws GeneralSecurityException
     {
-        User authenticatedUser = this.userRepository.findByName(user.getName()).orElseThrow(EntityNotFoundException::new);
+        User authenticatedUser = this.userRepository.findByName(user.getName()).orElseThrow(NotAuthorizedException::new);
         if (authenticatedUser.getTotp() == null)
         {
             if (new PasswordHasher().verifyHash(user.getPassword(), authenticatedUser.getPassword())) return this.finalizeLogin(false, authenticatedUser);

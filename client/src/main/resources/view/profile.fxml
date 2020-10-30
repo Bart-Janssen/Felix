@@ -79,13 +79,18 @@
                         <ImageView fx:id="qrCode" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </GridPane>
+                  <Label fx:id="label2FA" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <GridPane.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </GridPane.margin>
+                  </Label>
                </children>
                 </GridPane>
             </children>
         </AnchorPane>
         <AnchorPane minHeight="0.0" prefHeight="200.0" prefWidth="200.0">
             <children>
-                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToGroups="#switchToGroups" onActionSwitchToFriends="#switchToFriends" onActionSwitchToHome="#switchToHome" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <NavigationAnchor fx:id="navigationAnchor" onActionLogout="#logout" onActionSwitchToFriends="#switchToFriends" onActionSwitchToGroups="#switchToGroups" onActionSwitchToHome="#switchToHome" onActionSwitchToProfile="#switchToProfile" prefHeight="262.0" prefWidth="205.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
     </children>

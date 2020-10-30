@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 
 public class ProfileController extends MainController
 {
+    @FXML private Label label2FA;
     @FXML private ImageView qrCode;
     @FXML private Button buttonTwoFa;
     @FXML private Label labelName;
@@ -44,6 +45,10 @@ public class ProfileController extends MainController
         this.labelName.setText("Name: " + this.user.getName());
         this.labelDisplayName.setText("Displayname: " + this.user.getDisplayName());
         this.buttonTwoFa.setText(this.user.hasTwoFAEnabled() ? "Disable 2FA" : "Enable 2FA");
+        this.label2FA.setWrapText(true);
+        this.label2FA.setText(this.user.hasTwoFAEnabled() ? "Scan the code with the Google authenticator application. After that you need to enter your current password " +
+                "with the 2FA key paste after it.\n" +
+                "As example, if your password would be \"password\" and your temporary key is for example \"123456\", then your password will become \"password123456\".": "");
     }
 
     private void initializeEvents()
