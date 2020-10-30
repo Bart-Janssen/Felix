@@ -5,6 +5,7 @@ import felix.fxml.Friend;
 import felix.fxml.FriendInvite;
 import felix.fxml.PendingInvite;
 import felix.fxml.messageBox.CustomOkMessage;
+import felix.main.FelixSession;
 import felix.models.User;
 import felix.models.WebSocketMessage;
 import felix.service.friend.FriendService;
@@ -144,6 +145,12 @@ public class FriendController extends MainController implements ILoginListener
         if (this.friends.getChildren().stream().anyMatch(friend -> ((Friend)friend).getFriendName().equals(this.textFieldDisplayNameOutgoingInvite.getText())) || this.pendingOutgoingInvites.getChildren().stream().anyMatch(friend -> ((PendingInvite)friend).getFriendName().equals(this.textFieldDisplayNameOutgoingInvite.getText())))
         {
             new CustomOkMessage(stage, "This friend is already on your friend list.").show();
+            this.textFieldDisplayNameOutgoingInvite.setText("");
+            return;
+        }
+        if (super.getUser().getDisplayName().equals(this.textFieldDisplayNameOutgoingInvite.getText()))
+        {
+            new CustomOkMessage(stage, "you cannot send a friend invite to yourself.").show();
             this.textFieldDisplayNameOutgoingInvite.setText("");
             return;
         }

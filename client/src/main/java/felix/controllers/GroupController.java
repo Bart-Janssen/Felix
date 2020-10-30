@@ -49,7 +49,7 @@ public class GroupController extends MainController implements ILoginListener
         try
         {
             this.groupService.leaveGroup(group);
-            this.groups.getChildren().removeIf(x -> ((FXML_Group)x).getGroupName().equals(group.getGroupName()));
+            this.groups.getChildren().removeIf(memberGroup -> ((FXML_Group)memberGroup).getGroupName().equals(group.getGroupName()));
         }
         catch (Exception e)
         {

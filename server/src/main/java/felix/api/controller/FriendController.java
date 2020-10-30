@@ -1,6 +1,7 @@
 package felix.api.controller;
 
 import felix.api.configuration.JwtTokenGenerator;
+import felix.api.exceptions.BadRequestException;
 import felix.api.models.AesEncryptedMessage;
 import felix.api.models.GetterType;
 import felix.api.models.User;
@@ -40,6 +41,7 @@ public class FriendController extends EncryptionManager
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         String displayName = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), String.class);
+        if (user.getDisplayName().equals(displayName)) throw new BadRequestException();
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, this.friendService.sendFriendInvite(displayName, user.getId())));
     }
 

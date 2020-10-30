@@ -71,7 +71,7 @@ public class GroupService implements IGroupService
             }
         }
         if (!userIsPartOfGroup) throw new NotAuthorizedException();
-        user.getMemberGroups().removeIf(x -> x.getId().equals(group.getId()));
+        user.getMemberGroups().removeIf(memberGroup -> memberGroup.getId().equals(group.getId()));
         this.userRepository.save(user);
         if (group.getGroupMembers().size() == 0) this.groupRepository.delete(group);
         else this.groupRepository.save(group);
