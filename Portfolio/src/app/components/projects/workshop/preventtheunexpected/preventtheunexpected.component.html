@@ -1,0 +1,58 @@
+<p class="center-text">Preventing the unexpected</p>
+<div class="middle-text-space">
+  <h1>Beschrijving</h1>
+  <p>Prevent the unexpected houdt in dat je rekening moet houden met mogelijke aanvallen of problemen die vandaag de dag nog niet bestaan, maar morgen uit het niets kunnen 
+    onstaan. Hieronder vallen ook aanvallen die bekend staan als 'unknown attacks'.</p>
+  <br>
+  <h3><b>Voorkomen</b></h3>
+  <p class="no-bottom-margin">Echt 100% voorkomen is lastig, maar het is wel mogelijk om voorbereidingen te treffen zodat de kans kleiner is, of zodat het eerder opgemerkt wordt. Een paar voorbeelden 
+    hiervan zijn:</p>
+  <ul>
+    <li class="text">Regelmatig updates draaien;</li>
+    <li class="text">Monitoren;</li>
+    <li class="text">Aanvalsmogelijkheden verkleinen;</li>
+    <li class="text">Back-up's;</li>
+    <li class="text">Dubbele encryptie;</li>
+    <li class="text">Strikte afgrenzing;</li>
+    <li class="text">Geen onnodige informatie publiekelijk maken.</li>
+  </ul>
+  <h3><b>Felix</b></h3>
+  <p>Bij mijn applicatie heb ik ook voorbereidingen genomen om dit soort problemen tegen te gaan.</p>
+  <p class="no-bottom-margin"><b>Aanvalsmogelijkheden verkleinen</b></p>
+  <p>De database van mijn applicatie wordt alleen gebruikt door de chat server, de client praat altijd via de chat server en deze wil je dus ook echt geen toegang geven tot 
+    de database. Omdat de chat server de enigste is die de database gebruikt, staat de database ook op dezelfde server als de chat server met aleen local acces. De poort van de 
+    database staat ook niet open naar buiten. Hiermee verklein ik al een groot aanvalsmogelijkheid.</p>
+  <p class="no-bottom-margin"><b>Strikte afgrenzing</b></p>
+  <p>Mocht er op mijn applicatie iets geks gebeuren zoals een call vanuit een client met een ongeldige token of een ongeautoriseerde poging om iets te doen, dan wordt dit niet 
+    alleen geblokkeerd, maar dan wordt deze client ook uit de sessies verwijderd en compleet genegeerd met al het volgende wat deze client dan nog probeert. Hiermee is de 
+    applicatie misschien erg strikt afgesteld, maar er hoeft ook niet meer mee te gebeuren als waar de applicatie voor bedoeld is.</p>
+  <p class="no-bottom-margin"><b>Dubbele encrptie</b></p>
+  <p>Ik gebruik een mix van RSA en AES om mijn data te encrypten en iedere client heeft een eigen key die alleen voor die client werkt. Zou een client iets proberen te 
+    versleutelen met een key van een ander or een andere random key, dan werkt dit niet en worden de stappen herhaald van de stricte afgrenzing. Verder gebruik ik ook JWT-tokens 
+    waarvan ook die signing key per client identiek verschillend is. Deze JWT-token zit ook weer gekoppeld aan een sessie id van de client, dus als iemand deze token probeert te 
+    gebruiken op een andere client (CSRF) dan komt deze wel overeen met de signing key van die gebruiker, maar de sessie id komt niet meer overeen en dus worden hier ook de 
+    stappen van de stricte afgrenzing herhaald.</p>
+  <p class="no-bottom-margin"><b>Monitoren</b></p>
+  <p>Monitoring is een onderdeel wat ik voor het tweede event in wil bouwen. Momenteel heb ik meer event monitoring ingebouwd, als een gebruiker inlogd of dergelijke. Security 
+    specefieke monitoring is nog niet ingebouwd. Monitoring zoals een paar mislukte inlogpogingen van dezelfde locatie of meerdere keren raar gedrag zou er bij kunnen. Waarbij 
+    wel opgelet moet worden is dat er geen gevoelige informatie gelogd wordt. Wat overigens wel een leuke afleiding voor een Red vs Blue team event hacker zou zijn, is een nep 
+    key of password dat gelogd wordt, als het goed is moet dit dan uit de test komen, maar kan hier vervolgens niets mee gedaan worden.</p>
+  <p class="no-bottom-margin"><b>Back-up's</b></p>
+  <p>Momenteel heb ik geen backup systeem bij dit project, wat ik wel even wil delen is mijn backup methode die ik in een privé project gebruik. Privé heb ik een voorraadsysteem 
+    gemaakt voor het bedrijf van mijn moeder. Daar maak ik gebruik van een lokale database, het is in dit geval ook niet nodig om deze online te hebben staan. Maar ik heb er wel 
+    graag een backup van. Om hier toch een oplossing voor te vinden, export dagelijks ik de database, vervolgens versleutel ik het bestand lokaal met AES en verstuur dit AES 
+    versleutelde bestand naar een FTP-server in de cloud met geauthenticeerd en geautoriseerde toegang. Daarnaast heb ik lokaal ook nog een backup.</p>
+  <p class="no-bottom-margin"><b>Regelmatig updates draaien</b></p>
+  <p>Bij mijn applicatie gebruik ik libraries die up to date zijn, en ik zou deze ook updaten als de applicatie werkelijk lang in bedrijf zou draaien. Realistisch gezien is het 
+    onderhouden van live updates in dit tijdelijke project niet nuttig. Ja het is mogelijk om het te implementeren en absoluut nodig als het echt in live in bedrijf zou gaan. 
+    Ik heb dit in mijn eerder genoemde privé project wel ingebouwd, ik hoef hier alleen een update klaar te zetten en de voldenge keer dat er een client opstart checkt deze voor 
+    updates. Mocht de installatie van een update niet gedaan worden wordt deze client ivm versienummer niet meer geaccepteerd, zo ben ik er zeker van dat mijn clients/server up 
+    to date zijn.</p>
+  <p class="no-bottom-margin"><b>Onnodig publiekelijke informatie</b></p>
+  <p>Informatie wat niet per se publiekelijk hoeft te zijn heeft geen extra meerwaarde maar hackers kunnen mogelijk wel meer informatie verkrijgen over de applicatie. Een 
+    voorbeeld is Swagger.io, dit is eenvoudig toe te voegen en geeft een goed beeld van alle endpoints in een API. Het is nuttig voor ontwikkeling/testing en mogelijk nodig 
+    als er een samenwerking is met een andere partij. Maar in mijn project heeft dit geen enkele meerwaarde en kan dus alleen maar tegen je gebruikt worden.</p>
+  <br>
+  <br>
+  <br>
+</div>

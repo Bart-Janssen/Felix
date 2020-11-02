@@ -17,6 +17,7 @@ import { ChatappprojectComponent } from './components/projects/felix/chatappproj
 import { ThreatanalysisComponent } from './components/projects/felix/threatanalysis/threatanalysis.component';
 import { RiskanalysisComponent } from './components/projects/felix/riskanalysis/riskanalysis.component';
 import { RedblueeventComponent } from './components/projects/felix/redblueevent/redblueevent.component';
+import { PreventtheunexpectedComponent } from './components/projects/workshop/preventtheunexpected/preventtheunexpected.component';
 
 const routes: Routes = [
   {
@@ -59,6 +60,10 @@ const routes: Routes = [
   {
     path: "osint_workshop",
     component: OsintComponent,
+  },
+  {
+    path: "prevent_the_unexpected_workshop",
+    component: PreventtheunexpectedComponent
   },
   {
     path: "research_approach_project",

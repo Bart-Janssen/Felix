@@ -22,6 +22,7 @@ import { ThreatanalysisComponent } from './components/projects/felix/threatanaly
 import { RiskanalysisComponent } from './components/projects/felix/riskanalysis/riskanalysis.component';
 import { FelixComponent } from './components/projects/felix/felix.component';
 import { RedblueeventComponent } from './components/projects/felix/redblueevent/redblueevent.component';
+import { PreventtheunexpectedComponent } from './components/projects/workshop/preventtheunexpected/preventtheunexpected.component';
 
 export function jwtOptionsFactory() 
 {
@@ -52,6 +53,7 @@ export function jwtOptionsFactory()
     RiskanalysisComponent,
     FelixComponent,
     RedblueeventComponent,
+    PreventtheunexpectedComponent,
   ],
   imports: [
     BrowserModule,
