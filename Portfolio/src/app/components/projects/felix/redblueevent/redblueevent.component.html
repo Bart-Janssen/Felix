@@ -2,7 +2,7 @@
 <div class="middle-text-space">
   <p>Op deze pagina zijn de voorbereidingen en resultaten van mijn applicatie te zien van voor/na het red vs blue team event. Ik denk dat mijn applicatie anders is dan de meeste 
     omdat ik gezien heb dat de meeste een web-applicatie gemaakt hebben. Ik zelf vind het niet leuk om web-applicaties te maken, en ik denk dat een red teamer ook meer moet 
-    kunnen dan alleen web-applicaties hacken. Ik ben benieuwd naarde resultaten.</p>
+    kunnen dan alleen web-applicaties hacken. Ik ben benieuwd naar de resultaten.</p>
   <br>
   <h3><b>1<sup>e</sup> event</b></h3>
   <p class="no-bottom-margin"><b>Voorbereidingen</b></p>
@@ -12,10 +12,10 @@
     zelf op zijn pc installeren. Ik heb eerder geprobeerd met mijn docent te overleggen welke van deze mogelijkheden de beste is, hierop heb ik geen antwoord gekregen en heb ik 
     gekozen voor het toegang verlenen naar de VM clients of via privé chat credentials te krijgen voor Teamviewer. Voor de server heb ik wat extra maatregelen genomen. De 
     firewall heb ik zo ingesteld dat alle poorten gesloten zijn, behalve de poorten van de REST en websockets. De database staat niet open naar buiten en het enige toegelaten 
-    IP-address is localhost, hiermee wordt het moeilijk om überhoubt bij deze database te komen. De clients hebben geen extra beveiligingen.</p>
+    IP-address is localhost, hiermee wordt het moeilijk om überhaubt bij deze database te komen. De clients hebben geen extra beveiligingen.</p>
   <br>
   <p class="no-bottom-margin"><b>Resultaten</b></p>
-  <p class="no-bottom-margin">Ik had op mijn server monitoring aan staan en op eens zag ik wat gek verkeer wat herhaaldelijk en snel voorbij kwam. Aan het verkeer te zien 
+  <p class="no-bottom-margin">Ik had op mijn server monitoring aan staan en opeens zag ik wat gek verkeer wat herhaaldelijk en snel voorbij kwam. Aan het verkeer te zien 
     ging het om TCP-pakketjes wat van het IP-address 10.10.2.36 af kwam en richting ubuntu-server-20:6666 ging. Mijn server heet zo en mijn websocket server draait op poort 
     6666. Het verkeer zou best wel eens kunnen duiden een dergelijke scan zoals Nmap.</p>
   <img class="smaller" src="../../../../assets/felix/redblue/strange-traffic.png">
@@ -25,15 +25,15 @@
   
   <p class="no-bottom-margin">Nadat hij klaar was, waren we nog even aan het napraten op Teams. Hij concludeerde dat hij geen account aan kon aanmaken, wanneer hij dat probeerde kreeg hij een 
     'general failure'. De uiteindelijke reden was omdat hij een wachtwoord ingevuld had die niet aan de eisen voldeed. Ik had dan eigenlijk een duidelijkere foutmelding 
-    moeten geven, dit is dus duidelijk iets wat ik ga verbereten voor het 2<sup>e</sup> event. Ook probeerde hij in te loggen met het account van 'Natalie', dit account is 
+    moeten geven, dit is dus duidelijk iets wat ik ga verbeteren voor het 2<sup>e</sup> event. Ook probeerde hij in te loggen met het account van 'Natalie', dit account is 
     beveiligd met two factor authenticatie waarvan de QR-code niet publiekelijk zichtbaar is. Het lukte hem niet om in te loggen met het gebruikersnaam en wachtwoord omdat hij 
-    verwachtte dat er om een code gevraagd zou worden maar zoals ik in hoofdstuk 2.3 van mijn implementatie uitleg, de 2fa code komt achter het wachtwoord aan geplakt om zo 
-    ervoor te zorgen dat een hacker niet kan weten ofdat een gebruiker 2fa ingeschakeld heeft.</p>
+    verwachtte dat er om een code gevraagd zou worden maar zoals ik in hoofdstuk 2.3 van mijn implementatie uitleg, de 2fa code wordt achter het wachtwoord aanvast geplakt om zo 
+    ervoor te zorgen dat een hacker niet kan weten of dat een gebruiker 2fa ingeschakeld heeft.</p>
   <img class="smaller" src="../../../../assets/felix/redblue/2fa-chat-bob.png">
   <p class="image">Afbeelding 2 Chat met Bob</p>
   <p>Zoals in de afbeelding te zien is, is het gelukt om de hacker hierop vast te laten lopen.</p>
 
-  <p>Bij de resultaten werd een Nmap scan zichtbaar gemaakt, deze bracht weinig informatie naar boven. Op 10.10.2.125 (mijn chat server) hebben ze gevonstateerd dat ik een 
+  <p>Bij de resultaten werd een Nmap scan zichtbaar gemaakt, deze bracht weinig informatie naar boven. Op 10.10.2.125 (mijn chat server) hebben ze geconstateerd dat ik een 
     Jetty server gebruik, dit klopt inderdaad. Verder hebben ze op 10.10.2.126-127 (de clients) een open poort (7680) gevonden, echter dit zijn de clients en deze poort heeft 
     niets te maken met mijn applicatie dus deze informatie is niet heel relevant voor de security van mijn chat applicatie. Ik had verwacht dat ze wel zouden vinden dat 
     op de server poort 6666 en 29805 open staan. Dit zijn namelijk de poorten van de websocket-server en de REST-server, deze zie ik niet terug in hun resultaten.</p>

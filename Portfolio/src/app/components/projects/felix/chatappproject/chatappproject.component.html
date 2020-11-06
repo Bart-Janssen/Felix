@@ -1,6 +1,6 @@
 <p class="center-text">Felix chat app</p>
 <div class="middle-text-space">
-  <p>Deze pagina beschrijft de uitwerking, implementatie en keuzes van de chat application Felix. Het concept hiervan is te zien op de 
+  <p>Deze pagina beschrijft de uitwerking, implementatie en keuzes van de chat application Felix. Het concept hiervan is te zien op  
     <a routerLink="/concept_project" routerLinkActive="active">deze</a> pagina. In deze applicatie komen meerdere security aspecten aan bod
     die beschreven staan in mijn <a routerLink="/learningplan" routerLinkActive="active">leerplan</a>. De gedetailleerde uitwerking met gemaakte keuzes, onderbouwing en
     technische details zoals code snippets staan op deze pagina vermeldt. Mijn project staat op <a href="https://git.fhict.nl/I389419/chat-app-felix">Git</a> waar ik ook de 
@@ -35,7 +35,7 @@
     om grote berichten te versleutelen. Ik ga RSA alleen gebruiken om de sleutel voor de AES encryptie versleuteld te delen tussen de client en server.</p>
   <br>
   <p class="no-bottom-margin"><b>RSA</b></p>
-  <P class="no-bottom-margin">Voor het gebruik van RSA moeten de server en client beide een private en public key genereren. Dit gebeurd bij het opstarten van de systemen 
+  <P class="no-bottom-margin">Voor het gebruik van RSA moeten de server en client beide een private en public key genereren. Dit gebeurt bij het opstarten van de systemen 
     met deze functie:</P>
   <img src="../../../../assets/felix/code/build-rsa-keypair-code.png">
   <p class="image">Afbeelding 1 Genereren RSA keypair</p>
@@ -84,13 +84,13 @@
   <p class="no-bottom-margin"><b>2.2 Autorisatie</b></p>
   <p class="no-bottom-margin">Voor de authorisatie krijgt de gebruiker na het succesvol inloggen een JWT-token. Hierin kan informatie opgeslagen worden zoals de username, 
     displayname, id en of deze 2FA geactiveerd heeft, waarmee de client zich kan identificeren. Deze tokens worden uitgedeeld aan de client's door de server, maar worden ook 
-    in server zelf bijghouden met de bijhordende key en websocket sessie.</p>
+    in server zelf bijgehouden met de bijbehorende key en websocket sessie.</p>
   <img src="../../../../assets/felix/code/usersession-code.png">
   <p class="image">Afbeelding 7 Usersessie informatie</p>
   <p>Elke sessie heeft een eigen JWT-tokensleutel die bij iedere request van de client ververst wordt, waardoor de JWT-tokensleutel 
   maar een korte tijd in omloop blijft. Als er gerommeld is met deze token dan zal de server deze niet meer kunnen verifiëren en wordt de token ongeldig verklaard met als 
   resultaat dat die ingelogde sessie uit de server wordt verwijderd waardoor de client bij iedere volgende request wordt genereerd. Tevens wordt de client uitgelogd. 
-  Mocht een kwaadwillig iemand een andere 'geldige' token kunnen bemachtigen en deze probeerd te gebruiken op een andere inlog, dan komt deze token niet meer overeen met de 
+  Mocht een kwaadwillig iemand een andere 'geldige' token kunnen bemachtigen en deze probeert te gebruiken op een andere inlog, dan komt deze token niet meer overeen met de 
   key van de websocket sessie, en wordt deze ook verwijderd. De JWT-token zelf wordt ook als encrypted AES verkeer verstuurd, dit maakt het onderscheppen van een dergelijke 
   token niet mogelijk.</p>
   <p class="no-bottom-margin">Het genereren en verifiëren van een JWT-token ziet er uit als volgt:</p>
@@ -105,7 +105,7 @@
   <p class="no-bottom-margin">Voor authenticatie gebruik ik een gebruikersnaam en wachtwoord. Als een gebruiker een nieuw account maakt, dan zijn er drie gevraagde velden. Een gebruikersnaam, Een 
     displayname en een wachtwoord. De gebruikersnaam wordt gebruikt om mee in te loggen en de displayname wordt gebruikt als puur een naam die de andere gebruikers zien, er kan 
     ook niet worden ingelogd met de displayname. Door dit op deze manier zo te doen, kunnen andere gebruikers niet de gebruikersnaam achterhalen, waardoor zowel de gebruikersnaam
-    als wachtwoord niet publiek zichtbaar zijn. Qua wachtwoord beleid heb ik een minimale lengte ingesteld, minimaal 8 karakters. Ik kan wel een vereiste maken dat het wachtwoord 
+    als wachtwoord niet publiekelijk zichtbaar zijn. Qua wachtwoord beleid heb ik een minimale lengte ingesteld van minimaal 8 karakters. Ik kan wel een vereiste maken dat het wachtwoord 
     minimaal zoveel karakters is en zoveel speciale tekens en moeilijke dingen toevoegen, maar de lengte van een wachtwoord is vaak belangrijker dan het aantal verschillende 
     karakters. Het is ook zo dat korte wachtwoorden met veel verschillende soorten karakters moeilijker te onthouden is dan een lang wachtwoord. Zie de onderstaande afbeelding 
     voor een geweldig voorbeeld.</p>
@@ -113,14 +113,15 @@
   <p class="image">Afbeelding 10 Password strength</p>
 
   <p class="no-bottom-margin">Voor extra security hebben gebruikers de mogelijkheid om Google two factor authenticatie (2FA) in te schakelen. Als deze geactiveerd wordt krijgt 
-    de gebruiker een QR-code die gescant kan worden met de Google authenticator app op de telefoon.</p>
+    de gebruiker een QR-code die gescand kan worden met de Google authenticator app op de telefoon.</p>
   <img src="../../../../assets/felix/qr-code.png">
   <p class="image">Afbeelding 11 2FA QR-code</p>
 
   <p>Als deze is ingeschakeld en de gebruiker inlogt, dan moet de gebruiker de code van de Google authenticator app achter het huidige wachtwoord aan plakken. De reden hiervoor 
     is dat het dan niet mogelijk is om te zien wanneer de gebruikersnaam en wachtwoord goed zijn. Als voorbeeld; iemand probeert het gebruikersnaam en wachtwoord te raden, mocht 
     dit lukken en er wordt daarna om een code gevraagd, dan weet diegene dat de huidig geraden inloggegevens kloppen. Als de code achter het wachtwoord geplakt zit, is het niet 
-    mogelijk om hier achter te komen en vrijwel onmogelijk is om dit te brute forcen omdat het hele wachtwoord iedere 60 seconden verranderd.</p>
+    mogelijk om hier achter te komen en vrijwel onmogelijk is om dit te brute forcen omdat het hele wachtwoord iedere 60 seconden veranderd. Deze methode wordt ook vaker 
+    gebruikt, een voorbeeld hiervan is OpenVPN.</p>
 
   <p class="no-bottom-margin"><b>2.4 Hashes</b></p>
   <p>De wachtwoorden van gebruikers moeten uiteraard goed en veilig opgeslagen worden. Nooit in plaintext! Hiervoor doe ik dit in drie stappen: eerst genereer ik een sha512 hash
@@ -156,8 +157,9 @@
 
   <p class="no-bottom-margin"><b>2.7 Excepties</b></p>
   <p class="no-bottom-margin">Ik heb in mijn server een controller advise, dit is een handler die het hele project opvangt mocht er een exceptie opkomen. Per exceptie heb ik een 
-    speciale handeling die een http response code terug stuurt waar ik op de client weer een speciale melding kan geven of iets dergelijk. Mocht mijn exceptie er niet tussen 
-    staan dan is er nog een 'fall back' handler die alle eventueel ander mogelijke excepties opvangt. Zo kunnen er nooit ongewenste exepties optreden.</p>
+    speciale handeling die een http response code terug stuurt waar ik op de client weer een speciale melding kan geven of iets dergelijks. Mocht mijn exceptie er niet tussen 
+    staan dan is er nog een 'fall back' handler die alle eventueel ander mogelijke excepties opvangt. Zo kunnen er nooit ongewenste exepties optreden. In de afbeelding hieronder 
+    staat het voorbeeld van één van de mogelijke excepties die kunnen optreden en dus wordt afgevangen.</p>
   <img src="../../../../assets/felix/code/exeption-handler-code.png">
   <p class="image">Afbeelding 14 Exceptie handling</p>
   <br>
