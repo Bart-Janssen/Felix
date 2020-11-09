@@ -98,4 +98,18 @@ public class AuthenticationController extends EncryptionManager
         WebSocket.set2Fa(GetterType.DISPLAY_NAME, user.getDisplayName(), false);
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
     }
+
+    @DeleteMapping("/delete/")
+    public ResponseEntity<Void> deleteAccount(@RequestHeader("Authorization") String jwt) throws Exception
+    {
+        UserSession userSession = WebSocket.getSession(GetterType.TOKEN, jwt);
+        for (User friend : userSession.getUser().getFriends())
+        {
+            UserSession friendSession = WebSocket.getSession(GetterType.DISPLAY_NAME, friend.getDisplayName());
+            if (friendSession != null) friendSession.getSession().getAsyncRemote().sendText(new Gson().toJson(aesEncrypt(GetterType.SESSION_ID, friendSession.getSession().getId(), new WebSocketMessage(WebSocketMessageType.LOGOUT, "", userSession.getUser().getDisplayName(), friend.getDisplayName(), false, null))));
+        }
+        WebSocket.logout(userSession.getToken().getToken());
+        this.userService.deleteAccount(userSession.getUser());
+        return ResponseEntity.ok().build();
+    }
 }

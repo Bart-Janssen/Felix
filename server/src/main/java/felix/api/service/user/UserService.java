@@ -11,8 +11,11 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 import felix.api.configuration.AesEncryptionManager;
 import felix.api.configuration.PasswordHasher;
 import felix.api.exceptions.NotAuthorizedException;
+import felix.api.models.Group;
 import felix.api.repository.CredentialRepository;
 import felix.api.repository.UserRepository;
+import felix.api.service.friend.IFriendService;
+import felix.api.service.group.IGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService implements IUserService
 {
+    private final IGroupService groupService;
+    private final IFriendService friendService;
     private final UserRepository userRepository;
     private final GoogleAuthenticator googleAuthenticator;
     private final CredentialRepository credentialRepository;
@@ -103,5 +108,20 @@ public class UserService implements IUserService
         User dbUser = this.userRepository.findById(user.getId()).orElseThrow(EntityNotFoundException::new);
         dbUser.setOnline(false);
         userRepository.save(dbUser);
+    }
+
+    @Override
+    public void deleteAccount(User user) throws EntityNotFoundException
+    {
+        User dbUser = this.userRepository.findById(user.getId()).orElseThrow(EntityNotFoundException::new);
+        for (User friend : dbUser.getFriends())
+        {
+            this.friendService.removeFriend(friend.getDisplayName(), dbUser.getId());
+        }
+        for (Group group : dbUser.getMemberGroups())
+        {
+            this.groupService.leaveGroup(group.getId(), user.getId());
+        }
+        this.userRepository.delete(dbUser);
     }
 }

@@ -16,4 +16,5 @@ public interface IUserService
     String enable2FA(UUID userId, String username) throws IOException, WriterException;
     void disable2FA(UUID userId) throws IOException, URISyntaxException;
     void logout(User user) throws EntityNotFoundException;
+    void deleteAccount(User user) throws EntityNotFoundException;
 }

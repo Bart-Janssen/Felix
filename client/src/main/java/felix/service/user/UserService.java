@@ -47,4 +47,10 @@ public class UserService extends MainService implements IUserService
         AesEncryptedMessage aesEncryptedMessage = super.delete("authentication/2fa/disable/", AesEncryptedMessage.class);
         super.refreshJwtToken(new JwtToken(aesEncryptedMessage.getToken()));
     }
+
+    @Override
+    public void deleteAccount() throws IOException, URISyntaxException, GeneralSecurityException
+    {
+        super.delete("authentication/delete/", void.class);
+    }
 }

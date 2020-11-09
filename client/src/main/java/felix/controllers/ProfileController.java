@@ -1,8 +1,10 @@
 package felix.controllers;
 
 import felix.fxml.messageBox.CustomOkMessage;
+import felix.fxml.messageBox.FXML_MessageBoxStatus;
 import felix.main.FelixSession;
 import felix.models.User;
+import felix.models.View;
 import felix.service.system.JwtDecoder;
 import felix.service.user.IUserService;
 import felix.service.user.UserService;
@@ -21,6 +23,7 @@ import java.util.ResourceBundle;
 
 public class ProfileController extends MainController
 {
+    public Button buttonDeleteAccount;
     @FXML private Label label2FA;
     @FXML private ImageView qrCode;
     @FXML private Button buttonTwoFa;
@@ -82,6 +85,23 @@ public class ProfileController extends MainController
             catch (Exception e)
             {
                 new CustomOkMessage(stage, "Error while setting QR code, disable 2FA and try again.").show();
+            }
+        });
+        this.buttonDeleteAccount.setOnMouseClicked(event ->
+        {
+            FXML_MessageBoxStatus status = new CustomOkMessage(stage, "Are you sure you want to delete your account? this action cannot be undone!").showAndAwaitStatus();
+            if (status.equals(FXML_MessageBoxStatus.CONTINUE))
+            {
+                try
+                {
+                    this.userService.deleteAccount();
+                    FelixSession.getInstance().setToken(null);
+                    this.openNewView(View.LOGIN);
+                }
+                catch (Exception e)
+                {
+                    new CustomOkMessage(stage, "Error while deleting account.").show();
+                }
             }
         });
     }

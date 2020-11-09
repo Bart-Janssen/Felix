@@ -19,6 +19,7 @@ public class WebSocketConnection extends WebSocket
     @Override
     public void onWebSocketConnect(Session session)
     {
+        log.info("[Session ID] : " + session.getId() + " [Socket Connected]");
         try
         {
             String clientPublicKey = session.getPathParameters().get(WebSocket.KEY).replace("--dash--", "/");
@@ -86,6 +87,7 @@ public class WebSocketConnection extends WebSocket
     {
         try
         {
+            System.out.println("session killed: " + session.getId() + " - cos: " + closeCode);
             super.killSession(session.getId());
             session.close(new CloseReason(closeCode, reason));
         }

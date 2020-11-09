@@ -14,4 +14,5 @@ public interface IUserService
     void logout() throws IOException, URISyntaxException;
     String enable2Fa() throws IOException, URISyntaxException, GeneralSecurityException;
     void disable2Fa() throws IOException, URISyntaxException, GeneralSecurityException;
+    void deleteAccount() throws IOException, URISyntaxException, GeneralSecurityException;
 }
