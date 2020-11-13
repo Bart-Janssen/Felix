@@ -1,0 +1,24 @@
+.center-text
+{
+    font-size: 40px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center;
+    color: antiquewhite;
+}
+
+.image
+{
+    font-size: 12px;
+    font-style: italic;
+}
+
+.smaller
+{
+    width: 75%;
+}
+
+.much-smaller
+{
+    width: 40%;
+}

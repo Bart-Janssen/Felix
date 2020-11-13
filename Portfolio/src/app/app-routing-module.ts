@@ -18,6 +18,8 @@ import { ThreatanalysisComponent } from './components/projects/felix/threatanaly
 import { RiskanalysisComponent } from './components/projects/felix/riskanalysis/riskanalysis.component';
 import { RedblueeventComponent } from './components/projects/felix/redblueevent/redblueevent.component';
 import { PreventtheunexpectedComponent } from './components/projects/workshop/preventtheunexpected/preventtheunexpected.component';
+import { QuantumNetworkingComponent } from './components/projects/quantum-networking/quantum-networking.component';
+import { ReverseengeneeringComponent } from './components/projects/workshop/reverseengeneering/reverseengeneering.component';
 
 const routes: Routes = [
   {
@@ -66,8 +68,16 @@ const routes: Routes = [
     component: PreventtheunexpectedComponent
   },
   {
+    path: "reverse_engineering_workshop",
+    component: ReverseengeneeringComponent
+  },
+  {
     path: "research_approach_project",
     component: ResearchapproachComponent,
+  },
+  {
+    path: "quantum_networking",
+    component: QuantumNetworkingComponent
   },
   {
     path: "felix",

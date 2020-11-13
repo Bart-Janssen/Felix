@@ -1,0 +1,68 @@
+<p class="center-text">Reverse engineering</p>
+<div class="middle-text-space">
+  <h1>Beschrijving</h1>
+  <p>Deze workshop vond ik in het begin van het semester al een erg interesante workshop, ik wilde daar graag bij zijn. Helaas ging dat niet want deze workshop werdt 
+    gegeven tijdens dat ik ook een andere workshop had. Gelukkig was deze workshop opgenomen en kon ik deze terugkijken.</p>
+  <br>
+
+  <h3><b>Reverse engineering</b></h3>
+  <p class="no-bottom-margin">Reverse engineering is het decompilen van applicaties om zo de werking qua code te kunnen achterhalen zonder de orginele broncode te hebben. Hiermee zijn verschillende 
+    doelen mogelijk, het hangt ervan af vanuit welk perspectief hiernaar gekeken wordt. Er zijn min of meer drie groepen die dit gebruiken:</p>
+  <ul>
+    <li class="text"><b>Black hat</b> gebruikt dit om bijvoorbeeld ransomware of andere malware te verstoppen in applicaties;</li>
+    <li class="text"><b>White hat</b> gebruikt dit om bijvoorbeeld juist deze malware te vinden (malware inspectie);</li>
+    <li class="text"><b>Gray hat</b> gebruikt dit om bijvoorbeeld een crack te kunnen toepassen in een applicatie.</li>
+  </ul>
+
+  <h3><b>Black hat malware verstoppen</b></h3>
+  <p>Om dit goed te laten zien heb ik een simpel voorbeeld hiervan gemaakt in C#. Het doel hiervan is om een stukje malware te verstoppen in een onschuldige applicatie.</p>
+  
+  <p class="no-bottom-margin">Hiervoor heb ik een onschuldige applicatie gemaakt dat niets anders doet als een message geven naar de gebruiker.</p>
+  <img src="../../../assets/workshops/reverse-engineering/onschuldige-applicatie-code.png">
+  <p class="image">Afbeelding 1 Onschuldige applicatie code</p>
+
+  <p class="no-bottom-margin">Als deze onschuldige applicatie uitgevoerd wordt, ziet dat eruit als volgd:</p>
+  <img src="../../../assets/workshops/reverse-engineering/onschuldige-applicatie.png">
+  <p class="image">Afbeelding 2 Onschuldige applicatie</p>
+
+  <p class="no-bottom-margin">Als een black hat hacker deze applicatie decompiled en vervolgens zijn eigen stukje code erin zet en dit weer aan gebruikers beschikbaar 
+    stelt, dan is dit niet meer de onschuldige applicatie dat het was. In de onderstaande afbeelding is er een byte array toegevoegd, deze heeft ongeveer 5000 elementen. 
+    Dit is de binary van een exe bestand wat de malware bevat. Vaak wordt deze byte array gevuld met een simpel versleutelde versie van de malware. De rest van de 
+    toegevoegde code leest deze array uit en schrijft dit weg naar een exe bestand ergens op de computer, vervolgens wordt dit uitgevoerd. Als het programma klaar is 
+    dan wordt de exe weer verwijderd zodat er zo min mogelijk sporen zijn van de malware zelf.</p>
+  <img src="../../../assets/workshops/reverse-engineering/evil-code.png">
+  <p class="image">Afbeelding 3 Evil code</p>
+
+  <p class="no-bottom-margin">Aangezien het een byte array is, is dit moeilijk te achterhalen wat dit precies doet, dit kan alleen gedaan worden met de orginele broncode van de malware of met het  
+    decompilen van de applicatie. Hierop ga ik verder in het 'White hat' gedeelte. Als deze "niet meer" onschuldige applicatie wordt uitgevoerd krijgt de gebruiker iets te 
+    zien wat hij/zij waarschijnlijk niet leuk vind.</p>
+  <img src="../../../assets/workshops/reverse-engineering/ransomware.png">
+  <p class="image">Afbeelding 4 Randomware melding</p>
+
+
+
+  <h3><b>White hat malware inspectie</b></h3>
+  <p class="no-bottom-margin">De eerder gemaakte "niet meer" onschuldige applicatie ga ik decompilen om te achterhalen wat de malware precies doet. Hiervoor ga ik het programma DnSpy gebruiken. 
+    hierin is te zien dat dit inderdaad dezelfde code is als uit de broncode. Er zitten enkele kleine verschillen in omdat dit vanuit assembly code omgezet is naar een 
+    leesbare C# soort.</p>
+  <img class="smaller" src="../../../assets/workshops/reverse-engineering/decompiling-onschuldige-applicatie-code.png">
+  <p class="image">Afbeelding 5 Decompiling onschuldige applicatie</p>
+
+  <p class="no-bottom-margin">Om te achterhalen wat de malware precies doet kunnen we een breakpoint zetten en de gedecompilde code uitvoeren. Ik wil de malware zelf 
+    niet graag uitvoeren en dus ga ik de breakpoint zetten voordat het uitgevoerd wordt. Zoals in de afbeelding te zien is, is in de hex waarde onderin de afbeelding 
+    te zien dat het highlighted stukje begint met de hex waarde '4D5A', in ascii is dit 'MZ'. Dit duidt aan dat het een executable is.</p>
+  <img class="smaller" src="../../../assets/workshops/reverse-engineering/breakpoint.png">
+  <p class="image">Afbeelding 6 Breakpoint</p>
+
+  <p class="no-bottom-margin">Vervolgens ga ik de info van de byte array naar een bestand schrijven. Zodat ik de malware zelf kan decompilen om te kijken wat dit nu precies doet. In de 
+    onderstaande afbeelding is de decompiled versie van de malware te zien. Zoals zichtbaar is, doet de malware niet echt iets gevaarlijks. Maar het doel om te zien wat 
+    de malware precies doet is bereikt, het is nu 100% zichtbaar wat de eerder verstopte malware doet.</p>
+  <img src="../../../assets/workshops/reverse-engineering/decompiled-malware.png">
+  <p class="image">Afbeelding 7 Decompiled malware</p>
+
+  <h3><b>Gray hat cracks toepassen</b></h3>
+  <p></p>
+  <br>
+  <br>
+  <br>
+</div>
