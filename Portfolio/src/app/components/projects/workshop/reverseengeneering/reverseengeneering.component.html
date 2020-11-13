@@ -6,18 +6,24 @@
   <br>
 
   <h3><b>Reverse engineering</b></h3>
-  <p class="no-bottom-margin">Reverse engineering is het decompilen van applicaties om zo de werking qua code te kunnen achterhalen zonder de orginele broncode te hebben. Hiermee zijn verschillende 
-    doelen mogelijk, het hangt ervan af vanuit welk perspectief hiernaar gekeken wordt. Er zijn min of meer drie groepen die dit gebruiken:</p>
+  <p class="no-bottom-margin">Reverse engineering is het decompilen van applicaties om zo de werking qua code te kunnen achterhalen zonder de orginele broncode te hebben. 
+    Hiermee zijn verschillende doelen mogelijk, het hangt ervan af vanuit welk perspectief hiernaar gekeken wordt. Er zijn min of meer drie groepen die dit gebruiken:</p>
   <ul>
     <li class="text"><b>Black hat</b> gebruikt dit om bijvoorbeeld ransomware of andere malware te verstoppen in applicaties;</li>
     <li class="text"><b>White hat</b> gebruikt dit om bijvoorbeeld juist deze malware te vinden (malware inspectie);</li>
     <li class="text"><b>Gray hat</b> gebruikt dit om bijvoorbeeld een crack te kunnen toepassen in een applicatie.</li>
   </ul>
+  <p>Ook een doel hiervan is om te leren hoe bijvoorbeeld onderdelen in een applicatie werken of gewoon kennis krijgen van dit onderwerp. Vooral malware inspectie vind ik 
+    persoonlijk een erg interessant onderwerp.
+  </p>
 
+
+
+  <br>
   <h3><b>Black hat malware verstoppen</b></h3>
   <p>Om dit goed te laten zien heb ik een simpel voorbeeld hiervan gemaakt in C#. Het doel hiervan is om een stukje malware te verstoppen in een onschuldige applicatie.</p>
   
-  <p class="no-bottom-margin">Hiervoor heb ik een onschuldige applicatie gemaakt dat niets anders doet als een message geven naar de gebruiker.</p>
+  <p class="no-bottom-margin">Hiervoor heb ik een onschuldige applicatie gemaakt dat niets anders doet dan een message geven naar de gebruiker.</p>
   <img src="../../../assets/workshops/reverse-engineering/onschuldige-applicatie-code.png">
   <p class="image">Afbeelding 1 Onschuldige applicatie code</p>
 
@@ -35,20 +41,24 @@
 
   <p class="no-bottom-margin">Aangezien het een byte array is, is dit moeilijk te achterhalen wat dit precies doet, dit kan alleen gedaan worden met de orginele broncode van de malware of met het  
     decompilen van de applicatie. Hierop ga ik verder in het 'White hat' gedeelte. Als deze "niet meer" onschuldige applicatie wordt uitgevoerd krijgt de gebruiker iets te 
-    zien wat hij/zij waarschijnlijk niet leuk vind.</p>
+    zien wat hij/zij waarschijnlijk niet leuk vindt.</p>
   <img src="../../../assets/workshops/reverse-engineering/ransomware.png">
   <p class="image">Afbeelding 4 Randomware melding</p>
 
 
-
+  <br>
   <h3><b>White hat malware inspectie</b></h3>
+  <p>Malware inspectie is het onderzoeken of er malware toegevoegd is in een applicatie. Ook al is het goed verstopt er zijn vaak toch sporen aanwezig dat er malware in 
+    zit. Zo moet je bijvoorbeeld niet afgaan van de namen van functies in code. Deze kunnen een simpele onschuldige naam hebben, maar de inhoudelijke code kan alsnog 
+    malware code of dergelijke bevatten. Vaak zijn er meer sporen zoals applicatie header informatie die niet klopt of waar gekke typfouten in staan.</p>
+
   <p class="no-bottom-margin">De eerder gemaakte "niet meer" onschuldige applicatie ga ik decompilen om te achterhalen wat de malware precies doet. Hiervoor ga ik het programma DnSpy gebruiken. 
     hierin is te zien dat dit inderdaad dezelfde code is als uit de broncode. Er zitten enkele kleine verschillen in omdat dit vanuit assembly code omgezet is naar een 
     leesbare C# soort.</p>
   <img class="smaller" src="../../../assets/workshops/reverse-engineering/decompiling-onschuldige-applicatie-code.png">
   <p class="image">Afbeelding 5 Decompiling onschuldige applicatie</p>
 
-  <p class="no-bottom-margin">Om te achterhalen wat de malware precies doet kunnen we een breakpoint zetten en de gedecompilde code uitvoeren. Ik wil de malware zelf 
+  <p class="no-bottom-margin">Om te achterhalen wat de malware precies doet kan ik een breakpoint zetten en de gedecompilde code uitvoeren. Ik wil de malware zelf 
     niet graag uitvoeren en dus ga ik de breakpoint zetten voordat het uitgevoerd wordt. Zoals in de afbeelding te zien is, is in de hex waarde onderin de afbeelding 
     te zien dat het highlighted stukje begint met de hex waarde '4D5A', in ascii is dit 'MZ'. Dit duidt aan dat het een executable is.</p>
   <img class="smaller" src="../../../assets/workshops/reverse-engineering/breakpoint.png">
@@ -60,8 +70,25 @@
   <img src="../../../assets/workshops/reverse-engineering/decompiled-malware.png">
   <p class="image">Afbeelding 7 Decompiled malware</p>
 
+
+
+  <br>
   <h3><b>Gray hat cracks toepassen</b></h3>
-  <p></p>
+  <p class="no-bottom-margin">Voor het maken van een crack heb ik een simpel licentie applicatie voorbeeld gemaakt. De code hiervan is te zien in de onderstaande 
+    afbeelding.</p>
+  <img src="../../../assets/workshops/reverse-engineering/simple-licence-application-code.png">
+  <p class="image">Afbeelding 8 Simpele licentie applicatie</p>
+  
+  <p class="no-bottom-margin">Het is mogelijk om de exe hiervan te decompilen, exporteren naar een nieuw project vervolgens de code aan te passen en dit weer te bouwen 
+    naar een applicatie. In de onderstaande afbeelding heb ik dit gedaan. De code is iets anders aangezien dit vanuit assembly naar C# code gezet is. Het stukje 
+    "if (flag)" heb ik veranderd naar "if (flag || this.textBoxLicence.Text == "my-own-not-valid-key")", dit maakt het mogelijk dat mijn fake key ook geaccepteerd wordt. 
+    Zoals te zien in de afbeelding wordt mijn fake key inderdaad geaccepteerd.</p>
+  <img src="../../../assets/workshops/reverse-engineering/crack.png">
+  <p class="image">Afbeelding 9 Cracked</p>
+
+  <p>Dit is natuurlijk een enorm makkelijk voorbeeld, in de werkelijkheid zitten hier verschillende beveiligingsmaatregelen in die dit niet zo makkelijk mogelijk maken 
+    en zijn hier vele meer stappen voor nodig om dit te kunnen toepassen. De theorie zoals hierboven beschreven is wel de basis waarop dit werkt.</p>
+
   <br>
   <br>
   <br>
