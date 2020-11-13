@@ -1,0 +1,10 @@
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\bin\Debug\LicentieApp.exe.config
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\bin\Debug\LicentieApp.exe
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\bin\Debug\LicentieApp.pdb
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\obj\Debug\LicentieApp.csprojAssemblyReference.cache
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\obj\Debug\LicentieApp.Form1.resources
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\obj\Debug\LicentieApp.Properties.Resources.resources
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\obj\Debug\LicentieApp.csproj.GenerateResource.cache
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\obj\Debug\LicentieApp.csproj.CoreCompileInputs.cache
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\obj\Debug\LicentieApp.exe
+C:\Users\Frb999\source\repos\LicentieApp\LicentieApp\obj\Debug\LicentieApp.pdb

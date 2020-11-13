@@ -1,0 +1,7 @@
+F:\malware\my own\LicentieApp\bin\Debug\LicentieApp.exe.config
+F:\malware\my own\LicentieApp\bin\Debug\LicentieApp.exe
+F:\malware\my own\LicentieApp\bin\Debug\LicentieApp.pdb
+F:\malware\my own\LicentieApp\obj\Debug\LicentieApp.csprojAssemblyReference.cache
+F:\malware\my own\LicentieApp\obj\Debug\LicentieApp.csproj.CoreCompileInputs.cache
+F:\malware\my own\LicentieApp\obj\Debug\LicentieApp.exe
+F:\malware\my own\LicentieApp\obj\Debug\LicentieApp.pdb

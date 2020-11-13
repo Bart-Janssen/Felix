@@ -1,0 +1,10 @@
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\bin\Debug\decompileapp.exe.config
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\bin\Debug\decompileapp.exe
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\bin\Debug\decompileapp.pdb
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\obj\Debug\decompileapp.csprojAssemblyReference.cache
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\obj\Debug\decompileapp.Form1.resources
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\obj\Debug\decompileapp.Properties.Resources.resources
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\obj\Debug\decompileapp.csproj.GenerateResource.cache
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\obj\Debug\decompileapp.csproj.CoreCompileInputs.cache
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\obj\Debug\decompileapp.exe
+C:\Users\Frb999\source\repos\decompileapp\decompileapp\obj\Debug\decompileapp.pdb
