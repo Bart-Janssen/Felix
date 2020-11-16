@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/friends")
@@ -28,9 +27,9 @@ public class FriendController extends EncryptionManager
     }
 
     @DeleteMapping("/{friendDisplayName}")
-    public ResponseEntity removeFriend(@RequestHeader("Authorization") String jwt, @PathVariable String friendDisplayName) throws Exception
+    public ResponseEntity<AesEncryptedMessage> removeFriend(@RequestHeader("Authorization") String jwt, @PathVariable String friendDisplayName) throws Exception
     {
-        friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace("--DASH--", "/"), String.class);
+        friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace(DASH, "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.friendService.removeFriend(friendDisplayName, user.getId());
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
@@ -73,7 +72,7 @@ public class FriendController extends EncryptionManager
     @DeleteMapping("/invites/incoming/decline/{friendDisplayName}")
     public ResponseEntity<AesEncryptedMessage> declineInvite(@RequestHeader("Authorization") String jwt, @PathVariable String friendDisplayName) throws Exception
     {
-        friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace("--DASH--", "/"), String.class);
+        friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace(DASH, "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.friendService.declineInvite(friendDisplayName, user.getId());
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
@@ -82,7 +81,7 @@ public class FriendController extends EncryptionManager
     @DeleteMapping("/invites/outgoing/cancel/{friendDisplayName}")
     public ResponseEntity<AesEncryptedMessage> cancelInvite(@RequestHeader("Authorization") String jwt, @PathVariable String friendDisplayName) throws Exception
     {
-        friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace("--DASH--", "/"), String.class);
+        friendDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, friendDisplayName.replace(DASH, "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.friendService.cancelInvite(friendDisplayName, user.getId());
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));

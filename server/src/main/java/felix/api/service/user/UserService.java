@@ -8,7 +8,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
-import felix.api.configuration.AesEncryptionManager;
 import felix.api.configuration.PasswordHasher;
 import felix.api.exceptions.NotAuthorizedException;
 import felix.api.models.Group;
@@ -17,7 +16,6 @@ import felix.api.repository.UserRepository;
 import felix.api.service.friend.IFriendService;
 import felix.api.service.group.IGroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import felix.api.models.User;
 import javax.persistence.EntityNotFoundException;
@@ -78,8 +76,13 @@ public class UserService implements IUserService
     }
 
     @Override
-    public User register(User user) throws DataIntegrityViolationException, GeneralSecurityException
+    public User register(User user) throws GeneralSecurityException
     {
+        user.setMemberGroups(new ArrayList<>());
+        user.setFriends(new ArrayList<>());
+        user.setTotp(null);
+        user.setOnline(true);
+        user.setTwoFAEnabled(false);
         user.setPassword(new PasswordHasher().hash(user.getPassword()));
         return this.userRepository.save(user);
     }
@@ -111,7 +114,7 @@ public class UserService implements IUserService
     }
 
     @Override
-    public void deleteAccount(User user) throws EntityNotFoundException
+    public void deleteAccount(User user)
     {
         User dbUser = this.userRepository.findById(user.getId()).orElseThrow(EntityNotFoundException::new);
         for (User friend : dbUser.getFriends())

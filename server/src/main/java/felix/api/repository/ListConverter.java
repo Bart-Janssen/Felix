@@ -11,14 +11,14 @@ import java.util.List;
 @Converter
 public class ListConverter<T> implements AttributeConverter<List<T>, String>
 {
-    private final static String base64 = "piqtjOVwpb6U8/u7uxTMYalj9t4wZFDwYuAhpST8Jyc=";
+    private static final String BASE64 = "piqtjOVwpb6U8/u7uxTMYalj9t4wZFDwYuAhpST8Jyc=";
 
     @Override
     public String convertToDatabaseColumn(final List<T> list)
     {
         try
         {
-            return AesEncryptionManager.encrypt(base64, new Gson().toJson(list));
+            return AesEncryptionManager.encrypt(BASE64, new Gson().toJson(list));
         }
         catch (GeneralSecurityException e)
         {
@@ -31,7 +31,7 @@ public class ListConverter<T> implements AttributeConverter<List<T>, String>
     {
         try
         {
-            return new Gson().fromJson(AesEncryptionManager.decrypt(base64, json), new TypeToken<List<T>>(){}.getType());
+            return new Gson().fromJson(AesEncryptionManager.decrypt(BASE64, json), new TypeToken<List<T>>(){}.getType());
         }
         catch (GeneralSecurityException e)
         {

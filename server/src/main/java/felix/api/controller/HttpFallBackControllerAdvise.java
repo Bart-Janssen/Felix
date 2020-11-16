@@ -15,14 +15,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class HttpFallBackControllerAdvise
 {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity handleException(final Exception e)
+    public ResponseEntity<Void> handleException(final Exception e)
     {
+        log.error(String.format("Fallback exception handled; %s at: %s", e.getMessage(), e.getStackTrace()[0]));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleRuntimeException(final RuntimeException e)
+    public ResponseEntity<Void> handleRuntimeException(final RuntimeException e)
     {
+        log.error(String.format("Fallback exception handled; %s at: %s", e.getMessage(), e.getStackTrace()[0]));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

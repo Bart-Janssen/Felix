@@ -8,9 +8,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RsaEncryptionManager
 {
-    private final static String RSA = "RSA";
-    private final static int KEY_SIZE = 2048;
+    private static final String RSA = "RSA";
+    private static final int KEY_SIZE = 2048;
     private static KeyPair serverKeyPair;
+
+    private RsaEncryptionManager(){}
 
     static
     {

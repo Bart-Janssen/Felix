@@ -7,7 +7,6 @@ import io.jsonwebtoken.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -27,9 +26,8 @@ public class JwtTokenGenerator
     @SneakyThrows
     public JwtToken createJWT(User account)
     {
-        SecretKey key = KeyGenerator.getInstance(SignatureAlgorithm.HS512.getJcaName()).generateKey();
-        byte[] KEY = Arrays.toString(key.getEncoded()).getBytes(StandardCharsets.UTF_8);
-        Key signingKey = new SecretKeySpec(KEY, SignatureAlgorithm.HS256.getJcaName());
+        byte[] key = Arrays.toString(KeyGenerator.getInstance(SignatureAlgorithm.HS512.getJcaName()).generateKey().getEncoded()).getBytes(StandardCharsets.UTF_8);
+        Key signingKey = new SecretKeySpec(key, SignatureAlgorithm.HS256.getJcaName());
         JwtBuilder builder = Jwts.builder()
                 .setSubject("Felix chat app")
                 .claim(USER_ID, account.getId())
@@ -39,7 +37,7 @@ public class JwtTokenGenerator
                 .setIssuer("Felix")
                 .signWith(signingKey)
                 .setExpiration(new Date(System.currentTimeMillis() + TTL));
-        return new JwtToken(builder.compact(), KEY);
+        return new JwtToken(builder.compact(), key);
     }
 
     public User decodeJWT(String jwt)

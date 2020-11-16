@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import felix.api.configuration.JwtTokenGenerator;
 import java.util.Map;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/authentication")
@@ -21,17 +20,14 @@ public class AuthenticationController extends EncryptionManager
     private final IUserService userService;
 
     @PostMapping("/login/")
-    public ResponseEntity<AesEncryptedMessage> login(@RequestBody User user) throws Exception
+    public ResponseEntity<AesEncryptedMessage> login(@RequestBody AuthenticationUser authenticationUser) throws Exception
     {
-        Map<String, String> decryptedUserInfo = super.decryptRsaUser(user);
-        user.setName(decryptedUserInfo.get("name"));
-        user.setPassword(decryptedUserInfo.get("password"));
-        user.setSessionId(decryptedUserInfo.get("sessionId"));
-        User authenticatedUser = userService.login(user);
+        Map<String, String> decryptedUserInfo = super.decryptRsaUser(authenticationUser);
+        User authenticatedUser = userService.login(User.builder().name(decryptedUserInfo.get("name")).password(decryptedUserInfo.get("password")).build());
         if (authenticatedUser != null)
         {
             if (WebSocket.getSession(GetterType.DISPLAY_NAME, authenticatedUser.getDisplayName()) != null) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
-            authenticatedUser.setSessionId(user.getSessionId());
+            authenticatedUser.setSessionId(decryptedUserInfo.get("sessionId"));
             JwtToken token = new JwtTokenGenerator().createJWT(authenticatedUser);
             if (!WebSocket.addSession(authenticatedUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
             UserSession userSession = WebSocket.getSession(GetterType.DISPLAY_NAME, authenticatedUser.getDisplayName());
@@ -46,18 +42,15 @@ public class AuthenticationController extends EncryptionManager
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AesEncryptedMessage> register(@RequestBody User user) throws Exception
+    public ResponseEntity<AesEncryptedMessage> register(@RequestBody AuthenticationUser authenticationUser) throws Exception
     {
-        Map<String, String> decryptedUserInfo = super.decryptRsaUser(user);
-        user.setName(decryptedUserInfo.get("name"));
-        user.setDisplayName(decryptedUserInfo.get("disp"));
-        user.setPassword(decryptedUserInfo.get("password"));
-        user.setSessionId(decryptedUserInfo.get("sessionId"));
-        if (user.getPassword().length() < 8) throw new BadRequestException();
-        User registeredUser = userService.register(user);
+        Map<String, String> decryptedUserInfo = super.decryptRsaUser(authenticationUser);
+
+        if (authenticationUser.getPassword().length() < 8) throw new BadRequestException();
+        User registeredUser = userService.register(User.builder().displayName(decryptedUserInfo.get("disp")).password(decryptedUserInfo.get("password")).name(decryptedUserInfo.get("name")).build());
         if (registeredUser != null)
         {
-            registeredUser.setSessionId(user.getSessionId());
+            registeredUser.setSessionId(decryptedUserInfo.get("sessionId"));
             JwtToken token = new JwtTokenGenerator().createJWT(registeredUser);
             if (!WebSocket.addSession(registeredUser, token)) return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
             return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, token.getToken(), null));
@@ -66,7 +59,7 @@ public class AuthenticationController extends EncryptionManager
     }
 
     @PutMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Authorization") String jwt) throws Exception
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

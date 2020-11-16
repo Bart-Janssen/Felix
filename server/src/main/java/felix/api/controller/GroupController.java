@@ -10,10 +10,8 @@ import felix.api.service.group.IGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/groups")
@@ -40,7 +38,7 @@ public class GroupController extends EncryptionManager
     @DeleteMapping("/{groupId}")
     public ResponseEntity<AesEncryptedMessage> leaveGroup(@RequestHeader("Authorization") String jwt, @PathVariable String groupId) throws Exception
     {
-        groupId = super.aesDecrypt(GetterType.TOKEN, jwt, groupId.replace("--DASH--", "/"), String.class);
+        groupId = super.aesDecrypt(GetterType.TOKEN, jwt, groupId.replace(DASH, "/"), String.class);
         User user = new JwtTokenGenerator().decodeJWT(jwt);
         this.groupService.leaveGroup(UUID.fromString(groupId), user.getId());
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
@@ -50,7 +48,7 @@ public class GroupController extends EncryptionManager
     public ResponseEntity<AesEncryptedMessage> inviteGroup(@RequestHeader("Authorization") String jwt, @RequestBody AesEncryptedMessage aesEncryptedMessage, @PathVariable String groupId) throws Exception
     {
         String inviteDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), String.class);
-        groupId = super.aesDecrypt(GetterType.TOKEN, jwt, groupId.replace("--DASH--", "/"), String.class);
+        groupId = super.aesDecrypt(GetterType.TOKEN, jwt, groupId.replace(DASH, "/"), String.class);
         User user = this.groupService.invite(UUID.fromString(groupId), inviteDisplayName);
         WebSocket.addGroupsIfAbsent(user);
         return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));

@@ -87,11 +87,14 @@ public class WebSocketConnection extends WebSocket
     {
         try
         {
-            System.out.println("session killed: " + session.getId() + " - cos: " + closeCode);
+            log.info("session killed: " + session.getId() + " - " + closeCode);
             super.killSession(session.getId());
             session.close(new CloseReason(closeCode, reason));
         }
-        catch (Exception ignored) {}
+        catch (Exception ignored)
+        {
+            log.info("Error killing session: " + session.getId() + " - " + closeCode);
+        }
     }
 
     @Override

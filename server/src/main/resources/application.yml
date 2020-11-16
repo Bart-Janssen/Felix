@@ -17,7 +17,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/felix-db
+    url: jdbc:postgresql://192.168.52.129:5432/felix-db
     driverClassName: org.postgresql.Driver
     username: felix
     password: tuwafjkse8y67sB^5be%EB^v5e4s6gh

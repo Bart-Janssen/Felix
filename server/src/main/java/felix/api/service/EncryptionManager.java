@@ -14,6 +14,8 @@ import java.util.Map;
 
 public abstract class EncryptionManager
 {
+    protected static final String DASH = "--DASH--";
+
     protected static <T> AesEncryptedMessage aesEncrypt(GetterType type, String key, T object) throws GeneralSecurityException
     {
         UserSession session = WebSocket.getSession(type, key);
@@ -27,7 +29,7 @@ public abstract class EncryptionManager
         return new ObjectMapper().readValue(decryptedMessage, this.getType(type));
     }
 
-    protected Map<String, String> decryptRsaUser(User user) throws Exception
+    protected Map<String, String> decryptRsaUser(AuthenticationUser user) throws GeneralSecurityException
     {
         Map<String, String> decryptedUserInfo = new HashMap<>();
         decryptedUserInfo.put("name", RsaEncryptionManager.decrypt(user.getName()));

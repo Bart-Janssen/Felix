@@ -1,9 +1,6 @@
 package felix.api.models;
 
-import com.google.gson.Gson;
 import felix.api.configuration.JwtTokenGenerator;
-import felix.api.service.EncryptionManager;
-
 import javax.websocket.Session;
 import java.util.*;
 
@@ -128,7 +125,7 @@ public class SessionMap
                 UserSession memberSession = this.get(GetterType.DISPLAY_NAME, member.getDisplayName());
                 memberSessions.add(memberSession);
             }
-            if (group.getGroupMembers().size() == 0)
+            if (group.getGroupMembers().isEmpty())
             {
                 groups.remove(group.getId());
             }

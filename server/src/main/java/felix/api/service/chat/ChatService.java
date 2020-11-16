@@ -25,12 +25,14 @@ public class ChatService implements IChatService
     @Autowired
     private GroupRepository groupRepository;
 
-    private final static String base64 = "JwS/4Ozf/OMwXEo8eajsXmOgMYFkhoP3JAcH06kSlVk=";
+    private static final String BASE64 = "JwS/4Ozf/OMwXEo8eajsXmOgMYFkhoP3JAcH06kSlVk=";
+    private static final String USER = "user";
+    private static final String FRIEND = "friend";
 
     @Override
     public void addNew(Chat chat) throws GeneralSecurityException
     {
-        chat.setMessage(AesEncryptionManager.encrypt(base64, chat.getMessage()));
+        chat.setMessage(AesEncryptionManager.encrypt(BASE64, chat.getMessage()));
         this.chatRepository.save(chat);
     }
 
@@ -39,22 +41,22 @@ public class ChatService implements IChatService
     {
         Map<String, User> friends = this.checkIfFriends(id, friendDisplayName);
         List<Chat> chatMessages = new ArrayList<>();
-        this.chatRepository.findAllByFromIdAndToId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(Chat.builder()
+        this.chatRepository.findAllByFromIdAndToId(friends.get(USER).getId(), friends.get(FRIEND).getId()).forEach(chat -> chatMessages.add(Chat.builder()
                 .message(chat.getMessage())
-                .displayNameFrom(friends.get("user").getDisplayName())
-                .displayNameTo(friends.get("friend").getDisplayName())
+                .displayNameFrom(friends.get(USER).getDisplayName())
+                .displayNameTo(friends.get(FRIEND).getDisplayName())
                 .date(chat.getDate())
                 .build()));
-        this.chatRepository.findAllByToIdAndFromId(friends.get("user").getId(), friends.get("friend").getId()).forEach(chat -> chatMessages.add(Chat.builder()
+        this.chatRepository.findAllByToIdAndFromId(friends.get(USER).getId(), friends.get(FRIEND).getId()).forEach(chat -> chatMessages.add(Chat.builder()
                 .message(chat.getMessage())
-                .displayNameTo(friends.get("user").getDisplayName())
-                .displayNameFrom(friends.get("friend").getDisplayName())
+                .displayNameTo(friends.get(USER).getDisplayName())
+                .displayNameFrom(friends.get(FRIEND).getDisplayName())
                 .date(chat.getDate())
                 .build()));
         chatMessages.sort(Comparator.comparing(Chat::getDate));
         for (Chat chat : chatMessages)
         {
-            chat.setMessage(AesEncryptionManager.decrypt(base64, chat.getMessage()));
+            chat.setMessage(AesEncryptionManager.decrypt(BASE64, chat.getMessage()));
         }
         return chatMessages;
     }
@@ -63,7 +65,7 @@ public class ChatService implements IChatService
     public void addNewOffline(UUID userId, String toFriendDisplayName, String message) throws GeneralSecurityException
     {
         Map<String, User> friends = this.checkIfFriends(userId, toFriendDisplayName);
-        this.addNew(new Chat(friends.get("user").getId(), friends.get("friend").getId(), message, new Date().getTime()));
+        this.addNew(new Chat(friends.get(USER).getId(), friends.get(FRIEND).getId(), message, new Date().getTime()));
     }
 
     @Override
@@ -88,20 +90,20 @@ public class ChatService implements IChatService
                         .build()));
         for (Chat chat : chatMessages)
         {
-            chat.setMessage(AesEncryptionManager.decrypt(base64, chat.getMessage()));
+            chat.setMessage(AesEncryptionManager.decrypt(BASE64, chat.getMessage()));
         }
         return chatMessages;
     }
 
-    private Map<String, User> checkIfFriends(UUID userId, String friendDisplayName) throws BadRequestException
+    private Map<String, User> checkIfFriends(UUID userId, String friendDisplayName)
     {
         User user = this.userRepository.findUserById(userId).orElseThrow(EntityNotFoundException::new);
         User friend = this.userRepository.findByDisplayName(friendDisplayName).orElseThrow(EntityNotFoundException::new);
         if (user.getFriends().stream().noneMatch(f -> f.getDisplayName().equals(friendDisplayName))) throw new BadRequestException();
         if (friend.getFriends().stream().noneMatch(f -> f.getDisplayName().equals(user.getDisplayName()))) throw new BadRequestException();
         Map<String, User> friends = new HashMap<>();
-        friends.put("user", user);
-        friends.put("friend", friend);
+        friends.put(USER, user);
+        friends.put(FRIEND, friend);
         return friends;
     }
 }
