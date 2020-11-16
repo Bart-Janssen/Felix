@@ -1,8 +1,8 @@
 .center-text
 {
-    font-size: 25px;
-    margin-top: 8%;
-    margin-bottom: 8%;
+    font-size: 40px;
+    margin-top: 5%;
+    margin-bottom: 5%;
     text-align: center;
     color: antiquewhite;
 }
@@ -11,4 +11,10 @@
 {
     font-size: 18px;
     color: antiquewhite;
+}
+
+.image
+{
+    font-size: 12px;
+    font-style: italic;
 }

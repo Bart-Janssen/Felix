@@ -20,6 +20,7 @@ import { RedblueeventComponent } from './components/projects/felix/redblueevent/
 import { PreventtheunexpectedComponent } from './components/projects/workshop/preventtheunexpected/preventtheunexpected.component';
 import { QuantumNetworkingComponent } from './components/projects/quantum-networking/quantum-networking.component';
 import { ReverseengeneeringComponent } from './components/projects/workshop/reverseengeneering/reverseengeneering.component';
+import { SecuritytestingComponent } from './components/projects/felix/securitytesting/securitytesting.component';
 
 const routes: Routes = [
   {
@@ -102,6 +103,10 @@ const routes: Routes = [
   {
     path: "red_team_vs_blue_team_event",
     component: RedblueeventComponent
+  },
+  {
+    path: "security_testing",
+    component: SecuritytestingComponent
   },
   {
     path: "not-implemented-yet",

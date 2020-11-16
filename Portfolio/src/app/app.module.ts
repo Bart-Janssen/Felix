@@ -25,6 +25,7 @@ import { RedblueeventComponent } from './components/projects/felix/redblueevent/
 import { PreventtheunexpectedComponent } from './components/projects/workshop/preventtheunexpected/preventtheunexpected.component';
 import { QuantumNetworkingComponent } from './components/projects/quantum-networking/quantum-networking.component';
 import { ReverseengeneeringComponent } from './components/projects/workshop/reverseengeneering/reverseengeneering.component';
+import { SecuritytestingComponent } from './components/projects/felix/securitytesting/securitytesting.component';
 
 export function jwtOptionsFactory() 
 {
@@ -58,6 +59,7 @@ export function jwtOptionsFactory()
     PreventtheunexpectedComponent,
     QuantumNetworkingComponent,
     ReverseengeneeringComponent,
+    SecuritytestingComponent,
   ],
   imports: [
     BrowserModule,

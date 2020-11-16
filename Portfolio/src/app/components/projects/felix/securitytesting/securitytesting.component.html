@@ -1,0 +1,73 @@
+<p class="center-text">Security testing</p>
+<div class="middle-text-space">
+
+  <p>Bij testing kan het over verschillende soorten testen gaan. In dit onderwerp ga ik dieper in op het onderwerp security testing. Dit is het tegenovergestelde van 
+    functional testing, in plaats van dat er verwachte gebeurtenissen optreden, wordt er bij security testing juist onverwachte input gebruikt om te kijken hoe het 
+    systeem daarop reageert.</p>
+  
+  <h3>Design</h3>
+  <p>Bij het maken van het disign van mijn applicatie, heb ik ook een
+  <a routerLink="/risk_analysis" routerLinkActive="active">risk</a> en <a routerLink="/threat_analysis" routerLinkActive="active">threat</a> analyse gedaan. Om deze 
+  te kunnen testen staan hieronder verschillende methodes uitgeschreven die ik heb uitgevoerd.</p>
+
+  <br>
+  <h3>Fuzzing</h3>
+  <p>Fuzzing wordt gebruikt om een systeem te testen op onverwachte input. Hiermee is het bijvoorbeeld mogelijk om injectie te testen, of juist om ander soort gekke input 
+    te testen. Eigenlijk is het, het testen van het onverwachte.</p>
+
+  <p class="no-bottom-margin">Fuzzing in mijn applicatie heeft op verschillende aspecten niet veel nut, pagina's achterhalen werkt niet want ik gebruik geen 
+    web-applicatie en al mijn endpoints accepteren alleen versleutelde data. De afbeelding hieronder laat zien dat ik een fuzz doe met Fuff. Het target is 
+    http://127.0.0.1:29805/authentication/login met de benodigde data. Ik heb de gebruikersnaam en sessie id meegegeven, in de woordlijst die ik gebruik staat het 
+    wachtwoord voor deze gebruiker. Alleen hij laat geen resultaten zien dat hij iets gevonden heeft omdat het niet versleuteld is. Dit zal dus nooit een resultaat 
+    laten zien. Omdat de AES sleutel niet bekend is, is het ook niet mogelijk om deze data te versleutelen zodat hij het wel accepteerd. De enigste manier om dit wel 
+    te kunnen is als een MitM ertussen gaan. Mijn applicatie draait ook niet op een Appache server of dergelijke dus daar valt ook niets te behalen. Door de 
+    'fall back' exceptie handler genoemd in mijn implementatie uitwerking, zijn er ook geen excepties die unhandled zijn. Mocht er een unhandled exceptie optreden, 
+    dan wordt er altijd een status 500 terug gestuurd. Zonder enige anders soort informatie. Dit voorkomt dat er misschien data zoals informatie over de error terug 
+    gestuurd wordt.</p>
+  <img src="../../../../assets/felix/security-testing/fuzzing.png">
+  <p class="image">Afbeelding 1 Fuzzing</p>
+
+  <p class="no-bottom-margin">Om toch fuzzing te kunnen testen, heb ik tijdelijk de encryptie uitgezet, hiermee kan ik wel fuzzen met een injectie woordlijst. De 
+    woordenlijst die ik hiervoor heb gebruikt is <a href="https://github.com/xmendez/wfuzz/blob/master/wordlist/Injections/All_attack.txt">deze</a>. Er zullen enkele 
+    zijn die geen enkele invloed hebben op mijn applicatie omdat deze bijvoorbeeld web gebaseerd zijn. Maar verschillende zullen mogelijk wel een invloed kunnen hebben. 
+    Na het uitvoeren hiervan zie ik dat er enkele excepties geweest zijn, alle excepties zijn van hetzelfde type. In de afbeelding is te zien wat voor excepties dit zijn. 
+    Het geeft niets dat deze exceptie optreedt want deze wordt opgevangen door mijn 'fall back' exceptie handler en de gebruiker (momenteel dus de fuzzing test) krijgt 
+    http errors terug gestuurd, maar hierbij komt geen gevoelige informatie en blijft de applicatie gewoon zonder problemen draaien.</p>
+  <img src="../../../../assets/felix/security-testing/fuzzing-results.png">
+  <p class="image">Afbeelding 2 Fuzzing resultaten</p>
+
+  <p class="no-bottom-margin">Ik heb een test uitgevoerd op de endpoint om chats op te halen. Zelfs met al de gekke input is er op de chats zelf niets veranderd. 
+    De SQL-injectie regels die erbij zaten hebben geen enkel effect gehad. De afbeelding hieronder laat de chat zien die in de database staat. Hier is niets geks 
+    aan te zien.</p>
+  <img src="../../../../assets/felix/security-testing/unafected-chat.png">
+  <p class="image">Afbeelding 3 Chat</p>
+
+  <br>
+  <h3>Code review</h3>
+  <p class="no-bottom-margin">Voor een code review heb ik SonarQube gebruikt. De eerste keer dat ik die draaide bleek dat er nog best redelijk wat code smells en een 
+    paar vulnerabilities waren. De vulnerabilities waren minder schuldig dan deze deden lijken, het was ondat ik in de RSA, AES, JWT-decoder en de PasswordHash klassen 
+    geen private constructor had.</p>
+  <img src="../../../../assets/felix/security-testing/sonarqube-first.png">
+  <p class="image">Afbeelding 4 Eerste scan</p>
+
+  <p class="no-bottom-margin">Na de scan heb ik de code erbij gepakt en het een en ander veranderd. De constructors heb ik nu toegevoegd en daarmee zijn de 
+    vulnerabilities weg. De code smells waren voornamelijk imports die niet gebruikt werden en wat Java naam conventies. De scan erna ziet er al veel beter uit.</p>
+  <img src="../../../../assets/felix/security-testing/sonarqube-refactored.png">
+  <p class="image">Afbeelding 5 Tweede scan</p>
+
+  <p class="no-bottom-margin">Er staan nog enkele code smells open. Dit zijn code smells die vertellen dat het niet goed is om een base klasse van een 'Exception' te 
+    gooien. Dit is in mijn geval wel nodig omdat anders mijn exceptie handler deze niet opvangt. Dit is een Spring onderdeel dus ik ga deze code smells niet oplossen.</p>
+  <img src="../../../../assets/felix/security-testing/code-smell.png">
+  <p class="image">Afbeelding 6 Code smell</p>
+
+  <br>
+  <h3>Configuration review</h3>
+  <p class="no-bottom-margin">Uiteraard heb ik nagedacht over de configuration van mijn applicaties. Zo heb ik bijvoorbeeld de server waarop hij komt te draaien 
+    ingesteld dat alle poorten dicht staan, behalve de poorten die nodig zijn. Ook de database configuratie heb ik zo ingesteld dat het niet mogelijk is om deze vanuit 
+    buitenaf te bereiken. Hierover is meer te lezen in mijn <a routerLink="/implementation" routerLinkActive="active">implementatie</a>. De configuratie van mijn 
+    applicatie heb ik ook aangepakt, zo gebruik ik geen standaard poorten en heb ik ook de optie gezet dat SQL-queries niet worden weergegeven.</p>
+
+  <br>
+  <br>
+  <br>
+</div>

@@ -164,17 +164,6 @@
   <p class="image">Afbeelding 14 Exceptie handling</p>
 
   <br>
-  <p class="no-bottom-margin"><b>Fuzzing</b></p>
-  <p class="no-bottom-margin">Fuzzing in mijn applicatie heeft niet veel nut, pagina's achterhalen werkt niet want ik gebruik geen web-applicatie en al mijn endpoints accepteren
-    alleen versleutelde data. De afbeelding hieronder laat zien dat ik een fuzz doe met Fuff. Het target is http://127.0.0.1:29805/authentication/login met de benodigde 
-    data. Ik heb de gebruikersnaam en sessie id meegegeven, in de woordlijst die ik gebruik staat het wachtwoord voor deze gebruiker. Alleen hij laat geen resultaten zien 
-    dat hij iets gevonden heeft omdat het niet versleuteld is. Dit zal dus nooit een resultaat laten zien. Omdat de AES sleutel niet bekend is, is het ook niet mogelijk 
-    om deze data te versleutelen zodat hij het wel accepteerd. Mijn applicatie draait ook niet op een Appache server of dergelijke dus daar valt ook niets te behalen. Door 
-    de 'fall back' exceptie handler eerder genoemd, zijn er ook geen excepties die unhandled zijn. Mocht er een unhandled exceptie optreden, dan wordt er altijd een status 
-    500 terug gestuurd. Dit voorkomt dat er misschien data zoals informatie over de error terug gestuurd wordt.</p>
-  <img src="../../../../assets/felix/code/fuzzing.png">
-  <p class="image">Afbeelding 15 Fuzzing</p>
-  <br>
   <br>
   <br>
 </div>
