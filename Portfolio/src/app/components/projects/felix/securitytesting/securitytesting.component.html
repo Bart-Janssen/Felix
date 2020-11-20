@@ -6,7 +6,7 @@
     systeem daarop reageert.</p>
   
   <h3>Design</h3>
-  <p>Bij het maken van het disign van mijn applicatie, heb ik ook een
+  <p>Bij het maken van het design van mijn applicatie, heb ik ook een
   <a routerLink="/risk_analysis" routerLinkActive="active">risk</a> en <a routerLink="/threat_analysis" routerLinkActive="active">threat</a> analyse gedaan. Om deze 
   te kunnen testen staan hieronder verschillende methodes uitgeschreven die ik heb uitgevoerd.</p>
 
@@ -17,17 +17,17 @@
 
   <p class="no-bottom-margin">Fuzzing in mijn applicatie heeft op verschillende aspecten niet veel nut, pagina's achterhalen werkt niet want ik gebruik geen 
     web-applicatie en al mijn endpoints accepteren alleen versleutelde data. De afbeelding hieronder laat zien dat ik een fuzz doe met Fuff. Het target is 
-    http://127.0.0.1:29805/authentication/login met de benodigde data. Ik heb de gebruikersnaam en sessie id meegegeven, in de woordlijst die ik gebruik staat het 
+    http://127.0.0.1:29805/authentication/login met de benodigde data. Ik heb de gebruikersnaam en sessie id meegegeven, in de woordenlijst die ik gebruik staat het 
     wachtwoord voor deze gebruiker. Alleen hij laat geen resultaten zien dat hij iets gevonden heeft omdat het niet versleuteld is. Dit zal dus nooit een resultaat 
-    laten zien. Omdat de AES sleutel niet bekend is, is het ook niet mogelijk om deze data te versleutelen zodat hij het wel accepteerd. De enigste manier om dit wel 
+    laten zien. Omdat de AES sleutel niet bekend is, is het ook niet mogelijk om deze data te versleutelen zodat hij het wel accepteert. De enigste manier om dit wel 
     te kunnen is als een MitM ertussen gaan. Mijn applicatie draait ook niet op een Appache server of dergelijke dus daar valt ook niets te behalen. Door de 
     'fall back' exceptie handler genoemd in mijn implementatie uitwerking, zijn er ook geen excepties die unhandled zijn. Mocht er een unhandled exceptie optreden, 
-    dan wordt er altijd een status 500 terug gestuurd. Zonder enige anders soort informatie. Dit voorkomt dat er misschien data zoals informatie over de error terug 
+    dan wordt er altijd een status 500 terug gestuurd zonder enige andere soort informatie. Dit voorkomt dat er misschien data zoals informatie over de error terug 
     gestuurd wordt.</p>
   <img src="../../../../assets/felix/security-testing/fuzzing.png">
   <p class="image">Afbeelding 1 Fuzzing</p>
 
-  <p class="no-bottom-margin">Om toch fuzzing te kunnen testen, heb ik tijdelijk de encryptie uitgezet, hiermee kan ik wel fuzzen met een injectie woordlijst. De 
+  <p class="no-bottom-margin">Om toch fuzzing te kunnen testen, heb ik tijdelijk de encryptie uitgezet, hiermee kan ik wel fuzzen met een injectie woordenlijst. De 
     woordenlijst die ik hiervoor heb gebruikt is <a href="https://github.com/xmendez/wfuzz/blob/master/wordlist/Injections/All_attack.txt">deze</a>. Er zullen enkele 
     zijn die geen enkele invloed hebben op mijn applicatie omdat deze bijvoorbeeld web gebaseerd zijn. Maar verschillende zullen mogelijk wel een invloed kunnen hebben. 
     Na het uitvoeren hiervan zie ik dat er enkele excepties geweest zijn, alle excepties zijn van hetzelfde type. In de afbeelding is te zien wat voor excepties dit zijn. 
@@ -36,7 +36,7 @@
   <img src="../../../../assets/felix/security-testing/fuzzing-results.png">
   <p class="image">Afbeelding 2 Fuzzing resultaten</p>
 
-  <p class="no-bottom-margin">Ik heb een test uitgevoerd op de endpoint om chats op te halen. Zelfs met al de gekke input is er op de chats zelf niets veranderd. 
+  <p class="no-bottom-margin">Ik heb een test uitgevoerd op het endpoint om chats op te halen. Zelfs met al de gekke input is er op de chats zelf niets veranderd. 
     De SQL-injectie regels die erbij zaten hebben geen enkel effect gehad. De afbeelding hieronder laat de chat zien die in de database staat. Hier is niets geks 
     aan te zien.</p>
   <img src="../../../../assets/felix/security-testing/unafected-chat.png">

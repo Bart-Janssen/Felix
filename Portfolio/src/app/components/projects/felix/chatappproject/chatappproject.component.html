@@ -84,13 +84,13 @@
   <p class="no-bottom-margin"><b>2.2 Autorisatie</b></p>
   <p class="no-bottom-margin">Voor de authorisatie krijgt de gebruiker na het succesvol inloggen een JWT-token. Hierin kan informatie opgeslagen worden zoals de username, 
     displayname, id en of deze 2FA geactiveerd heeft, waarmee de client zich kan identificeren. Deze tokens worden uitgedeeld aan de client's door de server, maar worden ook 
-    in server zelf bijgehouden met de bijbehorende key en websocket sessie.</p>
+    in de server zelf bijgehouden met de bijbehorende key en websocket sessie.</p>
   <img src="../../../../assets/felix/code/usersession-code.png">
   <p class="image">Afbeelding 7 Usersessie informatie</p>
   <p>Elke sessie heeft een eigen JWT-tokensleutel die bij iedere request van de client ververst wordt, waardoor de JWT-tokensleutel 
   maar een korte tijd in omloop blijft. Als er gerommeld is met deze token dan zal de server deze niet meer kunnen verifiëren en wordt de token ongeldig verklaard met als 
-  resultaat dat die ingelogde sessie uit de server wordt verwijderd waardoor de client bij iedere volgende request wordt genereerd. Tevens wordt de client uitgelogd. 
-  Mocht een kwaadwillig iemand een andere 'geldige' token kunnen bemachtigen en deze probeert te gebruiken op een andere inlog, dan komt deze token niet meer overeen met de 
+  resultaat dat die ingelogde sessie uit de server wordt verwijderd waardoor de client bij iedere volgende request wordt genegeerd. Tevens wordt de client uitgelogd. 
+  Mocht een kwaadwillend iemand een andere 'geldige' token kunnen bemachtigen en deze probeert te gebruiken op een andere inlog, dan komt deze token niet meer overeen met de 
   key van de websocket sessie, en wordt deze ook verwijderd. De JWT-token zelf wordt ook als encrypted AES verkeer verstuurd, dit maakt het onderscheppen van een dergelijke 
   token niet mogelijk.</p>
   <p class="no-bottom-margin">Het genereren en verifiëren van een JWT-token ziet er uit als volgt:</p>

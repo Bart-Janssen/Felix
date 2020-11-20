@@ -21,6 +21,8 @@ import { PreventtheunexpectedComponent } from './components/projects/workshop/pr
 import { QuantumNetworkingComponent } from './components/projects/quantum-networking/quantum-networking.component';
 import { ReverseengeneeringComponent } from './components/projects/workshop/reverseengeneering/reverseengeneering.component';
 import { SecuritytestingComponent } from './components/projects/felix/securitytesting/securitytesting.component';
+import { OnderzoeksplanComponent } from './components/projects/onderzoeksplan/onderzoeksplan.component';
+import { RsaComponent } from './components/projects/rsa/rsa.component';
 
 const routes: Routes = [
   {
@@ -57,6 +59,18 @@ const routes: Routes = [
     component: EthicsComponent,
   },
   {
+    path: "onderzoeksplan_project",
+    component: OnderzoeksplanComponent
+  },
+  {
+    path: "research_approach_project",
+    component: ResearchapproachComponent,
+  },
+  {
+    path: "rsa_project",
+    component: RsaComponent
+  },
+  {
     path: "workshop_project",
     component: WorkshopComponent,
   },
@@ -71,10 +85,6 @@ const routes: Routes = [
   {
     path: "reverse_engineering_workshop",
     component: ReverseengeneeringComponent
-  },
-  {
-    path: "research_approach_project",
-    component: ResearchapproachComponent,
   },
   {
     path: "quantum_networking",

@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component(
@@ -9,15 +10,15 @@ import { Component, OnInit } from '@angular/core';
 
 export class MainComponent implements OnInit
 {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   public ngOnInit() : void
   {
-    
+
   }
 
   protected click() : void
   {
-    alert("Click!");
+    
   }
 }
