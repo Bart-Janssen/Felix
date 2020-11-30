@@ -7,20 +7,16 @@ import felix.controllers.EventClientSocket;
 import felix.controllers.HeartBeatThread;
 import felix.fxml.messageBox.CustomOkMessage;
 import felix.fxml.messageBox.FXML_MessageBoxStatus;
-import felix.models.WebSocketMessage;
+import felix.models.*;
 import felix.service.EncryptionManager;
 import felix.service.system.RsaEncryptionManager;
-import felix.models.InitWebSocketMessage;
-import felix.models.JwtToken;
-import felix.models.User;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.net.URI;
 import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class FelixSession extends EncryptionManager
 {
@@ -66,7 +62,7 @@ public class FelixSession extends EncryptionManager
         FelixSession.token = token;
     }
 
-    static void connectToServer(Stage stage)
+    static void connectToServer(Stage stage) throws Exception
     {
         try
         {
@@ -152,5 +148,17 @@ public class FelixSession extends EncryptionManager
     public String getToken()
     {
         return token == null ? null : token.getToken();
+    }
+
+    public Licence rsaEncryptLicence(Licence licence) throws GeneralSecurityException
+    {
+        licence.setEncryptedToken(RsaEncryptionManager.encrypt(licence.getToken().toString()));
+        List<String> encryptedMacs = new ArrayList<>();
+        for (String mac : licence.getMacs())
+        {
+            encryptedMacs.add(RsaEncryptionManager.encrypt(mac));
+        }
+        licence.setMacs(encryptedMacs);
+        return licence;
     }
 }

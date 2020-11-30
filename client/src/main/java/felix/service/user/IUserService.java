@@ -2,6 +2,7 @@ package felix.service.user;
 
 import felix.exceptions.AlreadyLoggedInException;
 import felix.exceptions.NotAuthorizedException;
+import felix.models.Licence;
 import felix.models.User;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,4 +16,6 @@ public interface IUserService
     String enable2Fa() throws IOException, URISyntaxException, GeneralSecurityException;
     void disable2Fa() throws IOException, URISyntaxException, GeneralSecurityException;
     void deleteAccount() throws IOException, URISyntaxException, GeneralSecurityException;
+    void checkLicence(Licence licence) throws IOException, URISyntaxException, GeneralSecurityException;
+    void activate(Licence licence) throws IOException, URISyntaxException, GeneralSecurityException;
 }

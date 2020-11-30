@@ -22,7 +22,11 @@ public class Felix extends Application
         Scene scene = new Scene(parent);
         scene.getStylesheets().add(getClass().getResource("/custom/navstyle.css").toExternalForm());
         primaryStage.setScene(scene);
-        FelixSession.connectToServer(primaryStage);
+        synchronized (FelixSession.class)
+        {
+            FelixSession.connectToServer(primaryStage);
+        }
+        new LicenceChecker().checkLicence(true, scene);
         primaryStage.show();
     }
 

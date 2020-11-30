@@ -3,8 +3,10 @@ package felix.service.user;
 import com.google.gson.Gson;
 import felix.exceptions.AlreadyLoggedInException;
 import felix.exceptions.NotAuthorizedException;
+import felix.main.FelixSession;
 import felix.models.AesEncryptedMessage;
 import felix.models.JwtToken;
+import felix.models.Licence;
 import felix.models.User;
 import felix.service.MainService;
 import java.io.IOException;
@@ -52,5 +54,21 @@ public class UserService extends MainService implements IUserService
     public void deleteAccount() throws IOException, URISyntaxException, GeneralSecurityException
     {
         super.delete("authentication/delete/", void.class);
+    }
+
+    @Override
+    public void checkLicence(Licence licence) throws IOException, URISyntaxException, GeneralSecurityException
+    {
+        Licence encryptedLicence = FelixSession.getInstance().rsaEncryptLicence(licence);
+        encryptedLicence.setToken(null);
+        super.post("authentication/activation/check/", encryptedLicence, String.class);
+    }
+
+    @Override
+    public void activate(Licence licence) throws IOException, URISyntaxException, GeneralSecurityException
+    {
+        Licence encryptedLicence = FelixSession.getInstance().rsaEncryptLicence(licence);
+        encryptedLicence.setToken(null);
+        super.post("authentication/activation/", encryptedLicence, void.class);
     }
 }

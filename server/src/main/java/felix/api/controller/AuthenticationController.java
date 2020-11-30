@@ -4,12 +4,17 @@ import com.google.gson.Gson;
 import felix.api.exceptions.BadRequestException;
 import felix.api.models.*;
 import felix.api.service.EncryptionManager;
+import felix.api.service.licence.ILicenceService;
 import felix.api.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import felix.api.configuration.JwtTokenGenerator;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 @RestController
@@ -17,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/authentication")
 public class AuthenticationController extends EncryptionManager
 {
+    private final ILicenceService licenceService;
     private final IUserService userService;
 
     @PostMapping("/login/")
@@ -104,5 +110,38 @@ public class AuthenticationController extends EncryptionManager
         WebSocket.logout(userSession.getToken().getToken());
         this.userService.deleteAccount(userSession.getUser());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/activation/check/")
+    public ResponseEntity<String> checkActivation(@RequestBody Licence licence) throws Exception
+    {
+        Licence decryptRsaLicence = super.decryptRsaLicence(licence);
+        System.out.println(new Gson().toJson(decryptRsaLicence));
+
+        if (this.licenceService.check(decryptRsaLicence))
+        {
+            System.out.println("its all good");
+            return ResponseEntity.ok("");
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/activation/")
+    public ResponseEntity<String> activate(@RequestBody Licence licence) throws Exception
+    {
+        Licence decryptRsaLicence = super.decryptRsaLicence(licence);
+        if (decryptRsaLicence.getMacs().size() == 0) return ResponseEntity.status(400).build();
+        if (this.licenceService.activate(decryptRsaLicence)) return ResponseEntity.ok().build();
+        return ResponseEntity.status(400).body("This licence is not valid or already activated.");
+    }
+
+    @GetMapping("/activation/generate/")
+    public ResponseEntity<Licence> genLicence() throws Exception
+    {
+        OutputStream outputStream = new FileOutputStream(new File("C:\\Users\\Frb999\\Documents\\licence.lic"));
+        outputStream.write(this.licenceService.generate().toByteArray());
+        outputStream.close();
+
+        return ResponseEntity.ok(this.licenceService.generate());
     }
 }

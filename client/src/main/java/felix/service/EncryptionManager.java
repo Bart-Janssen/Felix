@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import felix.main.FelixSession;
 import felix.models.AesEncryptedMessage;
 import felix.models.JwtToken;
+import felix.models.Licence;
 import felix.service.system.AesEncryptionManager;
 
 import java.security.GeneralSecurityException;

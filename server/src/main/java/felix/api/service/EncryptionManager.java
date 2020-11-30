@@ -9,8 +9,7 @@ import felix.api.controller.WebSocket;
 import felix.api.models.*;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class EncryptionManager
 {
@@ -49,5 +48,19 @@ public abstract class EncryptionManager
                 return type;
             }
         };
+    }
+
+    protected Licence decryptRsaLicence(Licence licence) throws GeneralSecurityException
+    {
+        List<String> macs = new ArrayList<>();
+        for (String encryptedMac : licence.getMacs())
+        {
+            macs.add(RsaEncryptionManager.decrypt(encryptedMac));
+        }
+        return Licence.builder()
+                .token(UUID.fromString(RsaEncryptionManager.decrypt(licence.getEncryptedToken())))
+                .sign(licence.getSign())
+                .macs(macs)
+                .build();
     }
 }
