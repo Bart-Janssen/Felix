@@ -1,5 +1,6 @@
 package felix.main;
 
+import felix.fxml.messageBox.CustomOkMessage;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,9 +25,25 @@ public class Felix extends Application
         primaryStage.setScene(scene);
         synchronized (FelixSession.class)
         {
-            FelixSession.connectToServer(primaryStage);
+            if (!FelixSession.connectToServer())
+            {
+                new CustomOkMessage(primaryStage, "Error while connecting, application shutting down.").show();
+                System.exit(0);
+                return;
+            }
         }
-        new LicenceChecker().checkLicence(true, scene);
+        if (!FelixSession.getInstance().isConnected())
+        {
+            new CustomOkMessage(primaryStage, "Client is not connected, application shutting down.").show();
+            System.exit(0);
+            return;
+        }
+        if (!new LicenceChecker().checkLicence(true, scene))
+        {
+            new CustomOkMessage(primaryStage, LicenceChecker.getMessage()).show();
+            System.exit(0);
+            return;
+        }
         primaryStage.show();
     }
 

@@ -6,14 +6,9 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import felix.controllers.EventClientSocket;
 import felix.controllers.HeartBeatThread;
 import felix.fxml.messageBox.CustomOkMessage;
-import felix.fxml.messageBox.FXML_MessageBoxStatus;
 import felix.models.*;
 import felix.service.EncryptionManager;
 import felix.service.system.RsaEncryptionManager;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.stage.Stage;
-
 import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.util.*;
@@ -29,6 +24,11 @@ public class FelixSession extends EncryptionManager
     public static FelixSession getInstance()
     {
         return instance == null ? new FelixSession() : instance;
+    }
+
+    boolean isConnected()
+    {
+        return websocket != null && websocket.isOpen();
     }
 
     public void initialize(InitWebSocketMessage initWebSocketMessage)
@@ -49,7 +49,7 @@ public class FelixSession extends EncryptionManager
 
     public static String getIp()
     {
-        return "127.0.0.1";
+        return "10.10.2.125";  //10.10.2.125
     }
 
     public Boolean isInitialized()
@@ -62,7 +62,7 @@ public class FelixSession extends EncryptionManager
         FelixSession.token = token;
     }
 
-    static void connectToServer(Stage stage) throws Exception
+    static boolean connectToServer()
     {
         try
         {
@@ -76,10 +76,11 @@ public class FelixSession extends EncryptionManager
                 heartBeatThread.setWebSocket(websocket);
                 heartBeatThread.start();
             }
+            return websocket.isOpen();
         }
         catch (Exception e)
         {
-            new CustomOkMessage(stage, "Error while connecting.").show();
+            return false;
         }
     }
 

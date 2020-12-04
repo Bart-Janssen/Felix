@@ -28,43 +28,67 @@ class LicenceChecker
     private static final String SIGN = "Sign:";
     private static final String LIC_FILE_LOCATION = System.getenv("LOCALAPPDATA") + "\\Felix";
     private static final String LIC_FILE = "\\licence.lic";
+    private static String message;
 
     private IUserService userService = new UserService();
 
-    void checkLicence(boolean skipVirtual, Scene scene) throws Exception
+    public static String getMessage()
+    {
+        return message;
+    }
+
+    boolean checkLicence(boolean skipVirtual, Scene scene) throws Exception
     {
         List<String> macs = this.getMacs();
         if (macs.size() == 0) this.checkLicence(false, scene);
-        if (macs.size() == 0 && !skipVirtual) return;
+        if (macs.size() == 0 && !skipVirtual) return false;
         File directory = new File(LIC_FILE_LOCATION);
         if (!directory.exists()) directory.mkdir();
         if (!new File(LIC_FILE_LOCATION + LIC_FILE).exists())
         {
-            this.activate(scene);
-            return;
+            return this.activate(scene);
         }
         Licence licence = this.getLicenceFromFile(new File(LIC_FILE_LOCATION + LIC_FILE));
-        if (!this.verify(licence)) return;
+        if (!this.verify(licence)) return false;
         licence.setMacs(macs);
-        this.userService.checkLicence(licence);
+        try
+        {
+            this.userService.checkLicence(licence);
+            return true;
+        }
+        catch (BadRequestException e)
+        {
+            message = "Licence is not known.";
+            return false;
+        }
     }
 
-    private void activate(Scene scene) throws Exception
+    private boolean activate(Scene scene) throws Exception
     {
         List<String> macs = this.getMacs();
-        File selectedLicence = new FileChooser().showOpenDialog(scene.getWindow());
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Felix - Select licence");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("LIC files (*.lic)", "*.lic"));
+        File selectedLicence = fileChooser.showOpenDialog(scene.getWindow());
+        if (selectedLicence == null)
+        {
+            message = "You need to select a licence file.";
+            return false;
+        }
         Licence licence = this.getLicenceFromFile(selectedLicence);
         licence.setMacs(macs);
-        if (!this.verify(licence)) return;
+        if (!this.verify(licence)) return false;
         try
         {
             this.userService.activate(licence);
             File licenceFile = new File(LIC_FILE_LOCATION + LIC_FILE);
             Files.write(licenceFile.toPath(), Files.readAllBytes(selectedLicence.toPath()));
+            return true;
         }
         catch (BadRequestException e)
         {
-            System.out.println("This licence is already activated.");
+            message = "This licence is already activated.";
+            return false;
         }
     }
 
@@ -77,10 +101,10 @@ class LicenceChecker
         signature.update(licence.toSignString().getBytes());
         if (!signature.verify(Base64.getDecoder().decode(licence.getSign())))
         {
-            System.out.println("Licence is not valid.");
+            message = "Licence is not valid.";
             return false;
         }
-        System.out.println("Licence is valid.");
+        message = "Licence is valid.";
         return true;
     }
 

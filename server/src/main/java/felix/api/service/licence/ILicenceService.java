@@ -1,7 +1,6 @@
 package felix.api.service.licence;
 
 import felix.api.models.Licence;
-
 import java.security.GeneralSecurityException;
 
 public interface ILicenceService

@@ -38,7 +38,6 @@ public class LicenceService implements ILicenceService
     {
         Licence licence = this.licenceRepository.save(Licence.builder().activated(false).build());
         licence.setSign(new LicenceManager().sign(licence));
-        System.out.println(licence.getSign());
         return licence;
     }
 

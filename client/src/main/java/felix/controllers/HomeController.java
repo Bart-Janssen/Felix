@@ -1,6 +1,5 @@
 package felix.controllers;
 
-import com.google.gson.Gson;
 import felix.fxml.FXML_Chat;
 import felix.fxml.FXML_Group;
 import felix.fxml.FXML_GroupMember;
@@ -32,6 +31,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HomeController extends MainController implements IMessageListener, ILoginListener
 {
@@ -47,14 +48,15 @@ public class HomeController extends MainController implements IMessageListener, 
     private IGroupService groupService = new GroupService();
     private String chatTarget = null;
     private boolean isGroupChat;
+    private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
         this.buttonSend.setDisable(true);
         this.textFieldMessage.setDisable(true);
-        buttonSend.setStyle("-fx-background-color: #606060; -fx-border-width: 1; -fx-background-radius: 0; -fx-border-color: transparent;");
-        buttonSend.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/send.png"))));
+        this.buttonSend.setStyle("-fx-background-color: #606060; -fx-border-width: 1; -fx-background-radius: 0; -fx-border-color: transparent;");
+        this.buttonSend.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("/send.png"))));
         Platform.runLater(() -> super.initController(this.buttonSend, this));
         this.setEvents();
         this.openFriends();
@@ -225,7 +227,12 @@ public class HomeController extends MainController implements IMessageListener, 
     @Override
     public void onMessage(WebSocketMessage webSocketMessage)
     {
-        Platform.runLater(() -> this.vBoxChats.getChildren().add(new FXML_Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage(), new Date())));
+        Platform.runLater(() ->
+        {
+            Matcher matcher = Pattern.compile(URL_REGEX).matcher(webSocketMessage.getMessage());
+            if (matcher.find()) this.vBoxChats.getChildren().add(new FXML_Chat("Felix automatic message", "Be carefully with opening links.", new Date()));
+            this.vBoxChats.getChildren().add(new FXML_Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage(), new Date()));
+        });
     }
 
     @Override

@@ -15,10 +15,10 @@ public class Licence
 
     public String toSignString()
     {
-        return "Publisher:" + publisher + System.lineSeparator() +
-                "Application:" + application + System.lineSeparator() +
-                "Token:" + token + System.lineSeparator() +
-                "SignAlgorithm:" + algorithm + System.lineSeparator();
+        return "Publisher:" + publisher + (char)0b00001101 + (char)0b00001010 +
+                "Application:" + application + (char)0b00001101 + (char)0b00001010 +
+                "Token:" + token + (char)0b00001101 + (char)0b00001010 +
+                "SignAlgorithm:" + algorithm + (char)0b00001101 + (char)0b00001010;
     }
 
     public UUID getToken() {

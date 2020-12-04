@@ -11,10 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import felix.api.configuration.JwtTokenGenerator;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 @RestController
@@ -116,13 +112,7 @@ public class AuthenticationController extends EncryptionManager
     public ResponseEntity<String> checkActivation(@RequestBody Licence licence) throws Exception
     {
         Licence decryptRsaLicence = super.decryptRsaLicence(licence);
-        System.out.println(new Gson().toJson(decryptRsaLicence));
-
-        if (this.licenceService.check(decryptRsaLicence))
-        {
-            System.out.println("its all good");
-            return ResponseEntity.ok("");
-        }
+        if (this.licenceService.check(decryptRsaLicence)) return ResponseEntity.ok("");
         return ResponseEntity.badRequest().build();
     }
 
@@ -135,13 +125,11 @@ public class AuthenticationController extends EncryptionManager
         return ResponseEntity.status(400).body("This licence is not valid or already activated.");
     }
 
-    @GetMapping("/activation/generate/")
-    public ResponseEntity<Licence> genLicence() throws Exception
+    @GetMapping("/activation/generate/{id}/")
+    public ResponseEntity<Licence> genLicence(@PathVariable("id") String id) throws Exception
     {
-        OutputStream outputStream = new FileOutputStream(new File("C:\\Users\\Frb999\\Documents\\licence.lic"));
-        outputStream.write(this.licenceService.generate().toByteArray());
-        outputStream.close();
-
-        return ResponseEntity.ok(this.licenceService.generate());
+        if (!id.equals("tCbzOLx6voZbQnHUtwTNHcIwEGyrgtTsB8iEB9NwPs1+y6alncnEjiH4WzpaVmuTNwvpdQKzKFB4O9pGDs+9Gj+rlD8T3CAp3DlxWbkt9aPHpaO3YqpzbYyTFKtsay0Bfd1EB1lE9rr3+fmK7aZx0LL7RMAF8eP")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        Licence licence = this.licenceService.generate();
+        return ResponseEntity.ok(licence);
     }
 }
