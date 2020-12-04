@@ -11,7 +11,10 @@ import java.util.Date;
 
 public class FXML_Chat extends VBox
 {
-    public FXML_Chat(String fromDisplayName, String message, Date date)
+    private static final String DEFAULT_COLOR = "-fx-background-color: #909090;";
+    private static final String ALERT_COLOR = "-fx-background-color: #B0B0B0;";
+
+    public FXML_Chat(String fromDisplayName, String message, Date date, boolean system)
     {
         super.setPrefWidth(614);
         super.setMinHeight(45);
@@ -33,7 +36,7 @@ public class FXML_Chat extends VBox
         messageLabel.setPrefWidth(600);
         messageLabel.setWrapText(true);
         messageLabel.setPadding(new Insets(0, 0, 0, 10));
-        super.setStyle("-fx-background-color: #909090; -fx-background-radius: 5 5 5 5; -fx-border-radius: 5 5 5 5;");
+        super.setStyle((system ? ALERT_COLOR : DEFAULT_COLOR) + "-fx-background-radius: 5 5 5 5; -fx-border-radius: 5 5 5 5;");
         super.getChildren().addAll(gridPane, messageLabel);
     }
 }

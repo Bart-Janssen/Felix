@@ -48,7 +48,7 @@ public class HomeController extends MainController implements IMessageListener, 
     private IGroupService groupService = new GroupService();
     private String chatTarget = null;
     private boolean isGroupChat;
-    private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+    private static final String URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -105,7 +105,7 @@ public class HomeController extends MainController implements IMessageListener, 
         try
         {
             List<FXML_Chat> chats = new ArrayList<>();
-            this.chatService.getAllGroup(group.getId()).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), new Date(chat.getDate()))));
+            this.chatService.getAllGroup(group.getId()).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), new Date(chat.getDate()), false)));
             this.vBoxChats.getChildren().addAll(chats);
         }
         catch (Exception e)
@@ -125,7 +125,7 @@ public class HomeController extends MainController implements IMessageListener, 
         try
         {
             List<FXML_Chat> chats = new ArrayList<>();
-            this.chatService.getAll(friendDisplayName).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), new Date(chat.getDate()))));
+            this.chatService.getAll(friendDisplayName).forEach(chat -> chats.add(new FXML_Chat(chat.getDisplayNameFrom(), chat.getMessage(), new Date(chat.getDate()), false)));
             this.vBoxChats.getChildren().addAll(chats);
         }
         catch (Exception e)
@@ -215,7 +215,7 @@ public class HomeController extends MainController implements IMessageListener, 
                 return;
             }
             FelixSession.getInstance().sendMessage(this.textFieldMessage.getText(), this.isGroupChat, this.chatTarget);
-            this.vBoxChats.getChildren().add(new FXML_Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText(), new Date()));
+            this.vBoxChats.getChildren().add(new FXML_Chat(super.getUser().getDisplayName(), this.textFieldMessage.getText(), new Date(), false));
             this.textFieldMessage.setText("");
         }
         catch (Exception e)
@@ -230,8 +230,8 @@ public class HomeController extends MainController implements IMessageListener, 
         Platform.runLater(() ->
         {
             Matcher matcher = Pattern.compile(URL_REGEX).matcher(webSocketMessage.getMessage());
-            if (matcher.find()) this.vBoxChats.getChildren().add(new FXML_Chat("Felix automatic message", "Be carefully with opening links.", new Date()));
-            this.vBoxChats.getChildren().add(new FXML_Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage(), new Date()));
+            if (matcher.find()) this.vBoxChats.getChildren().add(new FXML_Chat("Felix automatic message", "Be carefully with opening links.", new Date(), true));
+            this.vBoxChats.getChildren().add(new FXML_Chat(webSocketMessage.getFrom(), webSocketMessage.getMessage(), new Date(), false));
         });
     }
 
