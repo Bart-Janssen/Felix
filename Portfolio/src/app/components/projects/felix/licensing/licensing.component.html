@@ -1,0 +1,50 @@
+<p class="center-text">Licensing</p>
+<div class="middle-text-space">
+  <p>Een onderdeel van mijn eigen bedachte uitdagingen was digital signing. Omdat ik voor mijn applicatie die ik ook gebruik voor het Blue vs Red team event gekozen heb 
+    voor een desktop applicatie, kan ik dit onderdeel hier prima en nuttig in aantonen. Voor het aantonen hiervan wil ik gebruik maken van digtale licenties. Als een 
+    gebruiker de applicatie installeert op zijn/haar computer dan wordt er gevraagd om een licentie. Deze licentie wordt tijdens het activeren gekoppeld aan de 
+    computer van de gebruiker op basis van MAC-addressen. Zo is de licentie maar een keer geldig.</p>
+
+  <h3>Licentie</h3>
+  <p class="no-bottom-margin">De licentie heeft verschillende velden waarmee de licentie wordt geidentificeerd. De licentie heeft informatie over de applicatie, 
+    waar de licentie vanaf komt, een token, het algoritme waamee de licentie ondertekend is en een digitale handtekening die ondertekend is met een private key. 
+    De functie "toSignString" in de onderstaande afbeelding is de functie die gebruikt wordt voor het ondertekenen. Zoals te zien is, staan er binaire waardes in. 
+    Eerst had ik een functie van Java die automatisch op basis van het besturingssysteem het 'new line' karakter gebruikt. Deze functie werkt prima, alleen het is niet handig om deze te gebruiken 
+    om op Linux digitaal te ondertekenen en onder windows te verifiëren omdat het 'new line' karakter op Linux "\n" is en op windows "\r\n" is wat de hele string om 
+    te ondertekenen verschillend maakt. Om die reden heb ik de waarde vast gezet op (00001101 en 00001010), dit is de binaire waarde van "\r\n", beide systemen 
+    kunnen hiermee omgaan.</p>
+  <img src="../../../../assets/felix/code/licence-code.png">
+  <p class="image">Afbeelding 1 Licentie-code</p>
+  <p class="no-bottom-margin">Het licentiebestand dat de gebruiker zelf krijgt, ziet er zo uit:</p>
+  <img src="../../../../assets/felix/licence.png">
+  <p class="image">Afbeelding 2 Licentie bestand</p>
+
+  <h3>Genereren van licenties</h3>
+  <p class="no-bottom-margin">Het genereren van een digitale licentie wordt gedaan op een API-call die beschermt is met een enorm lang wachtwoord. Alle onderdelen van 
+    de licentie worden gebruikt om het te ondertekenen. Het ondertekenen zelf gebeurt met een private key die alleen hiervoor bestemd is. De digitale handtekening zelf 
+    mag publiekelijk zichtbaar zijn en om de licentie te kunnen verifiëren wordt deze ook in de licentie toegevoegd.</p>
+  <img src="../../../../assets/felix/code/licence-sign-code.png">
+  <p class="image">Afbeelding 3 Licentie ondertekenen</p>
+  
+  <h3>Verifiëren van een licentie</h3>
+  <p class="no-bottom-margin">Als een gebruiker de client voor de eerste keer opstart dan wordt er om een licentie gevraagd. Deze accepteert alleen bestanden met een 
+    .lic extensie. Als de gebruiker deze heeft geselecteerd, dan wordt dit bestand door de client ingeladen en geverifieerd. Het verifiëren gebeurt met de public key 
+    die bij de private key hoort waarmee deze is ondertekend. Als de client vindt dat deze geldig is, dan wordt er een aanvraag naar de server gedaan, de server 
+    verifieerd deze licentie ook en als de server deze geldig verklaart dan wordt er in de server ook gekeken of deze al eerder geactiveerd is. Alleen als deze niet 
+    eerder geactiveerd is en geldig is, wordt de licentie geaccepteerd. Met de aanvraag worden MAC-addressen van de client meegestuurd en worden samen met de licentie 
+    versleuteld in de database opgeslagen.</p>
+  <img src="../../../../assets/felix/code/licence-verify-code.png">
+  <p class="image">Afbeelding 4 Licentie verifiëren</p>
+
+  <h3>Security</h3>
+  <p class="no-bottom-margin">Het is niet mogelijk om een licentie te vervalsen. Zouden er velden worden aangepast zoals bijvoorbeeld de ID van een licentie van iemand 
+    anders, dan komt deze met het verifiëren niet meer overeen met de meegegeven digitale handtekening waardoor de licentie niet meer geldig is. Als dit wordt geprobeerd, 
+    dan krijgt de gebruiker een foutmelding en kan de gebruiker het opnieuw proberen. Ook als de licentie al eerder geactiveerd is of als hij niet bekend is in de server 
+    dan krijgt de gebruiker hier ook een melding van.</p>
+  <img src="../../../../assets/felix/licence-not-valid.png">
+  <p class="image">Afbeelding 5 Melding ongeldige licentie</p>
+
+  <br>
+  <br>
+  <br>
+</div>

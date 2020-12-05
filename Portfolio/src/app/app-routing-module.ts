@@ -23,6 +23,8 @@ import { ReverseengeneeringComponent } from './components/projects/workshop/reve
 import { SecuritytestingComponent } from './components/projects/felix/securitytesting/securitytesting.component';
 import { OnderzoeksplanComponent } from './components/projects/onderzoeksplan/onderzoeksplan.component';
 import { RsaComponent } from './components/projects/rsa/rsa.component';
+import { LicensingComponent } from './components/projects/felix/licensing/licensing.component';
+import { CompilingComponent } from './components/projects/compiling/compiling.component';
 
 const routes: Routes = [
   {
@@ -71,6 +73,10 @@ const routes: Routes = [
     component: RsaComponent
   },
   {
+    path: "compiling_project",
+    component: CompilingComponent
+  },
+  {
     path: "workshop_project",
     component: WorkshopComponent,
   },
@@ -117,6 +123,10 @@ const routes: Routes = [
   {
     path: "security_testing",
     component: SecuritytestingComponent
+  },
+  {
+    path: "licensing",
+    component: LicensingComponent
   },
   {
     path: "not-implemented-yet",

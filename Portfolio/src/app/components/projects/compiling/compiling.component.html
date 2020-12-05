@@ -1,0 +1,171 @@
+<p class="center-text">Compileren</p>
+<div class="middle-text-space">
+  <p>Compileren is een van mijn leerdoelen waar ik meer van wil leren. Ik vind het leuk om te kunnen programmeren, maar ik wil ook graag weten wat er na het 
+    programmeren gebeurt. Een computer kan geen code lezen maar een computer leest instructies. Ik ga dieper in op de manier hoe dit werkt en hoe die 
+    instructies wel door de computer begrepen worden.</p>
+
+  <h3>Compiler</h3>
+  <p>Het compileren van een applicatie wordt gedaan met een compiler. Een compiler is een programma wat code om kan zetten naar een andere taal. Deze andere 
+    talen zijn vaak veel lagere level talen zoals Assembly of machine code zodat er een uitvoerbaar programma ontstaat dat een computer kan lezen. Het compileren 
+    van een applicatie bevat vier stappen: Preprocessing, Compiling, Assembler en Linking.</p>
+  <img src="../../../../assets/compiling/compiler-steps.jpg">
+  <p class="image">Afbeelding 1 Compileer stappen</p>
+    
+  <h3>Preprocessing</h3>
+  <p class="no-bottom-margin">Preprocessing is de eerste stap van het compilatie process. Binnen preprocessing worden 4 stappen uitgevoerd:</p>
+  <ul>
+    <li class="text">Trigraph replacement - Dit is het vervangen van karakters zoals '??('' dat volgens de programmeertaal specificaties niet nodig zijn, dit 
+      is tegenwoordig bijna niet meer gebruikt, maar mogelijk in oudere libraries die geimporteerd worden wel;</li>
+    <li class="text">Line splicing - Dit is het splitsen van escape karakters zoals '\n';</li>
+    <li class="text">Tokenization - Dit verwijderd commentaar;</li>
+    <li class="text">Macro expansion and directive handling - Macro's zijn bijvoorbeeld in de C programmeertaal '#define', '#defineif' en '#endif'. Als een 
+      '#defineif' niet waar is dan verwijderd deze die code.</li>
+  </ul>
+
+  <h3>Compiling</h3>
+  <p class="no-bottom-margin">Compiling is de tweede stap van het compilatie process. Deze stap bestaat uit 6 stappen: Lexial analysis, Syntax analyzer, 
+    Semantic analyzer, Intermediate Code Generator, Code Optimizer en Target Code Generation.</p>
+  <img src="../../../../assets/compiling/compiler-design.jpg">
+  <p class="image">Afbeelding 2 Compiler stappen</p>
+
+  <br>
+  <p><b>Lexial analysis</b></p>
+  <p class="no-bottom-margin">Lexial analysis, ook wel lexing genoemd, is de eerste fase binnen de compiler. Lexing is het omzetten van bepaalde strings in code naar 
+    een token. Verschillende tokens zijn:</p>
+  <ul>
+    <li class="text">Identifiers - Dit zijn namen die de programmeur heeft bedacht voor variable om code leesbaar te maken;</li>
+    <li class="text">Keywords - Dit zijn namen die al in de code bestaan zoals 'while', 'return', 'if', 'break';</li>
+    <li class="text">Seperators - Dit zijn haakjes en comma's etc zoals '&#123;', '&#125;', '(', ')', ',', ';', ':';</li>
+    <li class="text">Operators - Dit zijn rekentekens zoals '+', '-', '*', '~';</li>
+    <li class="text">Iteral - Dit zijn nummers, strings, booleans zoals '1', '"some text"', 'false', 'true';</li>
+    <li class="text">Comment - Dit is door de programmeur gedefinieerd commentaar. Dit kan uitgeschakelde code zijn of gewoon text voor de programmeurs.</li>
+  </ul>
+  <p>Een heel stuk code kan via lexing omgezet worden naar deze tokens, de output van een voorbeeld stukje code staat hieronder vermeld:</p>
+  <p>Het voorbeeld code is: someNumber = otherNumber + 15 - (5 * 3);</p>
+  <p>De output van lexing is: [(identifier, someNumber), (operator, =), (identifier, otherNumber), (operator, +), (iteral, 15), (operator, -), (seperator, (), 
+    (iteral, 5), (operator, *), (iteral, 3), (seperator, )), (seperator, ;)]</p>
+
+  <br>
+  <p><b>Syntax analyzer</b></p>
+  <p>De syntax analyzer is de tweede fase van de compiler en deze fase checkt dat de code voldoet aan de code syntax. Als er een stukje Java code is als: 'int number = 4;' 
+    dan voldoet dit aan de syntax vereisten van de Java programmeertaal. Als dit stukje code geschreven zou staan als: 'int 4 = 4;', dan voldoet dit niet aan de syntax 
+    omdat de eerste '4' geen iteral is terwijl dit wel verwacht wordt.</p>
+  
+  <br>
+  <p><b>Semantic analyzer</b></p>
+  <p class="no-bottom-margin">Semantic analyzer is de derde fase van de compiler. Deze fase controleert of de code declaraties correct zijn. Een belangrijk deel hiervan 
+    is het controleren van datatypes. Als een datatype niet klopt zoals het voorbeeld van dit stukje code: 'int number = "something";' of 'if (25.9 == true)', dan gaat 
+    het compileren fout omdat de types niet overeenkomen en krijgt de gebruiker hier een melding van zoals dit voorbeeld:</p>
+  <img src="../../../../assets/compiling/type-error.png">
+  <p class="image">Afbeelding 3 Type error</p>
+
+  <br>
+  <p><b>Intermediate Code Generator</b></p>
+  <p class="no-bottom-margin">Intermediate code is de vierde fase van de compiler. Deze fase elimineerd de noodzaak van een nieuwe volledige compiler voor elke unieke 
+    machine door het analysegedeelte voor alle compilers hetzelfde te houden. Dit kan gedaan worden in een van deze drie stappen:</p>
+  <ul>
+    <li class="text">Postfix Notation - Dit is het schrijven van code als: '(a + b) + (c - D)' als: 'ab + cd -+';</li>
+    <li class="text">Three-Address Code - Dit is het schrijven van code als: '(a + b) + (c - D)' als: 't1 = a + b; t2 = c - d; t3 = t1 * t2;';</li>
+    <li class="text">Syntax Tree - Dit maakt een hele tree van de code als:</li>
+    <img src="../../../../assets/compiling/syntax-tree.png">
+    <p class="image">Afbeelding 4 Syntax tree</p>
+  </ul>
+
+  <br>
+  <p><b>Code Optimizer</b></p>
+  <p class="no-bottom-margin">Code Optimizer is de vijfde fase van de compiler. Deze zorgt ervoor dat de code verder geoptimaliseerd wordt om zo het CPU en RAM 
+    verbruik te verminderen door bapaalde code anders te schrijven dan eerste instantie was. Dat zou kunnen als in het volgende voorbeeld het eerste stukje code 
+    te herschrijven naar het tweede stukje code. Door niet iedere iteratie een nieuw variable aan te maken, scheelt dit wat RAM verbruik.</p>
+  <img src="../../../../assets/compiling/code-optimizing.png">
+  <p class="image">Afbeelding 5 Code optimizing</p>
+
+  <br>
+  <p><b>Target Code Generation</b></p>
+  <p>Target Code Generation is de zesde en laatste fase van de compiler. Deze fase zorgt dat de code omgezet wordt naar Assembly code.</p>
+  <p class="no-bottom-margin">Een while loop in java die er uitziet als volgd:</p>
+  <img src="../../../../assets/compiling/while-loop-java.png">
+  <p class="image">Afbeelding 6 While loop Java</p>
+  <p class="no-bottom-margin">Zou in Assembly eruit komen zien als:</p>
+  <img src="../../../../assets/compiling/while-loop-asm.png">
+  <p class="image">Afbeelding 7 While loop Assembly</p>
+
+  <h3>Assembler</h3>
+  <p class="no-bottom-margin">Assembler is de derde stap van het compilatie process. Ieder platform heeft een eigen assembler om de gegenereerde assembly code uit de 
+    vorige stappen om te zetten naar machine code. De output van deze stap is een object file. Eigenlijk vertaalt deze stap assembly code naar machine code. Machine 
+    code praat rechtstreeks met de 'API' van de CPU. De CPU heeft niet echt een 'API', maar op basis van deze instructies kan de CPU bepaalde taken uitvoeren wat 
+    uiteindelijk weer gebruikt wordt om met het geheugen of registers te communiceren. De Assembly taal dat uit de vorige stap komt is nog redelijk leesbaar voor 
+    mensen, machine code is zo goed als niet meer leesbaar voor de meeste mensen.</p>
+  <img class="smaller" src="../../../../assets/compiling/machine-code.png">
+  <p class="image">Afbeelding 8 Machine code</p>
+
+  <h3>Linking</h3>
+  <p class="no-bottom-margin">Linking is de vierde en laatste stap van het compilatie process. Deze stap gebruikt de eerder gemaakte machine code en koppelt deze aan 
+    de libraries die gebruikt worden binnen de geschreven code. De uitkomst van de geschreven code en de libraries wordt één uitvoerbaar programma.</p>
+  <img src="../../../../assets/compiling/compiler-linker.png">
+  <p class="image">Afbeelding 9 Linker</p>
+
+  <h3>Interpreter</h3>
+  <p class="no-bottom-margin">Een interpreter is een programma dat code direct analyseerd op het gedrag en direct als instructies uitvoerd in plaats van dat deze eerst 
+    naar machine code gezet wordt. Het voordeel van een interpreter is dat deze vanuit source code direct uitgevoerd kan worden, een nadeel is dat dit iedere keer 
+    opnieuw moet bij het gebruiken van de applicatie en dus kost dit meer systeem bewerkingen. In tegenstelling van een compiler, kan een compiler de code omzetten dat 
+    later vaker gebruikt kan worden zonder dat deze iedere keer opnieuw gecompileerd moet worden. Bij talen waar datatypes belangrijke toepassingen zijn, is een 
+    compiler beter te gebruiken dan een interpreter. Python is een voorbeeld van een taal die een interpreter gebruikt, deze kan direct in een terminal gebruikt worden 
+    om bijvoorbeeld iets snel te kunnen testen zonder dat hier een heel compilatieprocess bij mee komt.</p>
+  <img src="../../../../assets/compiling/python.png">
+  <p class="image">Afbeelding 10 Pythin direct in terminal</p>
+
+  <h3>Disassembly</h3>
+  <p class="no-bottom-margin">Het is ook mogelijk om een aplpicatie terug te zetten naar leesbare code, dit heet decompileren en dit gebeurt via een decompiler. Een 
+    decompiler is eigenlijk het tegenovergestelde van een compiler. De code als uitkomst van een decompiler is vaak werkende code en kan weer gecompileerd worden, maar 
+    de code is vaak niet 100% hetzelfde als de orginele code. Decompilers worden vaak gebruikt voor reverse engineering van applicaties. In mijn workshop van 
+    <a routerLink="/reverse_engineering_workshop" routerLinkActive="active">reverse engineering</a>
+    gebruik ik ook een decompiler. Hier is ook goed het verschil te zien van de orginele code en de gedecompileerde code, wat te zien is tussen afbeelding 3 en 5, 
+    en tussen afbeelding 8 en 9 van de workshop. De werking van deze code's zijn herzelfde alleen ze zien er anders uit. Soms kunnen variable namen ook niet 
+    teruggehaald worden en worden deze vervangen met andere namen zoals dit voorbeeld hieronder waarin eerst de source code te zien is met daaronder de mogelijk 
+    gedecompileerde code:</p>
+  <img src="../../../../assets/compiling/decompiled-names.png">
+  <p class="image">Afbeelding 11 Variable namen</p>
+
+  <h3>Instructies</h3>
+  <p>De instructies dat een systeem kent hangt van de CPU af. 2 bekende voorbeelden hiervan zijn de x86 en de arm instructie sets. Een instructie voor het opahalen 
+    van data uit een geheugenlocatie werkt anders op arm dan op x86. Een CPU kent veel verschillende instructies om verschillende taken uit te voeren. In de x86 Assembly 
+    programmeertaal zelf wordt gebruik gemaakt van een x86 instructie set. Deze instructies zijn door mensen te lezen en worden later door de CPU omgezet naar opcode. 
+    Opcode wordt als hexidecimaal of binair gepresenteerd die de CPU kent. De CPU kan deze opcode vervolgens naar het geheugen sturen. Voornamelijk deze opcode's zijn 
+    verschillend pet instructie set. De opcode voor MOV gepresenteerd als hexadecimaal kan op de ene instructie set 0xAB zijn, en op de andere instructie set 0x0F; 
+    bij de intel x86 instructie set is de opcode voor MOV: 0xA0, 0xA1, 0xA2 en 0xA3. Opcode zelf wordt zelden tot nooit door mensen geprogrammeerd.</p>
+
+  <h3>Toepassen</h3>
+  <p class="no-bottom-margin">Het is mogelijk om de vier stappen: Preprocessing, Compiling, Assembler en Linking te bekijken tijdens het compileren van een programma. 
+    Om dit ook een keer gedaan te hebben ga ik een klein c programma wat 'main.c' heet, stap voor stap compileren zodat er een goed beeld is van deze stappen.</p>
+  <img src="../../../../assets/compiling/c-program.png">
+  <p class="image">Afbeelding 12 C programma</p>
+    
+  <p class="no-bottom-margin">Om alleen de preprocessing stap uit te voeren, moet het volgend commando uitgevoerd worden: 'gcc -E main.c -o main.i'. In de uitkomst 
+    hiervan is te zien dat de '#include&lt;stdio.h&gt;' vervangen is met een helehoop andere code.</p>
+  <img src="../../../../assets/compiling/preprocessing.png">
+  <p class="image">Afbeelding 13 Preprocessing</p>
+
+  <p class="no-bottom-margin">Als ik de compiling stap wil uitvoeren, dan moet ik de output van de preprocessing stap (main.i) gebruiken als input voor deze stap en 
+    vervolgens het commando: 'gcc -S main.i -o main.s' uitvoeren. In de output hiervan is te zien dat dit nog herkenbare leesbare assembly code is.</p>
+  <img src="../../../../assets/compiling/compiling.png">
+  <p class="image">Afbeelding 14 Compiling</p>
+
+  <p class="no-bottom-margin">Daarna is de assembler aan de beurt. Om deze te kunnen uitvoeren moet de output van de compiling stap (main.s) gebruikt worden als 
+    input voor het volgende commando: 'gcc -c main.s -o main.o'. De output hiervan is zoals te zien niet meer menselijk leesbaar. Er staan nog wat bekende assembly 
+    secties zoals '.data' en '.bss'.</p>
+  <img src="../../../../assets/compiling/assembler.png">
+  <p class="image">Afbeelding 15 Assembler</p>
+
+  <p class="no-bottom-margin">Als laatste stap kan het programma nog gelinkt worden met de libraries. Ook voor deze stap gebruik ik de output van de assembler stap 
+    (main.o). Vervolgens met het commando: 'gcc main.o -o main.out' kan de laatste uitvoerbare output gemaakt worden.</p>
+  <img src="../../../../assets/compiling/final-output.png">
+  <p class="image">Afbeelding 16 Totale output</p>
+
+  <p class="no-bottom-margin">Dit bestand is werkelijk uitvoerbaar en als ik dit uitvoer krijg ik de output die ik verwacht.</p>
+  <img src="../../../../assets/compiling/result.png">
+  <p class="image">Afbeelding 17 Resultaat</p>
+
+  <br>
+  <br>
+  <br>
+</div>
