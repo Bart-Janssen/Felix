@@ -103,7 +103,7 @@ public class SessionMap
                 for (User member : alreadyOnlineGroup.getGroupMembers())
                 {
                     UserSession memberSession = this.get(GetterType.DISPLAY_NAME, member.getDisplayName());
-                    memberSessions.add(memberSession);
+                    if (!memberSession.getUser().getId().equals(user.getId())) memberSessions.add(memberSession);
                 }
                 alreadyOnlineGroup.addGroupMember(User.builder().online(user.isOnline()).displayName(user.getDisplayName()).build());
                 this.groups.put(alreadyOnlineGroup.getId(), alreadyOnlineGroup);

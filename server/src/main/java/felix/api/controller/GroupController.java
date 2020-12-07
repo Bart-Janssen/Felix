@@ -5,6 +5,7 @@ import felix.api.exceptions.BadRequestException;
 import felix.api.models.AesEncryptedMessage;
 import felix.api.models.GetterType;
 import felix.api.models.User;
+import felix.api.models.UserSession;
 import felix.api.service.EncryptionManager;
 import felix.api.service.group.IGroupService;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +48,12 @@ public class GroupController extends EncryptionManager
     @PostMapping("/invites/{groupId}")
     public ResponseEntity<AesEncryptedMessage> inviteGroup(@RequestHeader("Authorization") String jwt, @RequestBody AesEncryptedMessage aesEncryptedMessage, @PathVariable String groupId) throws Exception
     {
+        UserSession userSession = WebSocket.getSession(GetterType.TOKEN, jwt);
         String inviteDisplayName = super.aesDecrypt(GetterType.TOKEN, jwt, aesEncryptedMessage.getMessage(), String.class);
         groupId = super.aesDecrypt(GetterType.TOKEN, jwt, groupId.replace(DASH, "/"), String.class);
         User user = this.groupService.invite(UUID.fromString(groupId), inviteDisplayName);
         WebSocket.addGroupsIfAbsent(user);
-        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, jwt, null));
+        UserSession upToDateSession = WebSocket.getSession(GetterType.SESSION_ID, userSession.getSession().getId());
+        return ResponseEntity.ok(aesEncrypt(GetterType.TOKEN, upToDateSession.getToken().getToken(), null));
     }
 }

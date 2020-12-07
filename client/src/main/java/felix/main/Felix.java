@@ -38,6 +38,7 @@ public class Felix extends Application
             System.exit(0);
             return;
         }
+        Thread.sleep(500);
         if (!new LicenceChecker().checkLicence(true, scene))
         {
             new CustomOkMessage(primaryStage, LicenceChecker.getMessage()).show();

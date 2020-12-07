@@ -64,7 +64,7 @@ public class GroupController extends MainController
         }
         catch (Exception e)
         {
-            new CustomOkMessage(stage, "An error occurred when inviting + " + invite.getInvitedUserDisplayName() + ".").show();
+            new CustomOkMessage(stage, "An error occurred when inviting " + invite.getInvitedUserDisplayName() + ".").show();
         }
     }
 
