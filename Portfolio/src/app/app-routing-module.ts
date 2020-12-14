@@ -25,6 +25,8 @@ import { OnderzoeksplanComponent } from './components/projects/onderzoeksplan/on
 import { RsaComponent } from './components/projects/rsa/rsa.component';
 import { LicensingComponent } from './components/projects/felix/licensing/licensing.component';
 import { CompilingComponent } from './components/projects/compiling/compiling.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
+import { PersoonlijkeOntwikkelingComponent } from './components/persoonlijke-ontwikkeling/persoonlijke-ontwikkeling.component';
 
 const routes: Routes = [
   {
@@ -55,6 +57,14 @@ const routes: Routes = [
   {
     path: "reflection",
     component: ReflectionComponent,
+  },
+  {
+    path: "feedback",
+    component: FeedbackComponent
+  },
+  {
+    path: "po",
+    component: PersoonlijkeOntwikkelingComponent
   },
   {
     path: "ethics_project",

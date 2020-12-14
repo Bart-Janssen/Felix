@@ -1,87 +1,143 @@
-<p class="center-text">Concept chat app</p>
+<p class="center-text">Concept chat applicatie Felix</p>
 <div class="middle-text-space">
-  <p>Voor dit semester is het bij software security ook de bedoeling dat ik een applicatie maak waarin verschillende security aspecten ingebouwd zijn, zodat we deze 
+  <p>Voor dit semester is het bij software security de bedoeling dat ik een applicatie maak waarin verschillende security aspecten ingebouwd zijn, zodat we deze 
     applicatie kunnen gebruiken bij het Red team vs Blue team event. Tijdens de eerste workshop van Casper hebben we hier aandacht aan besteed. We hebben een concept 
-    opgezet voor een applicatie. Hierbij was het van belang om ook de autorisatie, rechten en privacy te bepalen over de data die binnen deze applicatie gebruikt wordt.</p>
+    opgezet voor een applicatie. Hierbij was het van belang om ook de autorisatie, rechten en privacy te bepalen over de data die binnen deze applicatie gebruikt wordt.
+    Deze applicatie kan ook gebruikt worden om verschillende leerdoelen in aan te tonen. In dit document wordt ingegaan op wat voor applicatie ik ga maken en wat deze 
+    applicatie inhoudt.</p>
+    
   <br>
-  <p>Hieronder mijn concept tot zover, zoals ik van Casper heb begrepen, is het de bedoeling dat het concept nog op basis van volgende workshops wordt aangepast. Omdat de 
-    workshops in het engels gegeven werden en omdat we dit ook moesten presenteren in de klas waar ook mensen aanwezig waren die geen Nederlands kunnen verstaan, 
-    is het concept in het Engels geschreven. Ik denk dat ik op basis van dit concept al veel verschillende onderwerpen kan aantonen die gedefinieerd staan in mijn leerplan.</p>
+  <h3><b>1 Felix</b></h3>
+  <p class="no-bottom-margin">Felix is de naam van de applicatie waarvoor dit concept is. Felix is een chatapplicatie waarin gebruikers vrienden kunnen toevoegen en met elkaar kunnen chatten. 
+    Het is ook mogelijk om een groep aan te maken en hierin mensen toe te voegen en daarin als groep te chatten. De gebruikers hebben een client ter beschikking 
+    die via de chatserver communiceert naar de andere gebruikers. De afbeelding hieronder laat zien hoe de verbinding loopt van de clients naar de server.</p>
+  <img class="smaller" src="../../../../assets/felix/design.png">
+  <p class="image">Afbeelding 1 Design</p>
+
   <br>
-  <h3><b>1 Hard-software requirements</b></h3>
-  <p class="no-bottom-margin">The chat application has several hardware and software requirements:</p>
+  <h3><b>2 Functionaliteiten</b></h3>
+  <p>Binnen Felix moeten gebruikers een account aan kunnen maken. Daarnaast hebben ze verschillende opties zoals het versturen van vriendschapverzoeken naar andere 
+    gebruikers. Deze gebruikers kunnen deze dan accepteren of wijgeren. Als ze deze geaccepteerd hebben dan kunnen ze met elkaar chatten. Ook kan iemand een groep 
+    aanmaken. De gebruiker die de groep aanmaakt is automatisch de eigenaar. Vervolgens kan deze mensen aan de groep toevoegen en iedereen die in de groep zit kan 
+    hier in chatten. Ook hebben de gebruikers de optie om two factor authentication in te schakelen voor een extra laag beveiliging op hun account. Hieronder een 
+    lijst met de functionele en non-functionele eisen waaraan de applicatie moet voldoen.</p>
+  <p class="no-bottom-margin"><b>Functionele eisen</b></p>
   <ul>
-    <li class="text">Server to run the chat server on;</li>
-    <li class="text">A computer to use the chat client on;</li>
-    <li class="text">Internet connectivity from the computer to the server;</li>
-    <li class="text">Server that runs the database (this can be the same as the one with the chat server).</li>
+    <li class="text">Een gebruiker moet een account kunnen registreren;</li>
+    <li class="text">Een gebruiker moet kunnen inloggen;</li>
+    <li class="text">Een gebruiker moet kunnen uitloggen;</li>
+    <li class="text">Een gebruiker moet zijn/haar account kunnen verwijderen;</li>
+    <li class="text">Een gebruiker moet een chat groep aan kunnen maken;</li>
+    <li class="text">Een gebruiker moet een bericht in een groep kunnen versturen;</li>
+    <li class="text">Een gebruiker moet vriendschapsverzoeken kunnen versturen, accepteren en weigeren;</li>
+    <li class="text">Een gebruiker moet privé berichten kunnen versturen naar vrienden;</li>
+    <li class="text">Een gebruiker moet two factor authenticatie in kunnen schakelen.</li>
   </ul>
+  <p class="no-bottom-margin"><b>Non-functionele eisen</b></p>
+  <ul>
+    <li class="text">De wachtwoorden van de gebruikers moeten versleuteld opgeslagen zijn;</li>
+    <li class="text">De server moet te allen tijde bereikbaar zijn;</li>
+    <li class="text">De chats moeten versleuteld opgeslagen worden;</li>
+    <li class="text">Het verkeer van en naar de server moet versleuteld zijn.</li>
+  </ul>
+
   <br>
-  <h3><b>2 Components</b></h3>
-  <p class="no-bottom-margin">The components needed for the chat application are:</p>
-  <ul>
-    <li class="text">The client for the users;</li>
-    <li class="text">The server that the clients connect with;</li>
-    <li class="text">A database to storage data.</li>
-  </ul>
+  <h3><b>3 Wireframes</b></h3>
+  <p>Wireframes zijn de eerste concept ideëen van hoe de applicatie er ongeveer uit moet komen gaan zien. Er zijn wireframes gemaakt zodat er een overzicht is van 
+    hoe de pagina indeling binnen Felix er uit moet gaan zien.</p>
+  <p class="no-bottom-margin">De homepagina:</p>
+  <img class="smaller" src="../../../../assets/felix/wireframe-home.png">
+  <p class="image">Afbeelding 2 Wireframe homepagina</p>
+
+  <p class="no-bottom-margin">De homepagina:</p>
+  <img class="smaller" src="../../../../assets/felix/wireframe-friends.png">
+  <p class="image">Afbeelding 3 Wireframe vrienden</p>
+
   <br>
-  <h3><b>3 Layers</b></h3>
-  <p class="no-bottom-margin">The components of the chat application server and client exists of three layers:</p>
-  <p class="no-bottom-margin"><b>3.1 Client:</b></p>
+  <h3><b>4 Software en Hardware</b></h3>
+  <p>Felix heeft verschillende vereisten voor de software en hardware. De hardware voor Felix bestaat minimaal uit twee systemen, maar voor een correcte werking zijn 
+    drie systemen aangeraden (twee clients en een server). Hieronder een lijst met de vereiste voor de hardware en software:</p>
+  <p class="no-bottom-margin">Hardware</p>
   <ul>
-    <li class="text">View layer, basically the design and the view of the client;</li>
-    <li class="text">Logical layer, this does eventually needed logic;</li>
-    <li class="text">Connection layer, this connects to the server.</li>
+    <li class="text">Server waar de chat server op draait;</li>
+    <li class="text">Een computer voor de client;</li>
+    <li class="text">Internet verbinding van computer naar de server;</li>
+    <li class="text">Server voor de database (Dit kan dezelfde zijn als waar de chat server op draait).</li>
   </ul>
-  <p class="no-bottom-margin"><b>3.2 Server:</b></p>
+  <img class="way-smaller" src="../../../../assets/felix/software-design.jpg">
+  <p class="image">Afbeelding 4 Design</p>
+  <p class="no-bottom-margin">Software</p>
   <ul>
-    <li class="text">Controller layer, this accepts incoming connections;</li>
-    <li class="text">Logic layer, this handles logic such as user sessions, needed encryption;</li>
-    <li class="text">Database logic, this layer connects and writes to a database.</li>
+    <li class="text">Ondersteuning voor Java;</li>
+    <li class="text">Windows of Linux voor de server;</li>
+    <li class="text">Windows of Linux voor de client.</li>
   </ul>
+
   <br>
-  <h3><b>4 Use cases</b></h3>
-  <p class="no-bottom-margin">The use cases for the chat application are described below:</p>
+  <h3><b>5 Componenten</b></h3>
+  <p class="no-bottom-margin">De componenten van Felix server en client bestaan uit drie lagen:</p>
+  <p class="no-bottom-margin"><b>Client:</b></p>
   <ul>
-    <li class="text">An user has the possibility to register an account;</li>
-    <li class="text">An user has the possibility to login;</li>
-    <li class="text">An user has the possibility to logout;</li>
-    <li class="text">An user has the possibility to delete her/his account;</li>
-    <li class="text">An user has the possibility to make a chat group;</li>
-    <li class="text">The creator/admin of a group can manage its group;</li>
-    <li class="text">An user has the possibility to send chats in a group;</li>
-    <li class="text">An user has the possibility to send/accept friend invites to other players;</li>
-    <li class="text">An user has the possibility to send messages to friends only.</li>
+    <li class="text">View laag, deze laag houdt het design volgens de wireframes;</li>
+    <li class="text">Logical laag, deze laag handelt eventuele logische berekeningen af;</li>
+    <li class="text">Connection laag, deze laag zorgt voor de connectie naar de server.</li>
   </ul>
+  <p class="no-bottom-margin"><b>Server:</b></p>
+  <ul>
+    <li class="text">Controller laag, deze laag handelt aanvragen af;</li>
+    <li class="text">Logical laag, deze laag zorgt voor de sessies en encryptie;</li>
+    <li class="text">Database laag, deze laag zorgt voor connectie en encryptie naar de database.</li>
+  </ul>
+
   <br>
-  <h3><b>5 Security</b></h3>
-  <p class="no-bottom-margin">The needed security in the chat application is found both in the client and server:</p>
-  <p class="no-bottom-margin"><b>5.1 Client:</b></p>
+  <h3><b>6 Use cases</b></h3>
+  <p class="no-bottom-margin">De use cases voor Felix staan hieronder benoemd:</p>
   <ul>
-    <li class="text">Secure connection to the chat server with traffic encryption;</li>
-    <li class="text">Input validation.</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om een account te registreren;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om in te loggen;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om uit te loggen;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om zijn/haar account te verwijderen;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om een groep aan te maken;</li>
+    <li class="text">De administrator van een groep kan de groep beheren;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om berichten te versturen in een groep;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om vriendschapsverzoeken te versturen/accepteren;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om two factor authenticatie in te schakelen;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om two factor authenticatie uit te schakelen;</li>
+    <li class="text">Een gebruiker heeft de mogelijkheid om privé berichten te versturen naar vrienden.</li>
   </ul>
-  <p class="no-bottom-margin"><b>5.2 Server:</b></p>
-  <ul>
-    <li class="text">Secure connection to the client with traffic encryption;</li>
-    <li class="text">Input validation;</li>
-    <li class="text">Authentication (2FA);</li>
-    <li class="text">Authorization;</li>
-    <li class="text">Secure connection to the database;</li>
-    <li class="text">Secure storage of data (hashed passwords, encrypted chats).</li>
-  </ul>
+
+
+
+  
   <br>
-  <h3><b>6 Data</b></h3>
-  <p class="no-bottom-margin">The data that will be used in the chat application is as follows:</p>
+  <h3><b>7 Security</b></h3>
+  <p>Veel security is zowel in de server als client toegepast. De client doet checks op bepaalde security, dit zorgt voor minder aanvragen naar de server. De server 
+    doet deze check alsnog en deze is leidend. Hieronder een lijst van bepaalde security aspecten die in Felix voorkomen:</p>
+  <p class="no-bottom-margin"><b>Client:</b></p>
   <ul>
-    <li class="text">Account data, this contains usernames, passwords (hashed);</li>
-    <li class="text">Two factor authentication data, the 2FA validate code;</li>
-    <li class="text">Chats between users;</li>
-    <li class="text">Database passwords;</li>
-    <li class="text">Private keys for encrypting data (chats).</li>
+    <li class="text">Data encryptie naar de server;</li>
+    <li class="text">Input validatie.</li>
   </ul>
-  <p class="no-bottom-margin"><b>6.1 Authorization and permissions</b></p>
-  <p class="no-bottom-margin">The chat application has different permissions that shows as follow, these are written down in a CRUD method:</p>
+  <p class="no-bottom-margin"><b>Server:</b></p>
+  <ul>
+    <li class="text">Data encryptie naar de client;</li>
+    <li class="text">Input validatie;</li>
+    <li class="text">Authenticatie (2FA);</li>
+    <li class="text">Autorisatie;</li>
+    <li class="text">Data encryptie to the database;</li>
+    <li class="text">Encrypte data (gehashde wachtwoorden, encrypted berichten).</li>
+  </ul>
+
+  <br>
+  <h3><b>8 Data</b></h3>
+  <p class="no-bottom-margin">De data die in de database opgeslagen staat is als volgt:</p>
+  <ul>
+    <li class="text">Account data, dit bestaat uit gebruikersnamen en wachtwoorden (gehashed);</li>
+    <li class="text">Two factor authenticatie data, de 2FA validatiecode;</li>
+    <li class="text">Berichten van gebruikers.</li>
+  </ul>
+  <p class="no-bottom-margin"><b>Autorisatie en rechten</b></p>
+  <p class="no-bottom-margin">Felix heeft verschillende rechten op de data, dit houdt in wie bij welke data kan. Deze zijn beschreven in de CRUD methode:</p>
   <p class="no-bottom-margin">C: Create;</p>
   <p class="no-bottom-margin">R: Read;</p>
   <p class="no-bottom-margin">U: Update;</p>
@@ -89,10 +145,10 @@
   <br>
   <table>
     <tr>
-      <th>Data asset</th>
-      <th>User</th>
-      <th>Group owner</th>
-      <th>System admin</th>
+      <th>Data type</th>
+      <th>Gebruiker</th>
+      <th>Groep beheerder</th>
+      <th>Systeem admin</th>
       <th>Server admin</th>
     </tr>
     <tr>
@@ -110,14 +166,14 @@
       <td>-</td>
     </tr>
     <tr>
-      <td>Chats</td>
+      <td>Berichten</td>
       <td>CRUD</td>
       <td>CRD</td>
       <td>-</td>
       <td>-</td>
     </tr>
     <tr>
-      <td>Database passwords</td>
+      <td>Database wachtwoorden</td>
       <td>-</td>
       <td>-</td>
       <td>CU</td>
@@ -131,40 +187,40 @@
       <td>CUD</td>
     </tr>
     <tr>
-      <td>Functionality</td>
-      <td>Chats and friends</td>
-      <td>Group maintain</td>
-      <td>Application maintain</td>
-      <td>Application maintain</td>
+      <td>Functinaliteiten</td>
+      <td>Berichten en vrienden</td>
+      <td>Beheeren van groep</td>
+      <td>Applicatiebeheer</td>
+      <td>Applicatiebeheer</td>
     </tr>
     <tr>
-      <td>View product</td>
+      <td>Product inzien</td>
       <td>Y</td>
       <td>Y</td>
       <td>Y</td>
       <td>Y</td>
     </tr>
     <tr>
-      <td>Add/change product</td>
+      <td>Product aanpassen</td>
       <td>N</td>
       <td>N</td>
       <td>Y</td>
       <td>N</td>
     </tr>
   </table>
-  <p class="table-text">Table 1 Authorization and permissions</p>
+  <p class="table-text">Tabel 1 Autorisatie en rechten</p>
   <br>
-  <p class="no-bottom-margin"><b>Account data</b> can only be managed by its own user, the system admin must be able to delete certain accounts if necessary.</p>
-  <p class="no-bottom-margin"><b>2FA data</b> cannot even be seen by the user itself, and should not be in seen or changed.</p>
-  <p class="no-bottom-margin"><b>Chats</b> should be only visible by the ones who are authorized to view them. Within a group, the group owner must be able to delete impropriate chats.</p>
-  <p class="no-bottom-margin"><b>Database passwords</b> should only be created or updated by system/server admins.</p>
-  <p class="no-bottom-margin"><b>Private keys</b> should be only de created, updated or deleted by system/server admins.</p>
-  <p class="no-bottom-margin"><b>Functionality</b> is what the functions should be that the user defined can do with the application.</p>
-  <p class="no-bottom-margin"><b>View product</b> is which user can see or use the product.</p>
-  <p class="no-bottom-margin"><b>Add/change product</b> can only be done by the ones who made the application.</p>
+  <p class="no-bottom-margin"><b>Account data</b> kan alleen beheerd worden door de eigen gebruiker, een systeem administrator moet accounts kunnen verwijderen.</p>
+  <p class="no-bottom-margin"><b>2FA data</b> kan niet eens ingezien door de gebruiker zelf.</p>
+  <p class="no-bottom-margin"><b>Berichten</b> zouden alleen zichtbaar moeten zijn door diegene van wie deze zijn. In een groep, de groepsbeheerder moet ongepaste berichten kunnen verwijderen.</p>
+  <p class="no-bottom-margin"><b>Database wachtwoorden</b> zouden alleen geüpdated moeten mogen worden door de systeem/server admins.</p>
+  <p class="no-bottom-margin"><b>Private keys</b> zouden alleen aangemaakt, geüpdated of verwijderd moeten mogen worden door de systeem/server admins.</p>
+  <p class="no-bottom-margin"><b>Functionaliteiten</b> zijn de functies van Felix die de gebruiker moet kunnen gebruiken.</p>
+  <p class="no-bottom-margin"><b>Product inzien</b> is wie de applicatie zelf (server/configuratie) moet kunnen inzien.</p>
+  <p class="no-bottom-margin"><b>Product aanpassen</b> kan alleen gedaan worden door de ontwikkelaars van de applicatie.</p>
   <br>
-  <p class="no-bottom-margin"><b>6.2 CIA &  Privacy</b></p>
-  <p class="no-bottom-margin">The chat application has different privacy scales, these are described in the CIAP method;</p>
+  <p class="no-bottom-margin"><b>CIA & Privacy</b></p>
+  <p class="no-bottom-margin">Felix heeft verschillende privacy schalen, deze zijn beschreven in de CIAP methode;</p>
   <p class="no-bottom-margin">C: Confidentiality;</p>
   <p class="no-bottom-margin">I: Integrity;</p>
   <p class="no-bottom-margin">A: Availability;</p>
@@ -172,7 +228,7 @@
   <br>
   <table>
     <tr>
-      <th>Data asset</th>
+      <th>Data type</th>
       <th>Confidentiality</th> 
       <th>Integrity</th> 
       <th>Availability</th> 
@@ -200,14 +256,14 @@
       <td>Special personal</td>
     </tr>
     <tr>
-      <td>Chats</td>
+      <td>Berichten</td>
       <td>Confidential</td>
       <td>High</td>
       <td>Important</td>
       <td>Special personal</td>
     </tr>
     <tr>
-      <td>Database passwords</td>
+      <td>Database wachtwoorden</td>
       <td>Classified</td>
       <td>Guaranteed</td>
       <td>Essential</td>
@@ -221,28 +277,28 @@
       <td>Special personal</td>
     </tr>
   </table>
-  <p class="table-text">Table 2 CIA & Privacy</p>
+  <p class="table-text">Tabel 2 CIAP</p>
   <br>
-  <p class="no-bottom-margin"><b>Account data</b> is private to the user itself. This is completely personal and there might be aspects included in this such as email addresses, which might not wished to be shared.</p>
-  <p class="no-bottom-margin"><b>2FA data</b> is some piece of data which should not be seen by anyone. This is required to be able to login if enabled.</p>
-  <p class="no-bottom-margin"><b>3FA data</b> can contain biometric data, this is highly private data and special personal.</p>
-  <p class="no-bottom-margin"><b>Chats</b> could contain confidential data or other stuff that does not meant to be shared.</p>
-  <p class="no-bottom-margin"><b>Database passwords</b> are important to find connection to that database, nothing or no one else is allowed to make any kind of connectivity with this this database, excluding the chat server itself.</p>
-  <p class="no-bottom-margin"><b>Private keys</b> are used to encrypt traffic or data, this should never be accessible by someone who shouldn’t.</p>
+  <p class="no-bottom-margin"><b>Account data</b> is privé voor de gebruiker zelf. Dit is volledig persoonlijk en van bijvoorbeeld wachtwoorden bevatten, welke niet gewenst worden te delen.</p>
+  <p class="no-bottom-margin"><b>2FA data</b> is geheime data voor de 2FA instelling. Deze data is nodig als 2FA ingeschakeld is.</p>
+  <p class="no-bottom-margin"><b>3FA data</b> zou biometrische data kunnen bevatten, dit is hoog privé en mag door niemand anders ingezien worden.</p>
+  <p class="no-bottom-margin"><b>Berichten</b> zijn te allen tijde privé.</p>
+  <p class="no-bottom-margin"><b>Database wachtwoorden</b> zijn zeer belangrijk en de server is het enige systeem wat hier kennis van mag hebben.</p>
+  <p class="no-bottom-margin"><b>Private keys</b> worden gebruikt om data te versleutelen, niemand mag deze inzien.</p>
   <br>
-  <p class="no-bottom-margin"><b>6.3 Multifactor authentication</b></p>
-  <p class="no-bottom-margin"><b>One factor authentication</b></p>
-  <p>When a user will login, the system will ask for an username and password. This is the one factor authentication that will be used in the chat application as most basic 
-    authentication method.</p>
+  <p class="no-bottom-margin"><b>Multifactor authenticatie</b></p>
+  <p class="no-bottom-margin"><b>One factor authenticatie</b></p>
+  <p>Wanneer een gebruiker inlogt, vraagt het systeem om een gebruikersnaam en wachtwoord. Dit is de enige factor-authenticatie die in de chattoepassing als meest elementaire wordt gebruikt
+    authenticatiemethode.</p>
   <p class="no-bottom-margin"><b>Two factor authentication</b></p>
-  <p>When the user wants to have their account more private secured, there will be an option to enable two factor authentication with Google authentication. This will give 
-    the user an QR-code which can be scanned with the Google authenticator application on their phone. With this enabled, the user will get a 6 digit code which is unique 
-    and which get renewed every 60 seconds.</p>
+  <p>Wanneer de gebruiker zijn account meer privé wil beveiligen, is er een optie om tweefactorauthenticatie in te schakelen met Google-authenticatie. Dit zal geven
+    de gebruiker een QR-code die kan worden gescand met de Google authenticator-applicatie op zijn telefoon. Als dit is ingeschakeld, krijgt de gebruiker een 6-cijferige code die uniek is
+    en die elke 60 seconden worden vernieuwd.</p>
   <p class="no-bottom-margin"><b>Three factor authentication</b></p>
-  <p>A third factor method will be some harder to enable. Biometric factors will be hard because not everyone has for example a fingerprint system on their device, this 
-    same goes for a camera or other ways. Also, when using a camera or another method, this has way more privacy risks for the application because there is an extra factor 
-    to save securely and it may be in conflict with article 9 of the AVG law. When this gets leaked or stolen, it has a higher privacy issue since this is human personally 
-    information which can be used for other systems as well.</p>
+  <p>Een derde factor methode zal wat moeilijker in te schakelen zijn. Biometrische factoren zullen moeilijk zijn omdat niet iedereen bijvoorbeeld een vingerafdruksysteem op zijn apparaat heeft staan
+    hetzelfde geldt voor een camera of andere manieren. Ook bij het gebruik van een camera of een andere methode heeft dit veel meer privacyrisico's voor de applicatie omdat er een extra factor is
+    veilig opslaan en het kan in strijd zijn met artikel 9 van de AVG-wet. Wanneer dit wordt uitgelekt of gestolen, heeft dit een groter privacyprobleem, aangezien dit persoonlijk menselijk is
+    informatie die ook voor andere systemen kan worden gebruikt.</p>
   <br>
   <br>
   <br>

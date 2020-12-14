@@ -25,6 +25,16 @@ table
     width: 100%;
 }
 
+.smaller
+{
+    width: 60%;
+}
+
+.way-smaller
+{
+    width: 40%;
+}
+
 img
 {
     width: 100%;

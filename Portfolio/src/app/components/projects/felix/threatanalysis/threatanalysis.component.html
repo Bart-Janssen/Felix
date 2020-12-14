@@ -1,25 +1,32 @@
 <p class="center-text">Threat analysis</p>
 <div class="middle-text-space">
-  <p>Deze pagina beschrijft de threat analyse. Hier kijk ik naar wat voor veelvoorkomende threats er zijn en welke relevant zijn binnen mijn applicatie.</p>
-  <h3><b>Aanval types</b></h3>
-	<p class="no-bottom-margin">Het is belangrijk om te weten met wat voor soort aanvalstechnieken we te maken hebben. Hiervoor zijn er een aantal van de veelvoorkomende aanvallen op een rijtje gezet. 
-		Veelvoorkomende aanvallen binnen de cyber wereld zijn onder andere:</p>
-  <ul>
-    <li class="text">Malware, Trojans;</li>
-    <li class="text">Phishing;</li>
-    <li class="text">MitM;</li>
-    <li class="text">Ransomware;</li>
-    <li class="text">DDoS;</li>
-    <li class="text">Injection;</li>
-    <li class="text">Brute force;</li>
-    <li class="text">Unknown attacks/zero-days.</li>
+  	<p>Deze pagina beschrijft de threat analyse. Hier kijk ik naar welke threats vaak worden gebruikt en welke van toepassing zijn op Felix. Het complete 
+	  implementatie rapport kan <a target="_self" href="../../../assets/Rapport.pdf" download="Felix Rapport.pdf">hier</a> gezien worden. In dit rapport wordt deze threat 
+	  analyse ook beschreven met ook de maatregelen voor elke threat in het project Felix.</p>
+
+  	<h3><b>Aanval types</b></h3>
+  	<p class="no-bottom-margin">Het is belangrijk om te weten met wat voor soort aanvalstechnieken ik te maken heb, hiervoor zijn er een aantal van de meest 
+		voorkomende aanvallen op een rijtje gezet. De meest voorkomende aanvallen binnen de cyber wereld die invloed kunnen hebben op Felix zijn onder andere:</p>
+	<ul>
+		<li class="text">Malware, Trojans;</li>
+		<li class="text">Phishing;</li>
+		<li class="text">MitM;</li>
+		<li class="text">Ransomware;</li>
+		<li class="text">DDoS;</li>
+		<li class="text">Injectie;</li>
+		<li class="text">Brute force;</li>
+		<li class="text">Illegal application usage;</li>
+		<li class="text">Unknown attacks/zero-days.</li>
 	</ul>
 	<p>Ieder jaar komen er weer nieuwe cyberaanval-technieken aan en dus kan deze lijst vaak veranderen. Omdat deze nu momenteel nog onbekend zijn, vallen deze onder de 
-		‘unknown attacks/zero-days’. Hierop kun je moeilijk anticiperen. Mogelijk is het beste wat daartegen te doen is, is het loggen en monitoren van ongebruikelijk of vreemd 
-		gedrag binnen een applicatie wat niet onder te brengen is onder een van de bekendere technieken.</p>
+		‘unknown attacks/zero-days’. Hierop kan er moeilijk geanticipeerd worden. Mogelijk is het beste wat daartegen te doen is, is het loggen en monitoren van 
+		ongebruikelijk of vreemd gedrag binnen Felix wat niet onder te brengen is onder een van de bekendere aanvalstechnieken, aanvalsoppervlak te verkleinen en 
+		dubbele lagen van security te implementeren.</p>
 	<br>
 	<h3><b>Actoren</b></h3>
-	<p class="no-bottom-margin">Het is ook belangrijk om de veelvoorkomende kwaadwillende actoren in kaart te brengen. Veelvoorkomende kwaadwillende actoren binnen de cyber wereld zijn de volgende:</p>
+	<p class="no-bottom-margin">Ook de gebruikers van Felix kunnen verschillen. Het zou geweldig zijn als de gebruikers Felix alleen gebruiken waarvoor hij gemaakt 
+		is, helaas is dat in werkelijkheid niet zo. De meest voorkomende kwaadwillende actoren binnen de cyber wereld die invloed kunnen hebben op Felix zijn de 
+		volgende:</p>
 	<ul>
     <li class="text">Staat gesponseerde cyberaanvallen;</li>
     <li class="text">Script kiddies;</li>
@@ -27,8 +34,8 @@
     <li class="text">Ontevreden werknemers;</li>
     <li class="text">Hacktivisten.</li>
 	</ul>
-	<p>Veel van deze actoren voeren niet altijd dezelfde aanvallen uit. Veel aanvallen zijn gekoppeld aan een soort actor. Om dit in beeld te kunnen brengen, is het makkelijk 
-		om een tabel te maken met hierin welke actor welke type aanval vaak uitvoert, en wat hun motivatie daarbij is.</p>
+	<p>Veel van deze actoren voeren niet altijd dezelfde aanvallen uit. Veel aanvallen zijn gekoppeld aan een soort actor. Om dit in beeld te kunnen brengen, 
+		is het makkelijk om een tabel te maken met hierin welke actor welke type aanval vaak uitvoert, en wat hun motivatie daarbij is.</p>
 	<table>
 		<tr>
 			<th>Threat actor</th>
@@ -43,17 +50,17 @@
 		<tr>
 			<td>Script kiddies</td>
 			<td>Leren en uitproberen van hacken</td>
-			<td>DDoS, Injection, unknown attacks</td>
+			<td>DDoS, Injection, unknown attacks, Illegal application usage</td>
 		</tr>
 		<tr>
 			<td>Cybercriminelen</td>
 			<td>Geld verdienen</td>
-			<td>Ransomware, Brute force, MitM, Phishing, unknown attacks</td>
+			<td>Ransomware, Brute force, MitM, Phishing, unknown attacks, Illegal application usage</td>
 		</tr>
 		<tr>
 			<td>Ontevreden werknemers</td>
 			<td>Wraak</td>
-			<td>DDoS, unknown attacks</td>
+			<td>DDoS, unknown attacks, Illegal application usage</td>
 		</tr>
 		<tr>
 			<td>Hacktivisten</td>
@@ -62,6 +69,9 @@
 		</tr>
 	</table>
 	<p class="table-text">Tabel 1 Threat actoren met motivatie</p>
+	<p>Zo zullen binnen Felix waarschijnlijk niet alle bovenstaande actoren geïnteresseerd zijn in een applicatie zoals Felix. Hacktivisten zullen minder 
+		geïnteresseerd zijn dan bijvoorbeeld cybercriminelen of script kiddies. De type aanvallen ongeacht welke actor kan nog steeds een risico zijn.</p>
+		
 	<br>
 	<h3><b>Misuse case diagram</b></h3>
 	<p>Nu we weten met wat voor soort actoren te maken kunnen hebben, is het mogelijk om een misuse case diagram te maken voor mijn applicatie.</p>

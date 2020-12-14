@@ -1,7 +1,9 @@
 <p class="center-text">Risk analysis</p>
 <div class="middle-text-space">
 <p>Deze pagina beschrijft de risico analyse. Hier kijk ik naar de kans en impact van de eerder onderzochte 
-	<a routerLink="/threat_analysis" routerLinkActive="active">threat analysis</a>.</p>
+	<a routerLink="/threat_analysis" routerLinkActive="active">threat analysis</a>. Het complete implementatierapport kan 
+	<a target="_self" href="../../../assets/Rapport.pdf" download="Felix Rapport.pdf">hier</a> gezien worden. In dit rapport wordt deze risk analyse ook beschreven 
+	met ook de maatregelen voor elke threat in het project Felix.</p>
   <h3><b>De threats</b></h3>
 	<p class="no-bottom-margin">Op deze pagina staat de waarschijnlijkheid en risico’s van de eerder vastgestelde threats beschreven voor mijn applicatie. De eerder beschreven 
 		threats zijn als volgt:</p>
@@ -12,14 +14,123 @@
     <li class="text">Ransomware;</li>
     <li class="text">DDoS;</li>
     <li class="text">Injection;</li>
-    <li class="text">Brute force;</li>
+	<li class="text">Brute force;</li>
+	<li class="text">Illegal application usage;</li>
     <li class="text">Unknown attacks/zero-days.</li>
 	</ul>
-	<p>Niet al deze threats zijn even gevaarlijk, of hebben een even grote impact voor mijn applicatie. Om dit duidelijk in kaart te brengen, is de volgende tabel gemaakt:</p>
+	<p class="no-bottom-margin">De kans dat een van deze treats voorkomen binnen Felix is gelinkt aan een ‘Risk Occurrence’ (PMI). Deze schaal is als volgt:</p>
+	<table>
+		<tr>
+			<th>Kans</th>
+			<th>Betekenis</th>
+		</tr>
+		<tr>
+			<td>Hoog</td>
+			<td>Hoge kans dat dit voorkomt</td>
+		</tr>
+		<tr>
+			<td>Gemiddeld hoog</td>
+			<td>Gemiddeld hoge kans dat dit voorkomt</td>
+		</tr>
+		<tr>
+			<td>Gemiddeld laag</td>
+			<td>Gemiddeld lage kans dat dit voorkomt</td>
+		</tr>
+		<tr>
+			<td>Laag</td>
+			<td>Lage kans dat dit voorkomt</td>
+		</tr>
+	</table>
+	<p class="table-text">Tabel 1 Risico kans</p>
+
+	<p class="no-bottom-margin">De kansen zijn gebaseerd op de ‘Risk Occurrence Timeframe’ (PMI):</p>
+	<table>
+		<tr>
+			<th>Kans</th>
+			<th>Beschrijving</th>
+		</tr>
+		<tr>
+			<td>Hoog</td>
+			<td>Binnen een maand</td>
+		</tr>
+		<tr>
+			<td>Gemiddeld hoog</td>
+			<td>Binnen de volgende 2-4 maanden</td>
+		</tr>
+		<tr>
+			<td>Gemiddeld laag</td>
+			<td>Binnen de volgende 4-6 maanden</td>
+		</tr>
+		<tr>
+			<td>Laag</td>
+			<td>Boven 6 maanden</td>
+		</tr>
+	</table>
+	<p class="table-text">Tabel 2 Risico tijdframe</p>
+
+	<p class="no-bottom-margin">De impact wordt ook gelinkt aan een schaal, deze schaal is de ‘Risk Impact’ (PMI).</p>
+	<table>
+		<tr>
+			<th>Impact</th>
+			<th>Betekenis</th>
+		</tr>
+		<tr>
+			<td>Hoog</td>
+			<td>Catastrofale gevolgen</td>
+		</tr>
+		<tr>
+			<td>Gemiddeld</td>
+			<td>Kritische gevolgen</td>
+		</tr>
+		<tr>
+			<td>Laag</td>
+			<td>Accepteerbare gevolgen</td>
+		</tr>
+	</table>
+	<p class="table-text">Tabel 3 Impact</p>
+
+	<p class="no-bottom-margin">PMI heeft ook een schaal waarin vermeld wordt hoe deze gevolgen impact hebben op organisatorisch niveau ‘Impact classification’ (PMI).</p>
+	<table>
+		<tr>
+			<th>Type</th>
+			<th>Hoog</th>
+			<th>Gemiddeld</th>
+			<th>Laag</th>
+		</tr>
+		<tr>
+			<td>Kosten</td>
+			<td>Kosten stijging van 10%</td>
+			<td>Kosten stijging van 5-10%</td>
+			<td>Kosten stijging van 0-5%</td>
+		</tr>
+		<tr>
+			<td>Planning</td>
+			<td>Algemeen project vertraging van minimaal 2 weken of meer</td>
+			<td>Algemeen project vertraging van 1 tot 2 weken</td>
+			<td>Algemene project vertraging van 0 tot 1 week</td>
+		</tr>
+		<tr>
+			<td>Scope</td>
+			<td>Scope op meerdere aspecten geraakt, onacceptabel voor de gebruikers</td>
+			<td>Scope op meerdere aspecten geraakt</td>
+			<td>Scope amper geraakt</td>
+		</tr>
+		<tr>
+			<td>Kwaliteit</td>
+			<td>Kwaliteit gaat achteruit en heeft nieuwe toestemming nodig</td>
+			<td>Geen invloed op de kwaliteit van vitale functionaliteiten</td>
+			<td>Amper invloed op de kwaliteit</td>
+		</tr>
+	</table>
+	<p class="table-text">Tabel 4 Risk impact</p>
+
+	<p class="no-bottom-margin">Niet al deze threats zijn even gevaarlijk binnen Felix, of hebben een even grote impact voor Felix. Om dit duidelijk in kaart te brengen, 
+		is de volgende tabel gemaakt, hierin is ook de applicatie- en organisatorische impact meegenomen:</p>
 	<table>
 		<tr>
 			<th>Threat</th>
-			<th>Threat	Impact beschrijving</th>
+			<th>Threat Impact beschrijving</th>
+			<th>Organisatorische impact</th>
 			<th>Kans</th>
 			<th>Impact</th>
 			<th>Reden</th>
@@ -27,13 +138,15 @@
 		<tr>
 			<td>Malware, Trojans</td>
 			<td>Virussen die bij gebruikers geïnstalleerd kunnen worden</td>
+			<td>Gemiddeld</td>
 			<td>Laag</td>
 			<td>Hoog</td>
-			<td>In mijn applicatie is geen directe gebruiker naar gebruiker communicatie</td>
+			<td>In Felix is geen directe gebruiker naar gebruiker communicatie en er kunnen momenteel nog geen bestanden verstuurd worden</td>
 		</tr>
 		<tr>
 			<td>Phishing</td>
 			<td>Linkjes naar shady websites met mogelijke afpersing of dergelijke</td>
+			<td>Laag</td>
 			<td>Hoog</td>
 			<td>Hoog</td>
 			<td>Een link kan gemakkelijk meegestuurd worden met een chat berichtje</td>
@@ -43,12 +156,14 @@
 			<td>Tussen de communicatie inzitten om informatie uit te lezen</td>
 			<td>Hoog</td>
 			<td>Hoog</td>
+			<td>Hoog</td>
 			<td>Deze aanval kan uitgevoerd worden op de uitwisseling voor encryptie</td>
 		</tr>
 		<tr>
 			<td>Ransomware</td>
 			<td>Gijzelen van een computer</td>
-			<td>Klein</td>
+			<td>Gemiddeld</td>
+			<td>Laag</td>
 			<td>Hoog</td>
 			<td>Dit soort dergelijke aanvallen werken op computers, niet op een applicatie. Het is makkelijk mogelijk om een server opnieuw te lanceren</td>
 		</tr>
@@ -57,74 +172,113 @@
 			<td>Het platleggen van een systeem door overmatig veel aanvragen te doen</td>
 			<td>Hoog</td>
 			<td>Hoog</td>
-			<td>De applicatie kan compleet offline gebracht worden</td>
+			<td>Gemiddeld</td>
+			<td>Felix kan compleet offline gebracht worden</td>
 		</tr>
 		<tr>
-			<td>Injection</td>
+			<td>Injectie</td>
 			<td>Het injecteren van scripts of code</td>
 			<td>Hoog</td>
 			<td>Hoog</td>
-			<td>Dit zou de applicatie kunnen breken of de database kunnen aanpassen</td>
+			<td>Hoog</td>
+			<td>Dit zou de werking van Felix kunnen breken of de database kunnen aanpassen</td>
 		</tr>
 		<tr>
 			<td>Brute force</td>
 			<td>Het herhaaldelijk proberen van een actie</td>
-			<td>Middel</td>
+			<td>Gemiddeld</td>
 			<td>Hoog</td>
+			<td>Gemiddeld</td>
 			<td>Inloggegevens brute forcen</td>
+		</tr>
+		<tr>
+			<td>Illegal application usage</td>
+			<td>Het gebruiken van een applicatie zonder geldige licentie</td>
+			<td>Hoog</td>
+			<td>Gemiddeld hoog</td>
+			<td>Gemiddeld</td>
+			<td>Dit zou ervoor kunnen zorgen dat gebruikers de applicatie niet kopen, maar ergens downloaden</td>
 		</tr>
 		<tr>
 			<td>Unknown attacks</td>
 			<td>Het onbekende</td>
-			<td>Middel</td>
-			<td>Onbekend</td>
-			<td>Dit zijn onbekende aanvallen, tot je weet wat dit is, is het enige wat je eraan kan doen is monitoren en loggen</td>
+			<td>Gemiddeld</td>
+			<td>Gemiddeld hoog</td>
+			<td>Gemiddeld</td>
+			<td>Dit zijn onbekende aanvallen, tot er niet bekend is wat dit is, is het enige wat er eraan gedaan kan worden, het monitoren en loggen</td>
 		</tr>
 	</table>
-	<p class="table-text">Tabel 1 Risico matrix</p>
+	<p class="table-text">Tabel 5 Risico matrix</p>
+
 	<br>
-  <h3><b>Maatregelen</b></h3>
-	<p class="no-bottom-margin">Tegen bijna al deze threats is iets te doen. Hieronder een tabel met mogelijke maatregelen:</p>
-	<table>
-		<tr>
-			<th>Threat</th>
-			<th>Maatregel</th>
-		</tr>
-		<tr>
-			<td>Malware, Trojans</td>
-			<td>Een check op bijvoorbeeld bestandsformaten die verstuurd kunnen worden in de applicatie</td>
-		</tr>
-		<tr>
-			<td>Phishing</td>
-			<td>Een waarschuwing bij het openen van linkjes, mogelijk bekende domainen blokkeren</td>
-		</tr>
-		<tr>
-			<td>MitM</td>
-			<td>Werken met checks of certificaten bijvoorbeeld</td>
-		</tr>
-		<tr>
-			<td>Ransomware</td>
-			<td>Een check op bijvoorbeeld bestandsformaten die verstuurd kunnen worden in de applicatie</td>
-		</tr>
-		<tr>
-			<td>DDoS</td>
-			<td>Mogelijk wordt dit soort applicaties gebruikt onder een Kubernets cluster, deze vangt dit al af. Mogelijk een eigen maatregel zou het zijn van blacklisten van 
-				IP-adressen</td>
-		</tr>
-		<tr>
-			<td>Injection</td>
-			<td>Input check in zowel de client als server, veel frameworks hebben dit standaard ingebouwd</td>
-		</tr>
-		<tr>
-			<td>Brute force</td>
-			<td>Blokkeren als een event een bepaalde tijd herhaaldelijk wordt uitgevoerd</td>
-		</tr>
-		<tr>
-			<td>Unknown attacks</td>
-			<td>Zolang je niet weet wat het is kunnen deze alleen gelogd worden</td>
-		</tr>
-	</table>
-	<p class="table-text">Tabel 2 Maatregelen</p>
+	<p class="no-bottom-margin"><b>Maatregelen</b></p>
+	<p>Tegen de meeste van deze threats is het mogelijk om maatregelen te treffen, deze worden verdeeld over technische en organisatorische maatregelen:</p>
+
+	<p><b>Malware, Trojans, Ransomware</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Op de server zelf kunnen hier maatregelen tegen worden getroffen door regelmatig updates te draaien en virusscanners. Om de gebruikers te beschermen, 
+		kan er een check gedaan worden op de bestanden die verstuurd kunnen worden. Ook is het belangrijk om backup’s te hebben van data zoals onder andere de 
+		database. Belangrijk is dat deze backup’s niet op dezelfde locatie staan, maar op een andere. Ook is het belangrijk om meerdere backup’s te hebben en 
+		ook nog van eerdere versies. Het is beter om oude backup’s te hebben dan geen enkele.</p>
+	<p class="no-bottom-margin"><b>Organisatorisch:</b></p>
+	<p>Gebruikers erop attenderen dat dit gaande is en waarop ze moeten letten.</p>
+
+	<p><b>Phishing</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Mogelijk bekende domainen, of URL’s die lijken maar niet overeen komen met de wekelijke linkjes blokkeren. Melding geven met een waarschuwing 
+		dat het eventueel gevaarlijk kan zijn om linkjes te openen. Voor e-mail bescherming zou SPF, DKIM en DMARC van pas kunnen komen. Met SPF wordt 
+		bepaald welke e-mailservers namens de organisatie zijn, e-mails mogen verzenden. Met DKIM kunnen e-mailberichten worden gewaarmerkt en met DMARC 
+		kan een e-mailprovider kenbaar maken hoe andere mailservers om dienen te gaan met de resultaten van de SPF- en  DKIM-controles van de ontvangen e-mails.</p>
+	<p class="no-bottom-margin"><b>Organisatorisch:</b></p>
+	<p>Hierbij ook gebruikers attenderen en hoe ze dit zelf kunnen inzien en waar ze op kunnen letten.</p>
+	
+	<p><b>MitM</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Checks met certificaten en encryptie. Ook op netwerk niveau zijn er verschillende mogelijkheden om dit tegen te gaan. Een voorbeeld is een IDS in 
+		het netwerk draaiend hebben. Hiermee is het snel mogelijk om te zien dat bijvoorbeeld ARP gespooft wordt. Als twee systemen vaak met elkaar communiceren 
+		dan kan is een goede optie om een permanent statische ARP-configuratie in te stellen, dan zal de server nooit ARP-requests uitsturen en zal dit altijd 
+		de goede kant op gaan.</p>
+	<p class="no-bottom-margin"><b>Organisatorisch:</b></p>
+	<p>Uitleg geven aan de gebruikers hoe ze kunnen zien dat bijvoorbeeld de verbinding beveiligd is of niet.</p>
+
+	<p><b>DDoS</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Blacklisten van IP-adressen. Meestal wordt dit op netwerk niveau afgehandeld door middel van slimme firewalls of extra services. Bepaalde netwerk providers 
+		hebben hier services voor dat het DDoS verkeer weggeleid wordt naar een andere plaats. Bij Surfnet heet dit de “washing machine”, dit is een extra service 
+		die ingeschakeld kan worden als er geconstateerd wordt dat er een DDoS aanval gaande is.</p>
+	<p class="no-bottom-margin"><b>Organisatorisch:</b></p>
+	<p>Status naar de gebruikers dat er iets gaande is en hier updates over geven.</p>
+	
+	<p><b>Injectie/input validatie</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Input check in zowel de client als server, veel frameworks hebben dit al standaard ingebouwd. De reden dat dit ook op de client wordt gecheckt 
+		is zodat als de client al een aanvraag tegenhoudt, dan scheelt dit weer een aanvraag naar de server.</p>
+	<p><b>Organisatorisch:</b></p>
+	<p class="no-bottom-margin">Gebruikers de mogelijkheid geven om te rapporteren als ze hele gekke berichten zien. Een voorbeeld geven van de soort gekke berichten.</p>
+
+	<p><b>Brute force</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Blokkeren als een event een bepaalde tijd herhaaldelijk wordt uitgevoerd. Met checks kan dit achterhaald worden en zou er bijvoorbeeld om 
+		een Captcha gevraagd kunnen worden. Een andere optie is om een gebruiker te blokkeren voor een bepaalde tijd als er verschillende inlogpogingen 
+		gedaan worden.</p>
+	<p class="no-bottom-margin"><b>Organisatorisch:</b></p>
+	<p>Weinig, dit is meer technisch gerelateerd.</p>
+	
+	<p><b>Illegal application usage</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Gebruik maken van digitaal ondertekende licenties. Dit kan variëren van licenties tot simpele activatie codes.</p>
+	<p><b>Organisatorisch:</b></p>
+	<p>Ervoor zorgen dat de licenties alleen bij de organisatie zelf gemaakt en verkocht kunnen worden. Ook ervoor zorgen dat het kopen van een licentie 
+		meer biedt dan een gekraakte versie kan, bijvoorbeeld gratis updates (alleen als hij geactiveerd is), goede service etc.</p>
+
+	<p><b>Unknown attacks</b></p>
+	<p class="no-bottom-margin"><b>Technisch:</b></p>
+	<p>Loggen van onbekende events en hierop anticiperen, aanvalsoppervlak verkleinen door bijvoorbeeld configuraties zo aan te passen en dubbele lagen van 
+		security inbouwen helpt ook. Als iemand dan door de eerste laag is, loopt hij nog tegen een tweede laag of zelfs meer lagen aan. Dit kan de ontwikkelaars 
+		meer tijd geven om uit te zoeken wat er gaande is en hier sneller een update of patch voor uit te brengen.</p>
+	<p class="no-bottom-margin"><b>Organisatorisch:</b></p>
+	<p>Mensen erop attenderen dat ze hun gezond verstand moeten gebruiken en geen dingen moeten doen die niet verstandig lijken.</p>
+
 	<br>
 	<br>
 	<br>

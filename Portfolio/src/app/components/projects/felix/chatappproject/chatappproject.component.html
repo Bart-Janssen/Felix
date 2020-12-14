@@ -129,20 +129,13 @@
     uitgelekt zou zijn. Bcrypt is een van de meest gebruikte en beste password hashing functies en is aanwezig voor enorm veel programmeertalen.</p>
   <img src="../../../../assets/felix/code/hashing-code.png">
   <p class="image">Afbeelding 12 Hashing</p>
-  
-
-
-
-
-
 
   <p class="no-bottom-margin"><b>2.5 Licenties</b></p>
-  <p>Het licentie gedeelte wil ik pas implementeren voor de tweede Red vs Blue team event.</p>
-
-
-
-
-
+  <p>Voor het toepassen van digitale licenties, heb ik een mogelijkheid gemaakt om licenties te kunnen genereren die digitaal ondertekend worden met behulp van een 
+    private key. Deze licenties kunnen zowel in de client als server geverifieerd worden. De server is hierbij de leidende draad. De licenties zijn maar eenmaal geldig 
+    en worden gekoppeld aan de hardware van de client. De complete implementatie hiervan is te zien op mijn 
+    <a routerLink="/licensing" routerLinkActive="active">licensing pagina</a>. In het blue vs red team event mogen de hackers van mij ook proberen om dit 
+    onderdeel te testen. Ze kunnen hiervoor geldige, of al eerder geactiveerde licenties krijgen.</p>
 
   <p class="no-bottom-margin"><b>2.6 Database</b></p>
   <p class="no-bottom-margin">Voor de database gebruik ik een postgress database die vanuit een Docker image op te starten is. Dit is handig omdat als ik mijn applicatie wil 

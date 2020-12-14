@@ -15,11 +15,11 @@
   <p class="no-bottom-margin">Preprocessing is de eerste stap van het compilatie process. Binnen preprocessing worden 4 stappen uitgevoerd:</p>
   <ul>
     <li class="text">Trigraph replacement - Dit is het vervangen van karakters zoals '??('' dat volgens de programmeertaal specificaties niet nodig zijn, dit 
-      is tegenwoordig bijna niet meer gebruikt, maar mogelijk in oudere libraries die geimporteerd worden wel;</li>
+      wordt tegenwoordig bijna niet meer gebruikt, maar mogelijk in oudere libraries die geimporteerd worden wel;</li>
     <li class="text">Line splicing - Dit is het splitsen van escape karakters zoals '\n';</li>
     <li class="text">Tokenization - Dit verwijderd commentaar;</li>
     <li class="text">Macro expansion and directive handling - Macro's zijn bijvoorbeeld in de C programmeertaal '#define', '#defineif' en '#endif'. Als een 
-      '#defineif' niet waar is dan verwijderd deze die code.</li>
+      '#defineif' niet waar is dan wordt die code verwijderd.</li>
   </ul>
 
   <h3>Compiling</h3>
@@ -33,9 +33,9 @@
   <p class="no-bottom-margin">Lexial analysis, ook wel lexing genoemd, is de eerste fase binnen de compiler. Lexing is het omzetten van bepaalde strings in code naar 
     een token. Verschillende tokens zijn:</p>
   <ul>
-    <li class="text">Identifiers - Dit zijn namen die de programmeur heeft bedacht voor variable om code leesbaar te maken;</li>
+    <li class="text">Identifiers - Dit zijn namen die de programmeur heeft bedacht voor variablen om code leesbaar te maken;</li>
     <li class="text">Keywords - Dit zijn namen die al in de code bestaan zoals 'while', 'return', 'if', 'break';</li>
-    <li class="text">Seperators - Dit zijn haakjes en comma's etc zoals '&#123;', '&#125;', '(', ')', ',', ';', ':';</li>
+    <li class="text">Seperators - Dit zijn haakjes en komma's etc zoals '&#123;', '&#125;', '(', ')', ',', ';', ':';</li>
     <li class="text">Operators - Dit zijn rekentekens zoals '+', '-', '*', '~';</li>
     <li class="text">Iteral - Dit zijn nummers, strings, booleans zoals '1', '"some text"', 'false', 'true';</li>
     <li class="text">Comment - Dit is door de programmeur gedefinieerd commentaar. Dit kan uitgeschakelde code zijn of gewoon text voor de programmeurs.</li>
@@ -61,7 +61,7 @@
 
   <br>
   <p><b>Intermediate Code Generator</b></p>
-  <p class="no-bottom-margin">Intermediate code is de vierde fase van de compiler. Deze fase elimineerd de noodzaak van een nieuwe volledige compiler voor elke unieke 
+  <p class="no-bottom-margin">Intermediate code is de vierde fase van de compiler. Deze fase elimineert de noodzaak van een nieuwe volledige compiler voor elke unieke 
     machine door het analysegedeelte voor alle compilers hetzelfde te houden. Dit kan gedaan worden in een van deze drie stappen:</p>
   <ul>
     <li class="text">Postfix Notation - Dit is het schrijven van code als: '(a + b) + (c - D)' als: 'ab + cd -+';</li>
@@ -74,15 +74,15 @@
   <br>
   <p><b>Code Optimizer</b></p>
   <p class="no-bottom-margin">Code Optimizer is de vijfde fase van de compiler. Deze zorgt ervoor dat de code verder geoptimaliseerd wordt om zo het CPU en RAM 
-    verbruik te verminderen door bapaalde code anders te schrijven dan eerste instantie was. Dat zou kunnen als in het volgende voorbeeld het eerste stukje code 
-    te herschrijven naar het tweede stukje code. Door niet iedere iteratie een nieuw variable aan te maken, scheelt dit wat RAM verbruik.</p>
+    verbruik te verminderen door bepaalde code anders te schrijven dan eerste instantie was. Dat zou kunnen als in het volgende voorbeeld het eerste stukje code 
+    te herschrijven naar het tweede stukje code. Door niet in iedere iteratie een nieuw variable aan te maken, scheelt dit wat RAM verbruik.</p>
   <img src="../../../../assets/compiling/code-optimizing.png">
   <p class="image">Afbeelding 5 Code optimizing</p>
 
   <br>
   <p><b>Target Code Generation</b></p>
   <p>Target Code Generation is de zesde en laatste fase van de compiler. Deze fase zorgt dat de code omgezet wordt naar Assembly code.</p>
-  <p class="no-bottom-margin">Een while loop in java die er uitziet als volgd:</p>
+  <p class="no-bottom-margin">Een while loop in java die er uitziet als volgt:</p>
   <img src="../../../../assets/compiling/while-loop-java.png">
   <p class="image">Afbeelding 6 While loop Java</p>
   <p class="no-bottom-margin">Zou in Assembly eruit komen zien als:</p>
@@ -105,12 +105,12 @@
   <p class="image">Afbeelding 9 Linker</p>
 
   <h3>Interpreter</h3>
-  <p class="no-bottom-margin">Een interpreter is een programma dat code direct analyseerd op het gedrag en direct als instructies uitvoerd in plaats van dat deze eerst 
+  <p class="no-bottom-margin">Een interpreter is een programma dat code direct analyseert op het gedrag en direct als instructies uitvoerd in plaats van dat deze eerst 
     naar machine code gezet wordt. Het voordeel van een interpreter is dat deze vanuit source code direct uitgevoerd kan worden, een nadeel is dat dit iedere keer 
-    opnieuw moet bij het gebruiken van de applicatie en dus kost dit meer systeem bewerkingen. In tegenstelling van een compiler, kan een compiler de code omzetten dat 
+    opnieuw moet bij het gebruik van de applicatie en dus kost dit meer systeem bewerkingen. In tegenstelling van een compiler, kan een compiler de code omzetten dat 
     later vaker gebruikt kan worden zonder dat deze iedere keer opnieuw gecompileerd moet worden. Bij talen waar datatypes belangrijke toepassingen zijn, is een 
     compiler beter te gebruiken dan een interpreter. Python is een voorbeeld van een taal die een interpreter gebruikt, deze kan direct in een terminal gebruikt worden 
-    om bijvoorbeeld iets snel te kunnen testen zonder dat hier een heel compilatieprocess bij mee komt.</p>
+    om bijvoorbeeld iets snel te kunnen testen zonder dat hier een heel compilatieprocess bij komt kijken.</p>
   <img src="../../../../assets/compiling/python.png">
   <p class="image">Afbeelding 10 Pythin direct in terminal</p>
 
@@ -120,28 +120,29 @@
     de code is vaak niet 100% hetzelfde als de orginele code. Decompilers worden vaak gebruikt voor reverse engineering van applicaties. In mijn workshop van 
     <a routerLink="/reverse_engineering_workshop" routerLinkActive="active">reverse engineering</a>
     gebruik ik ook een decompiler. Hier is ook goed het verschil te zien van de orginele code en de gedecompileerde code, wat te zien is tussen afbeelding 3 en 5, 
-    en tussen afbeelding 8 en 9 van de workshop. De werking van deze code's zijn herzelfde alleen ze zien er anders uit. Soms kunnen variable namen ook niet 
+    en tussen afbeelding 8 en 9 van de workshop. De werking van deze code's zijn hetzelfde alleen ze zien er anders uit. Soms kunnen variablen namen ook niet 
     teruggehaald worden en worden deze vervangen met andere namen zoals dit voorbeeld hieronder waarin eerst de source code te zien is met daaronder de mogelijk 
     gedecompileerde code:</p>
   <img src="../../../../assets/compiling/decompiled-names.png">
   <p class="image">Afbeelding 11 Variable namen</p>
 
   <h3>Instructies</h3>
-  <p>De instructies dat een systeem kent hangt van de CPU af. 2 bekende voorbeelden hiervan zijn de x86 en de arm instructie sets. Een instructie voor het opahalen 
+  <p>De instructies dat een systeem kent hangt van de CPU af. 2 bekende voorbeelden hiervan zijn de x86 en de arm instructie sets. Een instructie voor het ophalen 
     van data uit een geheugenlocatie werkt anders op arm dan op x86. Een CPU kent veel verschillende instructies om verschillende taken uit te voeren. In de x86 Assembly 
     programmeertaal zelf wordt gebruik gemaakt van een x86 instructie set. Deze instructies zijn door mensen te lezen en worden later door de CPU omgezet naar opcode. 
-    Opcode wordt als hexidecimaal of binair gepresenteerd die de CPU kent. De CPU kan deze opcode vervolgens naar het geheugen sturen. Voornamelijk deze opcode's zijn 
-    verschillend pet instructie set. De opcode voor MOV gepresenteerd als hexadecimaal kan op de ene instructie set 0xAB zijn, en op de andere instructie set 0x0F; 
-    bij de intel x86 instructie set is de opcode voor MOV: 0xA0, 0xA1, 0xA2 en 0xA3. Opcode zelf wordt zelden tot nooit door mensen geprogrammeerd.</p>
+    Opcode wordt als hexidecimaal of binair gepresenteerd die de CPU kent. De CPU kan deze opcode vervolgens naar het geheugen sturen. Voornamelijk zijn deze opcode's 
+    verschillend per instructie set. De opcode voor de MOV instructie gepresenteerd als hexadecimaal kan op de ene instructie set 0xAB zijn, en op de andere instructie 
+    set 0x0F; bij de intel x86 instructie set is de opcode voor MOV: 0xA0, 0xA1, 0xA2 en 0xA3. Opcode zelf wordt zelden tot nooit door mensen geprogrammeerd.</p>
 
   <h3>Toepassen</h3>
   <p class="no-bottom-margin">Het is mogelijk om de vier stappen: Preprocessing, Compiling, Assembler en Linking te bekijken tijdens het compileren van een programma. 
-    Om dit ook een keer gedaan te hebben ga ik een klein c programma wat 'main.c' heet, stap voor stap compileren zodat er een goed beeld is van deze stappen.</p>
+    Om dit ook een keer gedaan te hebben ga ik een klein c programma wat 'main.c' heet, stap voor stap compileren zodat er een goed beeld is van deze stappen. De code 
+    hiervoor gebruikt is te zien in de onderstaande afbeelding.</p>
   <img src="../../../../assets/compiling/c-program.png">
   <p class="image">Afbeelding 12 C programma</p>
     
   <p class="no-bottom-margin">Om alleen de preprocessing stap uit te voeren, moet het volgend commando uitgevoerd worden: 'gcc -E main.c -o main.i'. In de uitkomst 
-    hiervan is te zien dat de '#include&lt;stdio.h&gt;' vervangen is met een helehoop andere code.</p>
+    hiervan is te zien dat de '#include&lt;stdio.h&gt;' vervangen is met een hele hoop andere code.</p>
   <img src="../../../../assets/compiling/preprocessing.png">
   <p class="image">Afbeelding 13 Preprocessing</p>
 
@@ -164,6 +165,11 @@
   <p class="no-bottom-margin">Dit bestand is werkelijk uitvoerbaar en als ik dit uitvoer krijg ik de output die ik verwacht.</p>
   <img src="../../../../assets/compiling/result.png">
   <p class="image">Afbeelding 17 Resultaat</p>
+
+  <h3>Conclusie</h3>
+  <p>Ik heb met deze uitdaging veel geleerd en ik vond het enorm interessant om te zien hoe dit werkt. Vooral het uitvoeren van het compileren per stap geeft mij 
+    een goed beeld van hoe dit werkt. Ook de eerder beschreven stappen zie ik overal terugkomen in het uitvoeren wat een hele hoop duidelijk maakt en net de final 
+    touch geeft om te begrijpen wat de stappen doen.</p>
 
   <br>
   <br>
