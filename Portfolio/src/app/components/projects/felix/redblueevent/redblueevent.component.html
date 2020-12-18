@@ -59,7 +59,58 @@
   
   <br>
   <p class="no-bottom-margin"><b>Resultaten</b></p>
-  <p class="no-bottom-margin">Het tweede event moet nog komen.</p>
+  <p>Voor het 2<sup>e</sup> event ben ik op school bij locatie TQ geweest, er werdt gevraagd aan de software engineers om op locatie aanwezig te 
+    zijn. Ik dacht dat is meteen een goed idee want dan kan ik ook contact zoeken met de blue teamers. Na de aftrap zat ik samen met Luuk uit mijn R&D project aan een 
+    tafel. De blue teamers hebben een monitoring systeem opgezet, ik vroeg me af of wij de monitoring ook konden inzien, daarom ben ik naar de blue teamers gegaan. 
+    Stefan vond het een geweldig idee en de blue teamers gingen kijken of ze dit konden opzetten. Na een tijd kwam Twan naar mij toe om het te laten zien, vanaf toen 
+    kon ik daar ook mijn eigen applicatie monitoren.</p>
+
+  <p class="no-bottom-margin">Na een tijd zag ik een ping naar mijn server gaan vanuit het IP-adres 10.10.2.57 met daarop volgend een NMAP scan.</p>
+  <img src="../../../../assets/felix/redblue/ping.png">
+  <p class="image">Afbeelding 4 Ping naar mijn server</p>
+
+  <p class="no-bottom-margin">Ik was benieuwd of ik achter de persoon kon komen die de ping en scan deed. In de seclab omgeving heb ik gezocht op dat IP-adres en vond 
+    ik al snel een Kali systeem met dat IP. Bij het Kali systeem staat niet van wie die is, maar bij de 'Permissions' tab, staat wel een CS nummer wat toegang heeft 
+    tot dat systeem. Bij deze is dat CS7019.</p>
+  <img src="../../../../assets/felix/redblue/permission-user.png">
+  <p class="image">Afbeelding 5 Permissions</p>
+
+  <p class="no-bottom-margin">Op basis van dat nummer kon ik in Canvas op de pagina waar alle CS nummers staan, een naam achterhalen van wie dit is. Het bleek Freddy 
+    Gomes te zijn.</p>
+  <img src="../../../../assets/felix/redblue/freddy.png">
+  <p class="image">Afbeelding 6 Freddy</p>
+
+  <p class="no-bottom-margin">Ik besloot om Freddy een bericht te sturen op Teams om te vragen of hij graag mijn Teamviewer account gegevens wil hebben zodat hij op 
+    mijn clients kan inloggen. Die wilde hij graag hebben en die heb ik dus ook gegeven. Ik zag dat er geen enkele Teamviewer connectie opgezet was en er was verder 
+    weinig verkeer op mijn server te zien. Later in de middag had ik Freddy gevraagd of hij nog iets gevonden had, waarop ik een antwoord kreeg dat hij eerder weg 
+    moest en dat zijn computer te langzaam was.</p>
+  <img src="../../../../assets/felix/redblue/freddy-gesprek.png">
+  <p class="image">Afbeelding 7 Freddy gesprek</p>
+
+  <p class="no-bottom-margin">In diezelfde middag zag ik nog een NMAP scan en vreemd netwerk verkeer naar mijn server op poort 6666. Poort 6666 is de poort waar 
+    mijn web socket server op draait.</p>
+  <img src="../../../../assets/felix/redblue/data-to-6666.png">
+  <p class="image">Afbeelding 8 Verkeer naar poort 6666</p>
+
+  <p class="no-bottom-margin">Ook dit IP-adres heb ik achterhaald en dit bleek Demian Schouten te zijn. Ik besloot ook om hem een bericht te sturen op Teams. 
+    Demian heeft hier nooit op gereageerd of het bericht gelezen.</p>
+  <img src="../../../../assets/felix/redblue/demian.png">
+  <p class="image">Afbeelding 9 Demian gesprek</p>
+
+  <br>
+  <h3><b>Mijn ervaring</b></h3>
+  <p>Mijn ervaring over beide red vs blue team is slecht. Mijn applicatie is niet getest, zewel het 1<sup>e</sup> en 2<sup>e</sup> event heeft mijn applicatie niet 
+    meer gehad dan een paar NMAP scans en wat pings. De rapportage dat de red teamers moeten maken van het 1<sup>e</sup> event is nooit geüpload door het team dat 
+    mijn applicatie 'gescaned' heeft. Hier is al verschillende keren naar gevraagd maar dit is nooit gedaan. De rapportage's van het 2<sup>e</sup> even tot op 
+    heden ook nog niet.</p>
+
+  <p>Ik vind het jammer dat mijn applicatie niet getest is. Ik heb verschillende mensen horen klagen dat veel applicaties niet online stonden of incompleet waren. 
+    Mijn applicatie is nog altijd volledig online geweest en had veel functionaliteiten om te testen dus ik vind het enorm jammer en het voelt een beetje alsof 
+    ik die applicatie heb gemaakt voor niets (behalve dan wat ik er van heb geleerd).</p>
+
+  <p>Ik heb vanuit mijzelf ook moeite gedaan om contact te zoeken met de red teamers om hun ook te helpen zodat ze makkelijker aan de gang kunnen, en met de blue 
+    teamers om met het installeren van Wazuh te helpen en in het 2<sup>e</sup> event toegang te verkrijgen voor het monitoring systeem.</p>
+
   <br>
   <br>
   <br>

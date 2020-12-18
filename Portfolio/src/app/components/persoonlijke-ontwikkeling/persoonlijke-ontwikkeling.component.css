@@ -12,3 +12,14 @@
     font-size: 18px;
     color: antiquewhite;
 }
+
+.normal
+{
+    width: 65%;
+}
+
+.image
+{
+    font-size: 12px;
+    font-style: italic;
+}
