@@ -32,6 +32,7 @@ import { LicensingComponent } from './components/projects/felix/licensing/licens
 import { CompilingComponent } from './components/projects/compiling/compiling.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { PersoonlijkeOntwikkelingComponent } from './components/persoonlijke-ontwikkeling/persoonlijke-ontwikkeling.component';
+import { AsmComponent } from './components/projects/asm/asm.component';
 
 export function jwtOptionsFactory() 
 {
@@ -72,6 +73,7 @@ export function jwtOptionsFactory()
     CompilingComponent,
     FeedbackComponent,
     PersoonlijkeOntwikkelingComponent,
+    AsmComponent,
   ],
   imports: [
     BrowserModule,

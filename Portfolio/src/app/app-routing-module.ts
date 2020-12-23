@@ -27,6 +27,7 @@ import { LicensingComponent } from './components/projects/felix/licensing/licens
 import { CompilingComponent } from './components/projects/compiling/compiling.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { PersoonlijkeOntwikkelingComponent } from './components/persoonlijke-ontwikkeling/persoonlijke-ontwikkeling.component';
+import { AsmComponent } from './components/projects/asm/asm.component';
 
 const routes: Routes = [
   {
@@ -85,6 +86,10 @@ const routes: Routes = [
   {
     path: "compiling_project",
     component: CompilingComponent
+  },
+  {
+    path: "asm_project",
+    component: AsmComponent
   },
   {
     path: "workshop_project",

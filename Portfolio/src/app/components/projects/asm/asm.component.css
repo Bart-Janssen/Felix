@@ -1,0 +1,55 @@
+.center-text
+{
+    font-size: 40px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center;
+    color: antiquewhite;
+}
+
+.text
+{
+    font-size: 18px;
+    color: antiquewhite;
+}
+
+.image
+{
+    font-size: 12px;
+    font-style: italic;
+}
+
+.normal
+{
+    width: 100%;
+}
+
+.instruction
+{
+    color: #859900;
+}
+
+.parameter
+{
+    color: #DC322F;
+}
+
+.number
+{
+    color: #2AA198;
+}
+
+.asm-label
+{
+    color: #CB4B16;
+}
+
+.comment
+{
+    color: #AAAAAA;
+}
+
+.string
+{
+    color: #CE9178;
+}
