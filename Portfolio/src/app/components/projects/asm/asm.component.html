@@ -1,6 +1,6 @@
 <p class="center-text"><b>Assembly</b></p>
 <div class="middle-text-space">
-  <p>De Assembly programmeertaal zelf heeft niet direct met security te maken. De reden dat ik dit onderdeel in mijn portfolio beschrijf is omdat ik dit zelf erg 
+  <p>De Assembly programmeertaal zelf heeft niet direct met security te maken. De reden dat ik dit onderdeel in mijn portfolio opneem is omdat ik dit zelf erg 
     interessant vind en omdat Assembly vaak terugkomt bij bijvoorbeeld reverse engineering of malware inspectie. Het is naar mijn mening dan ook goed om hier 
     basiskennis van te hebben.</p>
 
@@ -8,27 +8,27 @@
   
   <br>
   <h3>Assembly</h3>
-  <p>Een processor begrijpt alleen machinetaal, dit zijn reeksen van 1 en 0. Machinetaal is echter te complex om te gebruiken bij normaale 
+  <p>Een processor begrijpt alleen machinetaal, dit zijn reeksen van 1 en 0. Machinetaal is echter te complex om te gebruiken bij normale 
     softwareontwikkeling. Assembly is ontworpen om deze complexe machinetaal op een leesbare manier te kunnen gebruiken. Assembly is per CPU-architectuur verschillend, 
     de instructies en syntax is op een Intel x86 architectuur anders dan als op een ARM-architectuur. Ik ga in dit onderdeel in mijn portfolio alleen in op de Intel x86 
-    architectuur omdat ik zelf hier het vaakst mee werk.</p>
+    architectuur omdat ik zelf hier het meest mee werk.</p>
 
   <br>
   <h3>Instructies</h3>
   <p class="no-bottom-margin">Assembly werkt met instructies, dit is niet hetzelfde zoals code in Java, C# of C++, waar gebruik gemaakt wordt van operators, 
-    sepperators, variablen en identifiers. De volledige lijst van instructies zijn <a href="https://en.wikipedia.org/wiki/X86_instruction_listings">hier</a> te zien. 
-    De instructies kunnen variablen van registers ophalen/verplaatsen en bepaalde logische berekeningen hierop uitvoeren. Enkele veel gebruikte instructies leg ik 
+    sepperators, variabelen en identifiers. De volledige lijst van instructies zijn <a href="https://en.wikipedia.org/wiki/X86_instruction_listings">hier</a> te zien. 
+    De instructies kunnen variabelen van registers ophalen/verplaatsen en bepaalde logische berekeningen hierop uitvoeren. Enkele veel gebruikte instructies leg ik 
     specifiek uit:</p>
   <ul>
-    <li class="text"><span class="instruction">MOV</span> - De MOV instructie staat voor 'move', deze verplaatst een waarde naar een ander geheugenvariable of register;</li>
-    <li class="text"><span class="instruction">CMP</span> - De CMP instructie staat voor 'compare', deze vergelijkt twee variablen en wordt vaak gebruikt met de 'J?' instructies beschreven hieronder;</li>
+    <li class="text"><span class="instruction">MOV</span> - De MOV instructie staat voor 'move', deze verplaatst een waarde naar een ander geheugenvariabele of register;</li>
+    <li class="text"><span class="instruction">CMP</span> - De CMP instructie staat voor 'compare', deze vergelijkt twee variabelen en wordt vaak gebruikt met de 'J?' instructies beschreven hieronder;</li>
     <li class="text"><span class="instruction">JG</span> - De JG instructie staat voor 'jump greater', deze gebruikt de output van de CMP instructie om wel of niet een actie uit te voeren;</li>
     <li class="text"><span class="instruction">JL</span> - De JL instructie staat voor 'jump less';</li>
     <li class="text"><span class="instruction">JE</span> - De JE instructie staat voor 'jump equal';</li>
     <li class="text"><span class="instruction">JLE</span> - De JLE instructie staat voor 'jump less or equal';</li>
     <li class="text"><span class="instruction">JGE</span> - De JGE instructie staat voor 'jump greater or equal';</li>
-    <li class="text"><span class="instruction">INC</span> - De INC instructie staat voor 'increase', deze telt een waarde op met 1 bij een aangegeven geheugenvariable of register;</li>
-    <li class="text"><span class="instruction">ADD</span> - De ADD instructie staat voor 'add' en telt een aangegeven waarde op bij een aangegeven geheugenvariable of register;</li>
+    <li class="text"><span class="instruction">INC</span> - De INC instructie staat voor 'increase', deze telt een waarde op met 1 bij een aangegeven geheugenvariabele of register;</li>
+    <li class="text"><span class="instruction">ADD</span> - De ADD instructie staat voor 'add' en telt een aangegeven waarde op bij een aangegeven geheugenvariabele of register;</li>
     <li class="text"><span class="instruction">INT</span> - De INT instructie staat voor 'interupt', niet te verwarren met integer. Dit is de brug van software naar hardware en dus kan hiermee met 
       hardware gecommuniceerd worden;</li>
   </ul>
@@ -36,8 +36,8 @@
   <br>
   <h3>Registers</h3>
   <p>Een register is intern geheugen wat zich binnenin de processor bevindt, hier worden waarden opgeslagen die de processor direct kan gebruiken. Registers zijn 
-    vele malen sneller het RAM-geheugen. Een variable kan wel uit het RAM-geheugen gehaald worden en in deze registers geplaatst worden. Registers hebben vaak een 
-    vast bepaalde functie. Deze registers zijn ook per bit grote verschillend en hebben dan ook verschillende namen. Enkele registers leg ik specifiek uit:</p>
+    vele malen sneller dan het RAM-geheugen. Een variabele kan wel uit het RAM-geheugen gehaald worden en in deze registers geplaatst worden. Registers hebben vaak een 
+    vast bepaalde functie. Deze registers zijn ook per bit grootte verschillend en hebben dan ook verschillende namen. Enkele registers leg ik specifiek uit:</p>
   <ul>
     <li class="text">Accumulator - Wordt gebruikt om het resultaat van logische berekeningen in op te slaan.</li>
     <ul>
@@ -46,7 +46,7 @@
       <li class="text"><span class="parameter">EAX</span> - 32 bit;</li>
       <li class="text"><span class="parameter">RAX</span> - 64 bit.</li>
     </ul>
-    <li class="text">Base index - Wordt gebruikt voor addressering</li>
+    <li class="text">Base index - Wordt gebruikt voor adressering</li>
     <ul>
       <li class="text"><span class="parameter">BL/BH</span> - 8 bit;</li>
       <li class="text"><span class="parameter">BX</span> - 16 bit;</li>
@@ -67,21 +67,21 @@
       <li class="text"><span class="parameter">EDX</span> - 32 bit;</li>
       <li class="text"><span class="parameter">RDX</span> - 64 bit.</li>
     </ul>
-    <li class="text">Stack pointer - Dit register heeft het geheugenaddress van de bovenkant van de stack, van de SBP naar ESP is de grootte van een functie</li>
+    <li class="text">Stack pointer - Dit register heeft het geheugenadres van de bovenkant van de stack, van de SBP naar ESP is de grootte van een functie</li>
     <ul>
       <li class="text"><span class="parameter">SPL</span> - 8 bit;</li>
       <li class="text"><span class="parameter">SP</span> - 16 bit;</li>
       <li class="text"><span class="parameter">ESP</span> - 32 bit;</li>
       <li class="text"><span class="parameter">RSP</span> - 64 bit.</li>
     </ul>
-    <li class="text">Stack base pointer - Dit register heeft het geheugenaddress van het begin van het huidig uitgevoerde programma in de stack</li>
+    <li class="text">Stack base pointer - Dit register heeft het geheugenadres van het begin van het huidig uitgevoerde programma in de stack</li>
     <ul>
       <li class="text"><span class="parameter">BPL</span> - 8 bit;</li>
       <li class="text"><span class="parameter">BP</span> - 16 bit;</li>
       <li class="text"><span class="parameter">EBP</span> - 32 bit;</li>
       <li class="text"><span class="parameter">RBP</span> - 64 bit.</li>
     </ul>
-    <li class="text">Instruction pointer - Dit register heeft het geheugenaddress van de volgende functie dat uitgevoerd moet gaan worden</li>
+    <li class="text">Instruction pointer - Dit register heeft het geheugenadres van de volgende functie dat uitgevoerd moet gaan worden</li>
     <ul>
       <li class="text"><span class="parameter">IPL</span> - 8 bit;</li>
       <li class="text"><span class="parameter">IP</span> - 16 bit;</li>
@@ -89,8 +89,8 @@
       <li class="text"><span class="parameter">RIP</span> - 64 bit.</li>
     </ul>
   </ul>
-  <p class="no-bottom-margin">De eerste vier (32 bit benaming) EAX, EBX, ECX, EDX hebben tegenwoordig dezelfde functie. Hieronder een afbeelding met alle registers van de Intel x86 
-    instructieset met de range van 8 bit naar 512 bit:</p>
+  <p class="no-bottom-margin">De eerste vier (32 bit benaming) EAX, EBX, ECX, EDX hebben tegenwoordig dezelfde functie. Hieronder een afbeelding met alle registers 
+    van de Intel x86 instructieset met de range van 8 bit naar 512 bit:</p>
   <img class="normal" src="../../../../assets/asm/intel-x86-registers.png">
   <p class="image">Afbeelding 1 Intel x86 registers</p>
 
@@ -111,7 +111,7 @@
 
     <li class="text"><span class="instruction">JE </span> <span class="asm-label">continue</span></li>
     <ul>
-      <li class="text">Als de waardes van de vorige verglijking gelijk zijn, dan vervolgt de code naar de continue label.</li>
+      <li class="text">Als de waardes van de vorige vergelijking gelijk zijn, dan vervolgt de code naar de continue label.</li>
     </ul>
 
     <li class="text"><span class="instruction">INC </span> <span class="parameter">EAX</span></li>
@@ -121,7 +121,7 @@
 
     <li class="text"><span class="asm-label">continue:</span></li>
     <ul>
-      <li class="text">Hier wordt de label continue gedefinieerd, als de verglijking dus niet gelijk is dan wordt de vorige INC instructie niet uitgevoerd.</li>
+      <li class="text">Hier wordt de label continue gedefinieerd, als de vergelijking dus niet gelijk is dan wordt de vorige INC instructie niet uitgevoerd.</li>
     </ul>
 
     <li class="text"><span class="instruction">MOV </span><span class="parameter">EBX</span>,<span class="parameter"> EAX</span></li>
@@ -130,8 +130,8 @@
     </ul>
   </ul>
 
-  <p>De bovenstaande code doet eigelijk niets anders dan een waarde ophalen uit een register, met elkaar verglijken. Als deze gelijk is dan voeg 1 aan de waarde toe, 
-    anders ga verder met de code. Het verloop van de code is de waarde terug zetten in het register waar hij vandaan kwam. Dit is eigenlijk een gewone if statement.</p>
+  <p>De bovenstaande code doet eigenlijk niets anders dan een waarde ophalen uit een register, met elkaar vergelijken. Als deze gelijk is, dan wordt er 1 aan de waarde toegevoegd, 
+    anders zal de code verder gaan. Het verloop van de code is de waarde terug zetten in het register waar hij vandaan kwam. Dit is eigenlijk een gewone if statement.</p>
 
   <p>Functies kunnen ook aangemaakt worden, deze zien er hetzelfde uit als labels. Als labels vanaf buiten de code benaderbaar moeten zijn, dan moeten deze met 
     'global' benoemd worden. Meestal wordt dit alleen bij de main functie gedaan.</p>
@@ -147,10 +147,10 @@
     <li class="text"><span class="instruction">mov </span><span class="parameter">eax</span>,<span class="parameter"> ebx</span></li>
   </ul>
 
-  <p class="no-bottom-margin">Nummers kunnen aangegeven worden in verschillende manieren worden opgeschreven, het is van belang om het type aan te geven. De voorkeur bij Assembly gaat uit 
+  <p class="no-bottom-margin">Nummers kunnen op verschillende manieren worden opgeschreven, het is van belang om het type aan te geven. De voorkeur bij Assembly gaat uit 
     naar hexadecimaal.</p>
   <ul>
-    <li class="text"><span class="number">0xA0</span><span class="comment"> ; 0x betekend hexadecimaal, 0xA0 is 160 in decimaal</span></li>
+    <li class="text"><span class="number">0xA0</span><span class="comment"> ; 0x betekent hexadecimaal, 0xA0 is 160 in decimaal</span></li>
     <li class="text"><span class="number">200</span><span class="comment"> ; 200 is decimaal</span></li>
     <li class="text"><span class="number">200d</span><span class="comment"> ; 200d is speciaal aangegeven decimaal</span></li>
     <li class="text"><span class="number">11000000b</span><span class="comment"> ; 11000000b is binair, 11000000 is 192 in decimaal</span></li>
@@ -166,15 +166,15 @@
     <ul>
       <li class="text">In deze sectie worden constante waardes gedefinieerd.</li>
       <li class="text">message <span class="parameter">DB</span> <span class="string"> "Hello world!"</span>, <span class="number">0x0C </span> 
-      <span class="comment"> ; Hier wordt de constante waarde "Hello world!" gedefinieerd met de naam: message, de 0x0A is de lengte van de string.</span></li>
-      <li class="text">msg_len <span class="parameter">EQU</span> $ - message<span class="comment"> ; Hier wordt de lengte bewaart van de waarde: message. De $ geeft aan 
-        wat het start geheugenaddress is, het streepje betekent tot en met, en vervolgens de naam van de waarde, wat het eind geheugenaddress is. De naam van deze lengte 
+      <span class="comment"> ; Hier wordt de constante waarde "Hello world!" gedefinieerd met de naam: message, de 0x0A is de hexadecimale ASSCI waarde voor '\n', wat enter betekent.</span></li>
+      <li class="text">msg_len <span class="parameter">EQU</span> $ - message<span class="comment"> ; Hier wordt de lengte bewaard van de waarde: message. De $ geeft aan 
+        wat het start geheugenadres is, het streepje betekent tot en met, en vervolgens de naam van de waarde, wat het eind geheugenadres is. De naam van deze lengte 
         is: msg_len.</span></li>
     </ul>
 
     <li class="text"><span class="asm-label">.bss</span></li>
     <ul>
-      <li class="text">In deze sectie worden variablen gedefinieerd. Deze zijn er maar hebben geen waarde. Deze kunnen dus in de code toegewezen worden met een 
+      <li class="text">In deze sectie worden variabelen gedefinieerd. Deze zijn er maar hebben geen waarde. Deze kunnen dus in de code toegewezen worden met een 
         waarde.</li>
       <li class="text">var1 <span class="parameter">RESB</span> <span class="number"> 0xFF</span> <span class="comment"> ; Hier wordt een byte gereserveerd met naam 
         var1 en de lengte van 0xFF (255 bit), dit is dus één byte.</span></li>
@@ -225,15 +225,15 @@
   <p><span class="instruction">&emsp;INT </span> <span class="number">0x80</span></p>
 
   <p class="no-bottom-margin"><span class="instruction">&emsp;MOV </span> <span class="parameter">EBX</span>, <span>expected_input_length</span><span class="comment"> ; Plaatsen van de verwachte bytes lengte in het EBX register</span></p>
-  <p class="no-bottom-margin"><span class="instruction">&emsp;CMP </span> <span class="parameter">EAX</span>, <span class="parameter">EBX</span><span class="comment"> ; Verglijken van de gelezen bytes van de stdin (EAX) en de verwachte lengte</span></p>
-  <p><span class="instruction">&emsp;JNE </span> <span class="asm-label">print_bad</span><span class="comment"> ; Als de lengte niet hetzelfde is skip andere verglijkingen en print fout</span></p>
+  <p class="no-bottom-margin"><span class="instruction">&emsp;CMP </span> <span class="parameter">EAX</span>, <span class="parameter">EBX</span><span class="comment"> ; Vergelijken van de gelezen bytes van de stdin (EAX) en de verwachte lengte</span></p>
+  <p><span class="instruction">&emsp;JNE </span> <span class="asm-label">print_bad</span><span class="comment"> ; Als de lengte niet hetzelfde is, skip andere vergelijkingen en print fout</span></p>
 
-  <p class="no-bottom-margin"><span class="instruction">&emsp;LEA </span> <span class="parameter">ESI</span>, <span>[expected_input]</span><span class="comment"> ; Plaats geheugenaddress van de expected input naar het ESI register</span></p>
-  <p class="no-bottom-margin"><span class="instruction">&emsp;LEA </span> <span class="parameter">EDI</span>, [<span class="parameter">ECX</span>]<span class="comment"> ; Plaats geheugenaddress van de userinput naar het EDI register</span></p>
+  <p class="no-bottom-margin"><span class="instruction">&emsp;LEA </span> <span class="parameter">ESI</span>, <span>[expected_input]</span><span class="comment"> ; Plaats geheugenadres van de expected input naar het ESI register</span></p>
+  <p class="no-bottom-margin"><span class="instruction">&emsp;LEA </span> <span class="parameter">EDI</span>, [<span class="parameter">ECX</span>]<span class="comment"> ; Plaats geheugenadres van de userinput naar het EDI register</span></p>
   <p class="no-bottom-margin"><span class="instruction">&emsp;MOV </span> <span class="parameter">ECX</span>, <span>expected_input_length</span><span class="comment"> ; Plaats verwachte lengte naar het ECX register</span></p>
-  <p class="no-bottom-margin"><span class="instruction">&emsp;REP </span> <span class="parameter">CMPSB</span><span class="comment"> ; Verglijken van de string byte per byte, deze gebruikt de ESI, EDI en ECX registers</span></p>
+  <p class="no-bottom-margin"><span class="instruction">&emsp;REP </span> <span class="parameter">CMPSB</span><span class="comment"> ; Vergelijken van de string byte per byte, deze gebruikt de ESI, EDI en ECX registers</span></p>
   <p class="no-bottom-margin"><span class="instruction">&emsp;JNE </span> <span class="asm-label">print_bad</span><span class="comment"> ; Als deze niet hetzelfde is dan print fout</span></p>
-  <p><span class="instruction">&emsp;JE </span> <span class="asm-label">print_good</span><span class="comment"> ; Als ze hetzelfde zijn print goed</span></p>
+  <p><span class="instruction">&emsp;JE </span> <span class="asm-label">print_good</span><span class="comment"> ; Als ze hetzelfde zijn, print goed</span></p>
 
   <p class="no-bottom-margin"><span class="asm-label">end:</span><span class="comment"> ; Definieer end functie</span></p>
   <p class="no-bottom-margin"><span class="instruction">&emsp;MOV </span> <span class="parameter">EAX</span>, <span class="number">0x01</span><span class="comment"> ; 0x01 is de systemcall voor exit</span></p>
@@ -258,18 +258,18 @@
 
   <br>
   <h3>Compileren</h3>
-  <p class="no-bottom-margin">Vervolgens moet ik deze code compileren om hem te kunnen uitvoeren. Als deze gecompileerd is resulteerd dit in een .o bestand, dit bestand 
+  <p class="no-bottom-margin">Vervolgens moet ik deze code compileren om hem te kunnen uitvoeren. Als deze gecompileerd is resulteert dit in een .o bestand, dit bestand 
     is object code en moet nog gelinkt worden aan libraries. In de onderstaande afbeelding zijn hier de commando's voor te zien. "elf" staat voor Executable and 
-    Linkable Format. Deze beschrijft het standaard binaire formaat wat onder UNIX-gebaseerde besturingssystemen draait.</p>
+    Linkable Format, deze beschrijft het standaard binaire formaat wat onder UNIX-gebaseerde besturingssystemen draait. Bij Windows moet hier Win86 gebruikt worden.</p>
   <img src="../../../../assets/asm/compile-step.png">
   <p class="image">Afbeelding 2 Compileren en linken</p>
 
   <br>
   <h3>Uitvoeren</h3>
   <p class="no-bottom-margin">Na het compileren kan de executable uitgevoerd worden. Ik heb hier eerst een veel te kort antwoord gegeven, deze faalt al op de lengte 
-    check omdat de verwachting 13 karakters lang is en de gegeven waarde 2 is. De tweede keer heb ik wel de gevraagde 13 karakters, alleen een vraagteken in plaats 
-    van een uitroepteken. Deze komt dus niet overeen en word er alweer 'Bad!' geprint. Bij de derde geef ik wel de gevraagde text en zoals te zien is komt hij nu wel 
-    overeen en wordt het nu wel geaccepteerd.</p>
+    check omdat de verwachting 13 karakters lang is en de gegeven waarde 2 is. De tweede keer heb ik wel de gevraagde 13 karakters ingegeven, alleen een vraagteken in 
+    plaats van een uitroepteken. Deze komt dus niet overeen en wordt er alweer 'Bad!' geprint. Bij de derde geef ik wel de gevraagde tekst en zoals te zien is komt hij 
+    nu wel overeen en wordt het nu wel geaccepteerd.</p>
   <img src="../../../../assets/asm/output.png">
   <p class="image">Afbeelding 3 Output</p>
 
@@ -283,7 +283,7 @@
   <img src="../../../../assets/asm/crash.png">
   <p class="image">Afbeelding 4 Crash</p>
 
-  <p>Verder is dit wel een heel erg leerzaam onderdeel en ik ben blij dat ik dit het toegevoegd om hier meer kennis van op te doen. Ik wil hier meer mee kunnen om 
+  <p>Verder is dit wel een heel erg leerzaam onderdeel en ik ben blij dat ik dit heb toegevoegd om hier meer kennis van op te doen. Ik wil hier meer mee kunnen om 
     bijvoorbeeld makkelijker gedecompileerde code te kunnen begrijpen. Dit is een onderdeel wat vaak toegepast wordt bij bijvoorbeeld malwareinspectie.</p>
 
   <br>
